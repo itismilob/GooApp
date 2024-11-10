@@ -1,16 +1,16 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors, Fonts, Sizes } from '@/constants/Styles';
-import { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Colors, Fonts, Sizes } from "@/constants/Styles";
+import { useEffect, useRef, useState } from "react";
 
-import Header from '@/components/layouts/Header';
-import Title from '@/components/layouts/Title';
-import SubTitle from '@/components/layouts/SubTitle';
-import Contents from '@/components/layouts/Contents';
-import HomeBtn from '@/components/navigation/HomeBtn';
-import { FontAwesome6 } from '@expo/vector-icons';
+import Header from "@/components/layouts/Header";
+import Title from "@/components/layouts/Title";
+import SubTitle from "@/components/layouts/SubTitle";
+import Contents from "@/components/layouts/Contents";
+import HomeBtn from "@/components/navigation/HomeBtn";
+import { FontAwesome6 } from "@expo/vector-icons";
 
-import { GameData } from '@/constants/Types';
-import { useRouter } from 'expo-router';
+import { GameData } from "@/constants/Types";
+import { useRouter } from "expo-router";
 
 interface GameProps {
   total: number;
@@ -69,18 +69,16 @@ export default function Game({ total }: GameProps) {
     ]);
 
     if (correct === answer) {
-      console.log(steps, 'correct!!');
+      console.log(steps, "correct!!");
     } else {
-      console.log(steps, 'wrong!!');
+      console.log(steps, "wrong!!");
       setIsWrong(true);
       await new Promise((resolve) => setTimeout(resolve, 500));
       setIsWrong(false);
     }
 
     if (steps === total) {
-      console.log('end!!');
-      endTimer();
-      router.replace('/pages/Scoreboard');
+      router.replace("/pages/Scoreboard");
     } else {
       setSteps(steps + 1);
       createQuiz();
@@ -88,14 +86,14 @@ export default function Game({ total }: GameProps) {
   };
 
   const startTimer = () => {
-    console.log('game start');
+    console.log("game start");
     timerRef.current = setInterval(() => {
       setTime((prev) => prev + 0.01);
     }, 10);
   };
 
   const endTimer = () => {
-    console.log('game end');
+    console.log("game end");
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -111,7 +109,7 @@ export default function Game({ total }: GameProps) {
       <Title>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{quiz[0].toString()}</Text>
-          <FontAwesome6 name='xmark' size={50} color='white' />
+          <FontAwesome6 name="xmark" size={50} color="white" />
           <Text style={styles.title}>{quiz[1].toString()} = ?</Text>
         </View>
       </Title>
@@ -152,67 +150,67 @@ export default function Game({ total }: GameProps) {
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   title: {
     fontSize: Fonts.title,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   gameContents: {
-    width: '100%',
+    width: "100%",
     flex: 1,
   },
   btnsContainer: {
     flex: 2,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     gap: 20,
   },
   button: {
-    width: '47%',
-    height: '48%',
+    width: "47%",
+    height: "48%",
     backgroundColor: Colors.highlight,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: Sizes.buttonRadius,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: Fonts.bigText,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   infoContainer: {
     flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     gap: 10,
   },
   time: {
-    alignItems: 'center',
-    color: 'white',
+    alignItems: "center",
+    color: "white",
     fontSize: Fonts.bigText,
   },
   steps: {
-    alignItems: 'center',
-    color: 'white',
+    alignItems: "center",
+    color: "white",
     fontSize: Fonts.default,
   },
   wrong: {
     flex: 2,
     backgroundColor: Colors.wrong,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: Sizes.buttonRadius,
   },
   wrongText: {
-    color: 'white',
+    color: "white",
     fontSize: Fonts.title,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

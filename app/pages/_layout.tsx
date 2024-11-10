@@ -1,16 +1,21 @@
-import { Colors } from '@/constants/Styles';
-import { Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
-import 'react-native-reanimated';
+import { Colors } from "@/constants/Styles";
+import { Stack } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import "react-native-reanimated";
+
+import { Provider } from "react-redux";
+import store from "@/stores/store";
 
 export default function PagesLayout() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: styles.background,
-      }}
-    ></Stack>
+    <Provider store={store}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: styles.background,
+        }}
+      ></Stack>
+    </Provider>
   );
 }
 
