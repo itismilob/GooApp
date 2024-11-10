@@ -4,23 +4,20 @@ import SubTitle from '@/components/layouts/SubTitle';
 import Title from '@/components/layouts/Title';
 import HomeBtn from '@/components/navigation/HomeBtn';
 import { Colors, Fonts, Sizes } from '@/constants/Styles';
-import { addStatusDataAction } from '@/stores/statusDataSlice';
-import { RootState } from '@/stores/store';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { setTotalQuizAction } from '@/stores/inGameSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/stores/store';
 
 export default function Difficulty() {
   const router = useRouter();
-  const buttonHandler = (num: number) => {
-    router.replace('/pages/Game');
-  };
+  const dispatch = useDispatch();
 
-  const dispath = useDispatch();
-  const statusData = useSelector((state: RootState) => state.statusData);
-  const addStatusData = () => {
-    dispath(addStatusDataAction({ key: '3X3', time: 22.22 }));
+  const buttonHandler = (totalQuiz: number) => {
+    dispatch(setTotalQuizAction({ totalQuiz }));
+    router.replace('/pages/Game');
   };
 
   return (

@@ -1,116 +1,145 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Colors, Fonts, Sizes } from "@/constants/Styles";
-import { useEffect, useRef, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Colors, Fonts, Sizes } from '@/constants/Styles';
+import { useEffect, useRef, useState } from 'react';
 
-import Header from "@/components/layouts/Header";
-import Title from "@/components/layouts/Title";
-import SubTitle from "@/components/layouts/SubTitle";
-import Contents from "@/components/layouts/Contents";
-import HomeBtn from "@/components/navigation/HomeBtn";
-import { FontAwesome6 } from "@expo/vector-icons";
+import Header from '@/components/layouts/Header';
+import Title from '@/components/layouts/Title';
+import SubTitle from '@/components/layouts/SubTitle';
+import Contents from '@/components/layouts/Contents';
+import HomeBtn from '@/components/navigation/HomeBtn';
+import { FontAwesome6 } from '@expo/vector-icons';
 
-import { GameData } from "@/constants/Types";
-import { useRouter } from "expo-router";
+import { GameData } from '@/constants/Types';
+import { useRouter } from 'expo-router';
 
-interface GameProps {
-  total: number;
-}
-export default function Game({ total }: GameProps) {
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/stores/store';
+import { setInGameAction } from '@/stores/inGameSlice';
+
+export default function Game() {
   const router = useRouter();
 
-  total = 5;
-  const [steps, setSteps] = useState<number>(1);
-  const [quiz, setQuiz] = useState<number[]>([3, 4]);
-  const [answers, setAnswers] = useState<number[]>([12, 13, 14, 11]);
-  const [correct, setCorrect] = useState<number>(0);
-  const [gameData, setGameData] = useState<GameData[]>([]);
+  const [steps, setSteps] = useState<number>(0);
+  const [answers, setAnswers] = useState<number[]>([]);
   const [isWrong, setIsWrong] = useState<boolean>(false);
   const [time, setTime] = useState<number>(0);
+  const [prevTime, setPrevTime] = useState<number>(0);
+  const [thisStep, setThisStep] = useState<GameData | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const inGameData = useSelector((state: RootState) => state.inGameData);
+  const dispatch = useDispatch();
+  const setInGame = (gameData: GameData[]) => {
+    dispatch(setInGameAction({ gameDataList: gameData }));
+  };
+
   // Start Game
   useEffect(() => {
-    resetGame();
     createQuiz();
+    setTime(0);
+    setSteps(0);
+    startTimer();
+
     return endTimer;
   }, []);
 
-  const resetGame = () => {
-    setTime(0);
-    setSteps(1);
-    startTimer();
-  };
+  useEffect(() => {
+    createAnswers();
+  }, [thisStep]);
 
   const createQuiz = () => {
-    const quiz1 = Math.floor(Math.random() * 8) + 2;
-    const quiz2 = Math.floor(Math.random() * 8) + 2;
-    const correctOne = quiz1 * quiz2;
+    const gameList: GameData[] = Array.from(
+      { length: inGameData.totalQuiz },
+      () => {
+        const quiz1 = Math.floor(Math.random() * 8) + 2;
+        const quiz2 = Math.floor(Math.random() * 8) + 2;
+        const correct = quiz1 * quiz2;
+
+        return {
+          quiz: [quiz1, quiz2],
+          answer: 0,
+          correct,
+          time: 0,
+        };
+      }
+    );
+
+    setThisStep(gameList[0]);
+    setInGame(gameList);
+  };
+
+  const createAnswers = () => {
+    const correct = thisStep?.correct;
+    if (!correct) return;
+
     const answerList = [
-      correctOne,
-      correctOne + (Math.floor(Math.random() * 1) + 1), // 1, 2
-      correctOne + (Math.floor(Math.random() * 3) + 3), // 3, 4
-      correctOne - (Math.floor(Math.random() * 1) + 1), // 1, 2
+      correct,
+      correct + (Math.floor(Math.random() * 1) + 1), // 1, 2
+      correct + (Math.floor(Math.random() * 3) + 3), // 3, 4
+      correct - (Math.floor(Math.random() * 1) + 1), // 1, 2
     ].sort(() => Math.random() - 0.5);
 
-    setQuiz([quiz1, quiz2]);
-    setCorrect(correctOne);
     setAnswers(answerList);
   };
 
   const answerClickHandler = async (answer: number) => {
-    setGameData((prev) => [
-      ...prev,
-      {
-        quiz,
-        answer,
-        correct,
-      },
-    ]);
+    // add answer, timer data to inGameData
+    const newInGameData: GameData[] = [...inGameData.gameDataList];
+    const thisStepData: GameData = newInGameData[steps];
+    setThisStep(thisStepData);
+    setPrevTime(time);
 
-    if (correct === answer) {
-      console.log(steps, "correct!!");
+    newInGameData[steps] = {
+      ...thisStepData,
+      answer,
+      time: Number((time - prevTime).toFixed(2)),
+    };
+    setInGame(newInGameData);
+
+    // check answer is correct
+    if (thisStepData.correct === answer) {
+      console.log(steps, 'correct!!');
     } else {
-      console.log(steps, "wrong!!");
+      console.log(steps, 'wrong!!');
       setIsWrong(true);
       await new Promise((resolve) => setTimeout(resolve, 500));
       setIsWrong(false);
     }
 
-    if (steps === total) {
-      router.replace("/pages/Scoreboard");
+    // next step
+    if (steps + 1 === inGameData.totalQuiz) {
+      router.replace('/pages/Scoreboard');
     } else {
       setSteps(steps + 1);
-      createQuiz();
+      setThisStep(inGameData.gameDataList[steps + 1]);
     }
   };
 
   const startTimer = () => {
-    console.log("game start");
+    console.log('game start');
     timerRef.current = setInterval(() => {
       setTime((prev) => prev + 0.01);
     }, 10);
   };
 
   const endTimer = () => {
-    console.log("game end");
+    console.log('game end');
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
-
-    // console.log(JSON.stringify(gameData, null, 2));
   };
 
   return (
     <>
       <Header>
-        <HomeBtn>{`x${total}`}</HomeBtn>
+        <HomeBtn>{`x${inGameData.totalQuiz}`}</HomeBtn>
       </Header>
       <Title>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{quiz[0].toString()}</Text>
-          <FontAwesome6 name="xmark" size={50} color="white" />
-          <Text style={styles.title}>{quiz[1].toString()} = ?</Text>
+          <Text style={styles.title}>{thisStep?.quiz[0].toString()}</Text>
+          <FontAwesome6 name='xmark' size={50} color='white' />
+          <Text style={styles.title}>{thisStep?.quiz[1].toString()} = ?</Text>
         </View>
       </Title>
       <SubTitle>Click the answer</SubTitle>
@@ -118,7 +147,7 @@ export default function Game({ total }: GameProps) {
         <View style={styles.gameContents}>
           {isWrong ? (
             <View style={styles.wrong}>
-              <Text style={styles.wrongText}>{correct}</Text>
+              <Text style={styles.wrongText}>{thisStep?.correct}</Text>
             </View>
           ) : (
             <View style={styles.btnsContainer}>
@@ -139,7 +168,7 @@ export default function Game({ total }: GameProps) {
           <View style={styles.infoContainer}>
             <Text style={styles.time}>{time.toFixed(2)}s</Text>
             <Text style={styles.steps}>
-              {steps}/{total}
+              {steps + 1}/{inGameData.totalQuiz}
             </Text>
           </View>
         </View>
@@ -150,67 +179,67 @@ export default function Game({ total }: GameProps) {
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
   title: {
     fontSize: Fonts.title,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   gameContents: {
-    width: "100%",
+    width: '100%',
     flex: 1,
   },
   btnsContainer: {
     flex: 2,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     gap: 20,
   },
   button: {
-    width: "47%",
-    height: "48%",
+    width: '47%',
+    height: '48%',
     backgroundColor: Colors.highlight,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: Sizes.buttonRadius,
   },
   buttonText: {
-    color: "white",
+    color: 'white',
     fontSize: Fonts.bigText,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 
   infoContainer: {
     flex: 1,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 10,
   },
   time: {
-    alignItems: "center",
-    color: "white",
+    alignItems: 'center',
+    color: 'white',
     fontSize: Fonts.bigText,
   },
   steps: {
-    alignItems: "center",
-    color: "white",
+    alignItems: 'center',
+    color: 'white',
     fontSize: Fonts.default,
   },
   wrong: {
     flex: 2,
     backgroundColor: Colors.wrong,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: Sizes.buttonRadius,
   },
   wrongText: {
-    color: "white",
+    color: 'white',
     fontSize: Fonts.title,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });

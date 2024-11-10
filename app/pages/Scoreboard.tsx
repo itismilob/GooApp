@@ -5,15 +5,18 @@ import Title from '@/components/layouts/Title';
 import HomeBtn from '@/components/navigation/HomeBtn';
 import { Fonts, Colors, Sizes } from '@/constants/Styles';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import Entypo from '@expo/vector-icons/Entypo';
 
 import { GameData } from '@/constants/Types';
+import { RootState } from '@/stores/store';
+import { useSelector } from 'react-redux';
 
 const dataToList = (data: GameData, i: number) => {
   const isCorrect = data.answer === data.correct;
   return (
     <View
       key={i}
-      style={[styles.quizResult, isCorrect ? styles.Correct : styles.wrong]}
+      style={[styles.quizResult, isCorrect ? styles.correct : styles.wrong]}
     >
       <Text style={styles.quizResultText}>
         {data.quiz[0]}x{data.quiz[1]}
@@ -21,29 +24,30 @@ const dataToList = (data: GameData, i: number) => {
       {isCorrect ? (
         <Text style={styles.quizResultText}>{data.answer}</Text>
       ) : (
-        <Text
-          style={styles.quizResultText}
-        >{`${data.answer} -> ${data.correct}`}</Text>
+        <View style={styles.quizWrong}>
+          <Text style={styles.quizResultText}>{data.answer}</Text>
+          <Entypo name='arrow-right' size={20} color='white' />
+          <Text style={styles.quizResultText}>{data.correct}</Text>
+        </View>
       )}
+      <Text style={styles.quizResultText}>{data.time.toFixed(2)}s</Text>
     </View>
   );
 };
 
 export default function Scoreboard() {
-  const gameData = [
-    { quiz: [1, 2], answer: 2, correct: 2 },
-    { quiz: [1, 2], answer: 3, correct: 2 },
-    { quiz: [1, 2], answer: 2, correct: 2 },
-    { quiz: [1, 2], answer: 3, correct: 2 },
-    { quiz: [1, 2], answer: 2, correct: 2 },
-    { quiz: [1, 2], answer: 3, correct: 2 },
-    { quiz: [1, 2], answer: 2, correct: 2 },
-    { quiz: [1, 2], answer: 5, correct: 2 },
-    { quiz: [1, 2], answer: 2, correct: 2 },
-    { quiz: [1, 2], answer: 7, correct: 2 },
-    { quiz: [1, 2], answer: 2, correct: 2 },
-    { quiz: [1, 2], answer: 3, correct: 2 },
-  ];
+  const inGameData = useSelector((state: RootState) => state.inGameData);
+  const correctCount = inGameData.gameDataList.reduce((count, data) => {
+    if (data.correct === data.answer) {
+      count++;
+    }
+    return count;
+  }, 0);
+
+  const totalTime = inGameData.gameDataList.reduce((duration, data) => {
+    duration += data.time;
+    return duration;
+  }, 0);
 
   return (
     <>
@@ -52,13 +56,16 @@ export default function Scoreboard() {
           <Text style={styles.headerText}>Scoreboard</Text>
         </HomeBtn>
       </Header>
-      <Title>x20</Title>
-      <SubTitle>29.39s</SubTitle>
+      <Title>{`x${inGameData.totalQuiz}s`}</Title>
+      <SubTitle>{`${totalTime}s`}</SubTitle>
       <Contents>
         <View style={styles.scoreboardContainer}>
-          <Text style={styles.totalCorrect}>10/20</Text>
+          <Text style={styles.totalCorrect}>
+            {correctCount}/{inGameData.totalQuiz}
+          </Text>
           <ScrollView style={styles.scrollView}>
-            {gameData.length !== 0 && gameData.map(dataToList)}
+            {inGameData.gameDataList.length !== 0 &&
+              inGameData.gameDataList.map(dataToList)}
           </ScrollView>
         </View>
       </Contents>
@@ -85,6 +92,7 @@ const styles = StyleSheet.create({
     fontSize: Fonts.default,
     fontWeight: 'bold',
     paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   scrollView: {},
   quizResult: {
@@ -95,12 +103,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 6,
   },
-  Correct: {
+  correct: {
     backgroundColor: Colors.highlight,
   },
   wrong: {
     backgroundColor: Colors.wrong,
   },
+  quizWrong: { flexDirection: 'row', gap: 5, alignItems: 'center' },
   quizResultText: {
     color: 'white',
     fontSize: Fonts.default,

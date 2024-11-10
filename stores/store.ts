@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import statusDataSlice from './statusDataSlice';
+import statusReducer from './statusSlice';
+import inGameReducer from './inGameSlice';
 
 const store = configureStore({
   reducer: {
-    statusData: statusDataSlice,
+    statusData: statusReducer,
+    inGameData: inGameReducer,
   },
 });
 

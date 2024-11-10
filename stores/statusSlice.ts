@@ -1,13 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
-
-type StatusData = {
-  [key: string]: { mean: number; count: number };
-};
+import { StatusData } from '@/constants/Types';
 
 const initialState: StatusData = {};
 
-const addStatusData = (
+const addStatus = (
   state: WritableDraft<StatusData>,
   action: PayloadAction<{ key: string; time: number }>
 ) => {
@@ -24,13 +21,13 @@ const addStatusData = (
   }
 };
 
-export const statusDataSlice = createSlice({
+export const statusSlice = createSlice({
   name: 'statusData',
   initialState,
   reducers: {
-    addStatusData,
+    addStatus,
   },
 });
 
-export const { addStatusData: addStatusDataAction } = statusDataSlice.actions;
-export default statusDataSlice.reducer;
+export const { addStatus: addStatusAction } = statusSlice.actions;
+export default statusSlice.reducer;
