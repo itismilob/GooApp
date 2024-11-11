@@ -5,12 +5,13 @@ import SubTitle from '@/components/layouts/SubTitle';
 import Title from '@/components/layouts/Title';
 import HomeBtn from '@/components/navigation/HomeBtn';
 
-import { Colors, Fonts } from '@/constants/Styles';
+import { Colors, Fonts, Sizes } from '@/constants/Styles';
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Float } from 'react-native/Libraries/Types/CodegenTypes';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STATUS_KEY, StatusData } from '@/constants/Types';
+
+import ThemedText from '@/components/theme/ThemedText';
 
 type StatusArray = [string, { count: number; mean: number }][];
 
@@ -54,31 +55,37 @@ export default function Status() {
       <Title>Username</Title>
       <SubTitle>{`Total Mean : ${totalMean.toFixed(2)}s`}</SubTitle>
       <Contents>
-        <View style={styles.statusContents}>
-          <View style={styles.scrollTitleNLine}>
-            <View style={styles.scrollTitleContainer}>
-              <Text style={styles.scrollTitle}>Multiple</Text>
-              <Text style={styles.scrollTitle}>Mean</Text>
+        <View style={styles.statusContentsContainer}>
+          <View style={styles.statusContents}>
+            <View style={styles.scrollTitleNLine}>
+              <View style={styles.scrollTitleContainer}>
+                <ThemedText style={styles.scrollTitle}>Multiple</ThemedText>
+                <ThemedText style={styles.scrollTitle}>Mean</ThemedText>
+              </View>
+              <ListLine />
             </View>
-            <ListLine />
-          </View>
-          <ScrollView style={styles.scrollView}>
-            {statusArray.length !== 0 ? (
-              statusArray.map((status, i) => (
-                <View key={status[0]} style={styles.scrollContentContainer}>
-                  <View style={styles.ScrollContentTextContainer}>
-                    <Text style={styles.ScrollContentText}>{status[0]}</Text>
-                    <Text style={styles.ScrollContentText}>
-                      {`${status[1].mean.toFixed(2)}`}s
-                    </Text>
+            <ScrollView style={styles.scrollView}>
+              {statusArray.length !== 0 ? (
+                statusArray.map((status, i) => (
+                  <View key={status[0]} style={styles.scrollContentContainer}>
+                    <View style={styles.ScrollContentTextContainer}>
+                      <ThemedText style={styles.ScrollContentText}>
+                        {status[0]}
+                      </ThemedText>
+                      <ThemedText style={styles.ScrollContentText}>
+                        {`${status[1].mean.toFixed(2)}s`}
+                      </ThemedText>
+                    </View>
+                    {i != statusArray.length - 1 && <ListLine />}
                   </View>
-                  {i != statusArray.length - 1 && <ListLine />}
-                </View>
-              ))
-            ) : (
-              <Text style={styles.nullStatus}>No Status. Please play game</Text>
-            )}
-          </ScrollView>
+                ))
+              ) : (
+                <ThemedText style={styles.nullStatus}>
+                  No Status. Please play game
+                </ThemedText>
+              )}
+            </ScrollView>
+          </View>
         </View>
       </Contents>
     </>
@@ -86,14 +93,19 @@ export default function Status() {
 }
 
 const styles = StyleSheet.create({
+  statusContentsContainer: {
+    flex: 1,
+    width: '100%',
+    paddingHorizontal: Sizes.defaultPadding,
+  },
   statusContents: {
     flex: 1,
     // height: '100%',
-    width: '100%',
     backgroundColor: Colors.highlight,
     marginBottom: 20,
     borderRadius: 40,
-    paddingVertical: 30,
+    paddingTop: 30,
+    paddingBottom: 20,
   },
   scrollTitleNLine: {
     paddingHorizontal: 30,

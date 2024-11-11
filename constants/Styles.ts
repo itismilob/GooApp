@@ -15,4 +15,5 @@ export const Fonts = {
 export const Sizes = {
   buttonHeight: 100,
   buttonRadius: 30,
+  defaultPadding: 20,
 };

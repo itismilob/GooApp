@@ -1,8 +1,9 @@
-import { Fonts } from '@/constants/Styles';
+import { Fonts, Sizes } from '@/constants/Styles';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useRouter } from 'expo-router';
+import ThemedText from '../theme/ThemedText';
 
 interface GoMainBtnProps {
   children?: null | JSX.Element | string;
@@ -22,7 +23,7 @@ export default function HomeBtn({ children }: GoMainBtnProps) {
         {/* <Text style={styles.buttonText}>{'home'}</Text> */}
       </Pressable>
       {typeof children == 'string' ? (
-        <Text style={styles.text}>{children}</Text>
+        <ThemedText style={styles.text}>{children}</ThemedText>
       ) : (
         <View>{children}</View>
       )}
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     fontSize: Fonts.default,
     // backgroundColor: 'red',
+    paddingHorizontal: Sizes.defaultPadding,
   },
   button: { flexDirection: 'row' },
   buttonText: {

@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Fonts } from '@/constants/Styles';
+import ThemedText from '../theme/ThemedText';
 
 interface TitleProps {
   children?: string | JSX.Element;
@@ -9,7 +10,7 @@ export default function Title({ children }: TitleProps) {
   return (
     <View style={styles.title}>
       {typeof children === 'string' ? (
-        <Text style={styles.titleText}>{children}</Text>
+        <ThemedText style={styles.titleText}>{children}</ThemedText>
       ) : (
         children
       )}

@@ -7,6 +7,7 @@ import Header from '@/components/layouts/Header';
 import SubTitle from '@/components/layouts/SubTitle';
 import Contents from '@/components/layouts/Contents';
 import { useRouter } from 'expo-router';
+import ThemedText from '@/components/theme/ThemedText';
 
 export default function Main() {
   const router = useRouter();
@@ -30,13 +31,13 @@ export default function Main() {
       <Contents>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={startBtnHandler}>
-            <Text style={styles.buttonText}>Game Start</Text>
+            <ThemedText style={styles.buttonText}>Game Start</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={statusBtnHandler}>
-            <Text style={styles.buttonText}>Status</Text>
+            <ThemedText style={styles.buttonText}>Status</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={rankBtnHandler}>
-            <Text style={styles.buttonText}>Rank</Text>
+            <ThemedText style={styles.buttonText}>Rank</ThemedText>
           </TouchableOpacity>
         </View>
       </Contents>
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     gap: 30,
+    paddingHorizontal: Sizes.defaultPadding,
   },
   button: {
     width: '100%',

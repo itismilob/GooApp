@@ -10,6 +10,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { setTotalQuizAction } from '@/stores/inGameSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
+import ThemedText from '@/components/theme/ThemedText';
 
 export default function Difficulty() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function Difficulty() {
             }}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>x20</Text>
+            <ThemedText style={styles.buttonText}>x20</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -43,7 +44,7 @@ export default function Difficulty() {
             }}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>x50</Text>
+            <ThemedText style={styles.buttonText}>x50</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -51,7 +52,7 @@ export default function Difficulty() {
             }}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>x100</Text>
+            <ThemedText style={styles.buttonText}>x100</ThemedText>
           </TouchableOpacity>
         </View>
       </Contents>
@@ -65,6 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     gap: 30,
+    paddingHorizontal: Sizes.defaultPadding,
   },
   button: {
     width: '100%',

@@ -23,7 +23,7 @@ export default function PagesLayout() {
 
 const styles = StyleSheet.create({
   background: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     backgroundColor: Colors.background,
   },
 });

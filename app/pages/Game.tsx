@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
 import { setInGameAction } from '@/stores/inGameSlice';
+import ThemedText from '@/components/theme/ThemedText';
 
 export default function Game() {
   const router = useRouter();
@@ -137,9 +138,13 @@ export default function Game() {
       </Header>
       <Title>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{thisStep?.quiz[0].toString()}</Text>
+          <ThemedText style={styles.title}>
+            {`${thisStep?.quiz[0].toString()}`}
+          </ThemedText>
           <FontAwesome6 name='xmark' size={50} color='white' />
-          <Text style={styles.title}>{thisStep?.quiz[1].toString()} = ?</Text>
+          <ThemedText style={styles.title}>
+            {`${thisStep?.quiz[1].toString()} = ?`}
+          </ThemedText>
         </View>
       </Title>
       <SubTitle>Click the answer</SubTitle>
@@ -147,7 +152,9 @@ export default function Game() {
         <View style={styles.gameContents}>
           {isWrong ? (
             <View style={styles.wrong}>
-              <Text style={styles.wrongText}>{thisStep?.correct}</Text>
+              <ThemedText style={styles.wrongText}>
+                {`${thisStep?.correct}`}
+              </ThemedText>
             </View>
           ) : (
             <View style={styles.btnsContainer}>
@@ -160,16 +167,18 @@ export default function Game() {
                     key={i}
                     style={styles.button}
                   >
-                    <Text style={styles.buttonText}>{answer}</Text>
+                    <ThemedText
+                      style={styles.buttonText}
+                    >{`${answer}`}</ThemedText>
                   </TouchableOpacity>
                 ))}
             </View>
           )}
           <View style={styles.infoContainer}>
-            <Text style={styles.time}>{time.toFixed(2)}s</Text>
-            <Text style={styles.steps}>
-              {steps + 1}/{inGameData.totalQuiz}
-            </Text>
+            <ThemedText style={styles.time}>{`${time.toFixed(2)}s`}</ThemedText>
+            <ThemedText style={styles.steps}>
+              {`${steps + 1}/${inGameData.totalQuiz}}`}
+            </ThemedText>
           </View>
         </View>
       </Contents>
@@ -191,6 +200,7 @@ const styles = StyleSheet.create({
   gameContents: {
     width: '100%',
     flex: 1,
+    paddingHorizontal: Sizes.defaultPadding,
   },
   btnsContainer: {
     flex: 2,

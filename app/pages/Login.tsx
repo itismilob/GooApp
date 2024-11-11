@@ -6,6 +6,7 @@ import { Colors, Fonts, Sizes } from '@/constants/Styles';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import ThemedText from '@/components/theme/ThemedText';
 
 export default function Login() {
   const [user, setUser] = useState<string>('');
@@ -19,7 +20,7 @@ export default function Login() {
 
   const signInHandler = () => {
     console.log('Sign In');
-    router.push('/main');
+    router.push('/pages/Main');
   };
   const signUpHandler = () => {
     console.log('Sign Up');
@@ -46,10 +47,10 @@ export default function Login() {
           </View>
           <View style={styles.btnsContainer}>
             <Pressable onPress={signInHandler} style={styles.signIn}>
-              <Text style={styles.signInText}>Sign In</Text>
+              <ThemedText style={styles.signInText}>Sign In</ThemedText>
             </Pressable>
             <Pressable onPress={signUpHandler} style={styles.signUp}>
-              <Text style={styles.signUpText}>Sign Up</Text>
+              <ThemedText style={styles.signUpText}>Sign Up</ThemedText>
             </Pressable>
           </View>
         </View>

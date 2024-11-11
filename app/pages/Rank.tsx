@@ -6,76 +6,125 @@ import SubTitle from '@/components/layouts/SubTitle';
 import Title from '@/components/layouts/Title';
 import { Colors, Fonts } from '@/constants/Styles';
 import { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Float } from 'react-native/Libraries/Types/CodegenTypes';
+import ThemedText from '@/components/theme/ThemedText';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 type StatusData = {
   user: string;
-  speed: Float;
+  time: Float;
 };
 
 export default function Status() {
   const [statusData, setStatusData] = useState<StatusData[]>([
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
-    { user: 'someone', speed: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
+    { user: 'someone', time: 22.22 },
   ]);
+
+  const rankTypeArray = [20, 50, 100];
 
   return (
     <>
       <Header>
         <HomeBtn>Rank</HomeBtn>
       </Header>
-      <Title>x100</Title>
-      <SubTitle>43 UserName 43.44s</SubTitle>
-      <Contents>
-        <View style={styles.statusContents}>
-          <View style={styles.scrollTitleNLine}>
-            <View style={styles.scrollTitleContainer}>
-              <Text style={styles.scrollTitle}>Rank</Text>
-              <Text style={styles.scrollTitle}>User</Text>
-              <Text style={styles.scrollTitle}>Speed</Text>
-            </View>
-            <ListLine />
-          </View>
-          <ScrollView style={styles.scrollView}>
-            {statusData.length !== 0 &&
-              statusData.map((status, i) => (
-                <View key={i} style={styles.scrollContentContainer}>
-                  <View style={styles.ScrollContentTextContainer}>
-                    <Text style={styles.ScrollContentText}>{i + 1}</Text>
-                    <Text style={styles.ScrollContentText}>{status.user}</Text>
-                    <Text style={styles.ScrollContentText}>
-                      {status.speed}s
-                    </Text>
+      <View style={styles.rankTypeScrollView}>
+        <ScrollView horizontal pagingEnabled>
+          {rankTypeArray.map((type, i) => (
+            <View key={i} style={styles.rankTypeContainer}>
+              <ThemedText>{`x${type}`}</ThemedText>
+              <SubTitle>
+                <View style={styles.userRank}>
+                  <View style={styles.rowCenter}>
+                    <ThemedText
+                      style={{ ...styles.userRankText, fontWeight: 'bold' }}
+                    >
+                      43
+                    </ThemedText>
+                    <ThemedText
+                      style={{ ...styles.userRankText, fontSize: 20 }}
+                    >
+                      UserName
+                    </ThemedText>
                   </View>
-                  {i != statusData.length - 1 && <ListLine />}
+                  <ThemedText
+                    style={{ ...styles.userRankText, fontWeight: 'bold' }}
+                  >
+                    43.44s
+                  </ThemedText>
                 </View>
-              ))}
-          </ScrollView>
-        </View>
-      </Contents>
+              </SubTitle>
+              <Contents>
+                <View style={styles.statusContents}>
+                  <View style={styles.scrollTitleNLine}>
+                    <View style={styles.scrollTitleContainer}>
+                      <ThemedText style={styles.scrollTitle}>User</ThemedText>
+                      <ThemedText style={styles.scrollTitle}>Time</ThemedText>
+                    </View>
+                    <ListLine />
+                  </View>
+                  <ScrollView style={styles.scrollView}>
+                    {statusData.length !== 0 &&
+                      statusData.map((status, i) => (
+                        <View key={i} style={styles.scrollContentContainer}>
+                          <View style={styles.ScrollContentTextContainer}>
+                            <View style={styles.rowCenter}>
+                              <ThemedText style={styles.ScrollContentText}>
+                                {`${i + 1}`}
+                              </ThemedText>
+                              <ThemedText style={styles.ScrollContentText}>
+                                {status.user}
+                              </ThemedText>
+                            </View>
+                            <ThemedText style={styles.ScrollContentText}>
+                              {`${status.time.toFixed(2)}s`}
+                            </ThemedText>
+                          </View>
+                          {i != statusData.length - 1 && <ListLine />}
+                        </View>
+                      ))}
+                  </ScrollView>
+                </View>
+              </Contents>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  rankTypeScrollView: { flex: 11 },
+  rankTypeContainer: { width: SCREEN_WIDTH, paddingHorizontal: 20 },
+  userRank: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 40,
+  },
+  userRankText: { color: 'white', fontSize: Fonts.subTitle },
+  rowCenter: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   statusContents: {
     flex: 1,
-    // height: '100%',
     width: '100%',
     backgroundColor: Colors.highlight,
     marginBottom: 20,
     borderRadius: 40,
-    paddingVertical: 30,
+    paddingTop: 30,
+    paddingBottom: 20,
   },
   scrollTitleNLine: {
     paddingHorizontal: 30,

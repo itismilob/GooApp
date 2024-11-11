@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import { ReactNode } from 'react';
+import { Sizes } from '@/constants/Styles';
 
 interface HeaderProps {
   children?: ReactNode | null;

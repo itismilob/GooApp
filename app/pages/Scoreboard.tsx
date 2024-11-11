@@ -5,6 +5,7 @@ import Title from '@/components/layouts/Title';
 import HomeBtn from '@/components/navigation/HomeBtn';
 import { Fonts, Colors, Sizes } from '@/constants/Styles';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import ThemedText from '@/components/theme/ThemedText';
 import Entypo from '@expo/vector-icons/Entypo';
 
 import { GameData, STATUS_KEY, StatusData } from '@/constants/Types';
@@ -20,19 +21,27 @@ const dataToList = (data: GameData, i: number) => {
       key={i}
       style={[styles.quizResult, isCorrect ? styles.correct : styles.wrong]}
     >
-      <Text style={styles.quizResultText}>
-        {data.quiz[0]}x{data.quiz[1]}
-      </Text>
+      <ThemedText style={styles.quizResultText}>
+        {`${data.quiz[0]}x${data.quiz[1]}`}
+      </ThemedText>
       {isCorrect ? (
-        <Text style={styles.quizResultText}>{data.answer}</Text>
+        <ThemedText
+          style={styles.quizResultText}
+        >{`${data.answer}`}</ThemedText>
       ) : (
         <View style={styles.quizWrong}>
-          <Text style={styles.quizResultText}>{data.answer}</Text>
+          <ThemedText
+            style={styles.quizResultText}
+          >{`${data.answer}`}</ThemedText>
           <Entypo name='arrow-right' size={20} color='white' />
-          <Text style={styles.quizResultText}>{data.correct}</Text>
+          <ThemedText
+            style={styles.quizResultText}
+          >{`${data.correct}`}</ThemedText>
         </View>
       )}
-      <Text style={styles.quizResultText}>{data.time.toFixed(2)}s</Text>
+      <ThemedText style={styles.quizResultText}>
+        {`${data.time.toFixed(2)}s`}
+      </ThemedText>
     </View>
   );
 };
@@ -126,6 +135,7 @@ const styles = StyleSheet.create({
     // paddingVertical: 30,
     borderRadius: 30,
     overflow: 'hidden',
+    paddingHorizontal: Sizes.defaultPadding,
   },
   totalCorrect: {
     color: 'white',
@@ -134,7 +144,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
-  scrollView: {},
+  scrollView: {
+    // backgroundColor: 'red',
+    borderRadius: 30,
+  },
   quizResult: {
     flexDirection: 'row',
     justifyContent: 'space-between',
