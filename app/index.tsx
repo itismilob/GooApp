@@ -9,7 +9,7 @@ export default function () {
 
   useEffect(() => {
     setTimeout(() => {
-      router.replace('/pages/Main');
+      router.replace('/pages/Login');
     }, 0);
   });
   return (
