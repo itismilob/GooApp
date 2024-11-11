@@ -20,10 +20,12 @@ export default function HomeBtn({ children }: GoMainBtnProps) {
     <View style={styles.goMainBtn}>
       <Pressable style={styles.button} onPress={homeBtnHandler}>
         <Entypo name='chevron-left' size={30} color='white' />
-        {/* <Text style={styles.buttonText}>{'home'}</Text> */}
+        {/* <Text bold style={styles.buttonText}>{'home'}</Text> */}
       </Pressable>
       {typeof children == 'string' ? (
-        <ThemedText style={styles.text}>{children}</ThemedText>
+        <ThemedText bold style={styles.text}>
+          {children}
+        </ThemedText>
       ) : (
         <View>{children}</View>
       )}
@@ -45,11 +47,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: Fonts.default,
-    fontWeight: 'bold',
   },
   text: {
     color: 'white',
     fontSize: Fonts.subTitle,
-    fontWeight: 'bold',
   },
 });

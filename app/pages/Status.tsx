@@ -37,9 +37,10 @@ export default function Status() {
     setStatusArray(sortedStatusArray);
 
     // total mean
-    const mean = sortedStatusArray.reduce((acc, data) => {
-      return acc + data[1].mean;
-    }, 0);
+    const mean =
+      sortedStatusArray.reduce((acc, data) => {
+        return acc + data[1].mean;
+      }, 0) / sortedStatusArray.length;
     setTotalMean(mean);
   };
 
@@ -59,8 +60,12 @@ export default function Status() {
           <View style={styles.statusContents}>
             <View style={styles.scrollTitleNLine}>
               <View style={styles.scrollTitleContainer}>
-                <ThemedText style={styles.scrollTitle}>Multiple</ThemedText>
-                <ThemedText style={styles.scrollTitle}>Mean</ThemedText>
+                <ThemedText bold style={styles.scrollTitle}>
+                  Multiple
+                </ThemedText>
+                <ThemedText bold style={styles.scrollTitle}>
+                  Mean
+                </ThemedText>
               </View>
               <ListLine />
             </View>
@@ -119,7 +124,6 @@ const styles = StyleSheet.create({
   scrollTitle: {
     color: 'white',
     fontSize: Fonts.default,
-    fontWeight: 'bold',
   },
   scrollView: {
     marginTop: 10,

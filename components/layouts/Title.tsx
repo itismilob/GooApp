@@ -10,7 +10,9 @@ export default function Title({ children }: TitleProps) {
   return (
     <View style={styles.title}>
       {typeof children === 'string' ? (
-        <ThemedText style={styles.titleText}>{children}</ThemedText>
+        <ThemedText bold style={styles.titleText}>
+          {children}
+        </ThemedText>
       ) : (
         children
       )}
@@ -27,7 +29,6 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: Fonts.title,
-    fontWeight: 'bold',
     color: 'white',
   },
 });

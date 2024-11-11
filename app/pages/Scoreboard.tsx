@@ -21,20 +21,23 @@ const dataToList = (data: GameData, i: number) => {
       key={i}
       style={[styles.quizResult, isCorrect ? styles.correct : styles.wrong]}
     >
-      <ThemedText style={styles.quizResultText}>
+      <ThemedText bold style={styles.quizResultText}>
         {`${data.quiz[0]}x${data.quiz[1]}`}
       </ThemedText>
       {isCorrect ? (
         <ThemedText
+          bold
           style={styles.quizResultText}
         >{`${data.answer}`}</ThemedText>
       ) : (
         <View style={styles.quizWrong}>
           <ThemedText
+            bold
             style={styles.quizResultText}
           >{`${data.answer}`}</ThemedText>
           <Entypo name='arrow-right' size={20} color='white' />
           <ThemedText
+            bold
             style={styles.quizResultText}
           >{`${data.correct}`}</ThemedText>
         </View>
@@ -102,16 +105,18 @@ export default function Scoreboard() {
     <>
       <Header>
         <HomeBtn>
-          <Text style={styles.headerText}>Scoreboard</Text>
+          <ThemedText bold style={styles.headerText}>
+            Scoreboard
+          </ThemedText>
         </HomeBtn>
       </Header>
       <Title>{`x${inGameData.totalQuiz}s`}</Title>
       <SubTitle>{`${totalTime.toFixed(2)}s`}</SubTitle>
       <Contents>
         <View style={styles.scoreboardContainer}>
-          <Text style={styles.totalCorrect}>
-            {correctCount}/{inGameData.totalQuiz}
-          </Text>
+          <ThemedText bold style={styles.totalCorrect}>
+            {`${correctCount}/${inGameData.totalQuiz}`}
+          </ThemedText>
           <ScrollView style={styles.scrollView}>
             {inGameData.gameDataList.length !== 0 &&
               inGameData.gameDataList.map(dataToList)}
@@ -126,7 +131,6 @@ const styles = StyleSheet.create({
   headerText: {
     color: 'white',
     fontSize: Fonts.subTitle,
-    fontWeight: 'bold',
   },
   scoreboardContainer: {
     flex: 1,
@@ -140,7 +144,6 @@ const styles = StyleSheet.create({
   totalCorrect: {
     color: 'white',
     fontSize: Fonts.default,
-    fontWeight: 'bold',
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
@@ -166,6 +169,5 @@ const styles = StyleSheet.create({
   quizResultText: {
     color: 'white',
     fontSize: Fonts.default,
-    fontWeight: '500',
   },
 });

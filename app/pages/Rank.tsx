@@ -43,13 +43,11 @@ export default function Status() {
         <ScrollView horizontal pagingEnabled>
           {rankTypeArray.map((type, i) => (
             <View key={i} style={styles.rankTypeContainer}>
-              <ThemedText>{`x${type}`}</ThemedText>
+              <Title>{`x${type}`}</Title>
               <SubTitle>
                 <View style={styles.userRank}>
                   <View style={styles.rowCenter}>
-                    <ThemedText
-                      style={{ ...styles.userRankText, fontWeight: 'bold' }}
-                    >
+                    <ThemedText bold style={styles.userRankText}>
                       43
                     </ThemedText>
                     <ThemedText
@@ -58,9 +56,7 @@ export default function Status() {
                       UserName
                     </ThemedText>
                   </View>
-                  <ThemedText
-                    style={{ ...styles.userRankText, fontWeight: 'bold' }}
-                  >
+                  <ThemedText bold style={styles.userRankText}>
                     43.44s
                   </ThemedText>
                 </View>
@@ -69,8 +65,12 @@ export default function Status() {
                 <View style={styles.statusContents}>
                   <View style={styles.scrollTitleNLine}>
                     <View style={styles.scrollTitleContainer}>
-                      <ThemedText style={styles.scrollTitle}>User</ThemedText>
-                      <ThemedText style={styles.scrollTitle}>Time</ThemedText>
+                      <ThemedText style={styles.scrollTitle} bold>
+                        User
+                      </ThemedText>
+                      <ThemedText style={styles.scrollTitle} bold>
+                        Time
+                      </ThemedText>
                     </View>
                     <ListLine />
                   </View>
@@ -80,14 +80,14 @@ export default function Status() {
                         <View key={i} style={styles.scrollContentContainer}>
                           <View style={styles.ScrollContentTextContainer}>
                             <View style={styles.rowCenter}>
-                              <ThemedText style={styles.ScrollContentText}>
+                              <ThemedText bold style={styles.ScrollContentText}>
                                 {`${i + 1}`}
                               </ThemedText>
                               <ThemedText style={styles.ScrollContentText}>
                                 {status.user}
                               </ThemedText>
                             </View>
-                            <ThemedText style={styles.ScrollContentText}>
+                            <ThemedText bold style={styles.ScrollContentText}>
                               {`${status.time.toFixed(2)}s`}
                             </ThemedText>
                           </View>
@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
   scrollTitle: {
     color: 'white',
     fontSize: Fonts.default,
-    fontWeight: 'bold',
   },
   scrollView: {
     marginTop: 10,

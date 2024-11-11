@@ -1,3 +1,4 @@
+import ThemedText from '@/components/theme/ThemedText';
 import { Colors } from '@/constants/Styles';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
@@ -20,15 +21,15 @@ export default function () {
         justifyContent: 'center',
       }}
     >
-      <Text
+      <ThemedText
+        bold
         style={{
           fontSize: 80,
-          fontWeight: 'bold',
           color: 'white',
         }}
       >
         GooApp
-      </Text>
+      </ThemedText>
     </View>
   );
 }

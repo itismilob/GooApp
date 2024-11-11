@@ -7,7 +7,6 @@ import Title from '@/components/layouts/Title';
 import SubTitle from '@/components/layouts/SubTitle';
 import Contents from '@/components/layouts/Contents';
 import HomeBtn from '@/components/navigation/HomeBtn';
-import { FontAwesome6 } from '@expo/vector-icons';
 
 import { GameData } from '@/constants/Types';
 import { useRouter } from 'expo-router';
@@ -137,22 +136,14 @@ export default function Game() {
         <HomeBtn>{`x${inGameData.totalQuiz}`}</HomeBtn>
       </Header>
       <Title>
-        <View style={styles.titleContainer}>
-          <ThemedText style={styles.title}>
-            {`${thisStep?.quiz[0].toString()}`}
-          </ThemedText>
-          <FontAwesome6 name='xmark' size={50} color='white' />
-          <ThemedText style={styles.title}>
-            {`${thisStep?.quiz[1].toString()} = ?`}
-          </ThemedText>
-        </View>
+        {`${thisStep?.quiz[0].toString()} x ${thisStep?.quiz[1].toString()} = ?`}
       </Title>
       <SubTitle>Click the answer</SubTitle>
       <Contents>
         <View style={styles.gameContents}>
           {isWrong ? (
             <View style={styles.wrong}>
-              <ThemedText style={styles.wrongText}>
+              <ThemedText bold style={styles.wrongText}>
                 {`${thisStep?.correct}`}
               </ThemedText>
             </View>
@@ -169,6 +160,7 @@ export default function Game() {
                   >
                     <ThemedText
                       style={styles.buttonText}
+                      bold
                     >{`${answer}`}</ThemedText>
                   </TouchableOpacity>
                 ))}
@@ -177,7 +169,7 @@ export default function Game() {
           <View style={styles.infoContainer}>
             <ThemedText style={styles.time}>{`${time.toFixed(2)}s`}</ThemedText>
             <ThemedText style={styles.steps}>
-              {`${steps + 1}/${inGameData.totalQuiz}}`}
+              {`${steps + 1}/${inGameData.totalQuiz}`}
             </ThemedText>
           </View>
         </View>
@@ -187,16 +179,6 @@ export default function Game() {
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  title: {
-    fontSize: Fonts.title,
-    fontWeight: 'bold',
-    color: 'white',
-  },
   gameContents: {
     width: '100%',
     flex: 1,
@@ -220,7 +202,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: Fonts.bigText,
-    fontWeight: 'bold',
   },
 
   infoContainer: {
@@ -250,6 +231,5 @@ const styles = StyleSheet.create({
   wrongText: {
     color: 'white',
     fontSize: Fonts.title,
-    fontWeight: 'bold',
   },
 });

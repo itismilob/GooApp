@@ -47,7 +47,9 @@ export default function Login() {
           </View>
           <View style={styles.btnsContainer}>
             <Pressable onPress={signInHandler} style={styles.signIn}>
-              <ThemedText style={styles.signInText}>Sign In</ThemedText>
+              <ThemedText bold style={styles.signInText}>
+                Sign In
+              </ThemedText>
             </Pressable>
             <Pressable onPress={signUpHandler} style={styles.signUp}>
               <ThemedText style={styles.signUpText}>Sign Up</ThemedText>
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: Colors.highlight,
   },
-  signInText: { color: 'white', fontSize: Fonts.default, fontWeight: 'bold' },
+  signInText: { color: 'white', fontSize: Fonts.default },
   signUp: {
     alignItems: 'center',
   },
