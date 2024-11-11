@@ -7,9 +7,11 @@ import { Fonts, Colors, Sizes } from '@/constants/Styles';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 
-import { GameData } from '@/constants/Types';
+import { GameData, STATUS_KEY, StatusData } from '@/constants/Types';
 import { RootState } from '@/stores/store';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const dataToList = (data: GameData, i: number) => {
   const isCorrect = data.answer === data.correct;
@@ -49,6 +51,44 @@ export default function Scoreboard() {
     return duration;
   }, 0);
 
+  const saveToStorage = async () => {
+    try {
+      // get prevStatus
+      const json = await AsyncStorage.getItem(STATUS_KEY);
+      let prevStatus: StatusData = {};
+      if (json) {
+        prevStatus = await JSON.parse(json);
+      }
+
+      // convert prevStatus to new
+      inGameData.gameDataList.forEach((gameData: GameData) => {
+        if (gameData.correct !== gameData.answer) return;
+        const quiz = `${gameData.quiz[0]}x${gameData.quiz[1]}`;
+
+        if (prevStatus[quiz]) {
+          const prevData = prevStatus[quiz];
+          const mean =
+            (prevData.mean * prevData.count + gameData.time) /
+            (prevData.count + 1);
+          const count = prevData.count + 1;
+
+          prevStatus[quiz] = { mean: Number(mean.toFixed(2)), count };
+        } else {
+          prevStatus[quiz] = { mean: gameData.time, count: 1 };
+        }
+      });
+
+      // save newStatus
+      await AsyncStorage.setItem(STATUS_KEY, JSON.stringify(prevStatus));
+    } catch (error) {
+      console.log('AsyncStorage Error', error);
+    }
+  };
+
+  useEffect(() => {
+    saveToStorage();
+  }, []);
+
   return (
     <>
       <Header>
@@ -57,7 +97,7 @@ export default function Scoreboard() {
         </HomeBtn>
       </Header>
       <Title>{`x${inGameData.totalQuiz}s`}</Title>
-      <SubTitle>{`${totalTime}s`}</SubTitle>
+      <SubTitle>{`${totalTime.toFixed(2)}s`}</SubTitle>
       <Contents>
         <View style={styles.scoreboardContainer}>
           <Text style={styles.totalCorrect}>

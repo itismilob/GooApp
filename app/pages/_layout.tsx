@@ -1,10 +1,11 @@
-import { Colors } from "@/constants/Styles";
-import { Stack } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import "react-native-reanimated";
+import { Colors } from '@/constants/Styles';
+import { Stack } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
+import 'react-native-reanimated';
 
-import { Provider } from "react-redux";
-import store from "@/stores/store";
+import { Provider } from 'react-redux';
+import store from '@/stores/store';
+import { StatusBar } from 'expo-status-bar';
 
 export default function PagesLayout() {
   return (
@@ -15,6 +16,7 @@ export default function PagesLayout() {
           contentStyle: styles.background,
         }}
       ></Stack>
+      <StatusBar style='light' />
     </Provider>
   );
 }

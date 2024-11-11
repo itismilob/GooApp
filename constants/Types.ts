@@ -11,5 +11,7 @@ export type InGameData = {
 };
 
 export type StatusData = {
-  [key: string]: { mean: number; count: number };
+  [quiz: string]: { mean: number; count: number };
 };
+
+export const STATUS_KEY = '@Status';
