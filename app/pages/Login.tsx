@@ -39,13 +39,13 @@ export default function Login() {
               autoCapitalize='none'
               onChangeText={setUser}
               style={styles.textInput}
-            ></TextInput>
-            <TextInput
+            />
+            {/* <TextInput
               placeholder='Password'
               autoCapitalize='none'
               onChangeText={setPassword}
               style={styles.textInput}
-            ></TextInput>
+            /> */}
           </View>
           <View style={styles.btnsContainer}>
             <Pressable onPress={signInHandler} style={styles.signIn}>
