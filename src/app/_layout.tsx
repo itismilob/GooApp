@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
 import * as Font from 'expo-font';
 
 export default function RootLayout() {

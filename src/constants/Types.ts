@@ -14,4 +14,8 @@ export type StatusData = {
   [quiz: string]: { mean: number; count: number };
 };
 
+export type userData = {
+  username?: string;
+};
+
 export const STATUS_KEY = '@Status';

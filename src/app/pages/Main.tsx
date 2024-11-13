@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors, Fonts, Sizes } from '@/constants/Styles';
 import { useState } from 'react';
 

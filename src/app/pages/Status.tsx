@@ -12,12 +12,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STATUS_KEY, StatusData } from '@/constants/Types';
 
 import ThemedText from '@/components/theme/ThemedText';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores/store';
 
 type StatusArray = [string, { count: number; mean: number }][];
 
 export default function Status() {
   const [statusArray, setStatusArray] = useState<StatusArray>([]);
   const [totalMean, setTotalMean] = useState<number>(0);
+
+  const userData = useSelector((state: RootState) => state.userData);
 
   const getStatus = async () => {
     // await AsyncStorage.clear();
@@ -53,7 +57,7 @@ export default function Status() {
       <Header>
         <HomeBtn>Status</HomeBtn>
       </Header>
-      <Title>Username</Title>
+      <Title>{userData.username}</Title>
       <SubTitle>{`Total Mean : ${totalMean.toFixed(2)}s`}</SubTitle>
       <Contents>
         <View style={styles.statusContentsContainer}>

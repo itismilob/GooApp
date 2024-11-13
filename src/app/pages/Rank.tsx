@@ -5,34 +5,197 @@ import ListLine from '@/components/ListLine';
 import SubTitle from '@/components/layouts/SubTitle';
 import Title from '@/components/layouts/Title';
 import { Colors, Fonts } from '@/constants/Styles';
-import { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import { Float } from 'react-native/Libraries/Types/CodegenTypes';
+import { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import ThemedText from '@/components/theme/ThemedText';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores/store';
+import { SERVER_URL } from '@env';
+
+type rankData = {
+  rank: number;
+  username: string;
+  mean: number;
+};
+
+type rankDataDict = {
+  userData?: rankData;
+  topData?: rankData[];
+};
+
+type rankByType = {
+  [rankType: number]: rankDataDict;
+};
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-type StatusData = {
-  user: string;
-  time: Float;
-};
-
-export default function Status() {
-  const [statusData, setStatusData] = useState<StatusData[]>([
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-    { user: 'someone', time: 22.22 },
-  ]);
-
+export default function Rank() {
   const rankTypeArray = [20, 50, 100];
+  const userData = useSelector((state: RootState) => state.userData);
+
+  const [rankData, setRankData] = useState<rankByType>({});
+
+  const fetchData = async () => {
+    for (let i = 0; i < rankTypeArray.length; i++) {
+      // get Top Rank
+      await fetch(
+        `${SERVER_URL}/rank?gametype=${rankTypeArray[i]}&username=${userData.username}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          if (response.status === 404) {
+            return Promise.resolve(null);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data === null) {
+            console.log('topRank', null);
+            return;
+          }
+          console.log('topRank', data);
+
+          setRankData((prev) => {
+            const temp: rankByType = { ...prev };
+            if (temp[rankTypeArray[i]]) {
+              temp[rankTypeArray[i]].topData = data;
+            } else {
+              temp[rankTypeArray[i]] = { topData: data };
+            }
+            return temp;
+          });
+        })
+        .catch((error) => {
+          console.error('Get Top Rank Error:', error);
+        });
+
+      // get User Rank
+      await fetch(
+        `${SERVER_URL}/rank/user?gametype=${rankTypeArray[i]}&username=${userData.username}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+        .then((response) => {
+          if (response.status === 404) {
+            return Promise.resolve(null);
+          }
+          return response.json();
+        }) // 응답을 JSON 형태로 변환
+        .then((data) => {
+          if (data === null) {
+            console.log('userRank', null);
+            return;
+          }
+          console.log('userRank', data);
+
+          setRankData((prev) => {
+            const temp: rankByType = { ...prev };
+            if (temp[rankTypeArray[i]]) {
+              temp[rankTypeArray[i]].userData = data;
+            } else {
+              temp[rankTypeArray[i]] = { userData: data };
+            }
+            return temp;
+          });
+        })
+        .catch((error) => {
+          console.error('Get User Rank Error:', error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const rankView = (type: number, i: number) => {
+    const rankDict = rankData[type];
+    if (!rankDict) return;
+
+    return (
+      <View key={i} style={styles.rankTypeContainer}>
+        <Title>{`x${type}`}</Title>
+        <SubTitle>
+          {rankDict.userData ? (
+            <View style={styles.userRank}>
+              <View style={styles.rowCenter}>
+                <ThemedText bold style={styles.userRankText}>
+                  {`${rankDict.userData.rank}`}
+                </ThemedText>
+                <ThemedText style={{ ...styles.userRankText, fontSize: 20 }}>
+                  {`${rankDict.userData.username}`}
+                </ThemedText>
+              </View>
+              <ThemedText bold style={styles.userRankText}>
+                {`${rankDict.userData.mean.toFixed(2)}s`}
+              </ThemedText>
+            </View>
+          ) : (
+            <ThemedText bold style={styles.userRankText}>
+              User Rank Null
+            </ThemedText>
+          )}
+        </SubTitle>
+        <Contents>
+          <View style={styles.statusContents}>
+            <View style={styles.scrollTitleNLine}>
+              <View style={styles.scrollTitleContainer}>
+                <ThemedText style={styles.scrollTitle} bold>
+                  User
+                </ThemedText>
+                <ThemedText style={styles.scrollTitle} bold>
+                  Time
+                </ThemedText>
+              </View>
+              <ListLine />
+            </View>
+            <ScrollView style={styles.scrollView}>
+              {rankList(rankDict.topData)}
+            </ScrollView>
+          </View>
+        </Contents>
+      </View>
+    );
+  };
+
+  const rankList = (topData: rankData[] | undefined) => {
+    if (!topData || topData.length === 0)
+      return (
+        <View style={styles.ScrollContentTextContainer}>
+          <ThemedText bold style={styles.ScrollContentText}>
+            Rank Null
+          </ThemedText>
+        </View>
+      );
+
+    return topData.map((data, i) => (
+      <View key={i} style={styles.scrollContentContainer}>
+        <View style={styles.ScrollContentTextContainer}>
+          <View style={styles.rowCenter}>
+            <ThemedText bold style={styles.ScrollContentText}>
+              {`${data.rank}`}
+            </ThemedText>
+            <ThemedText style={styles.ScrollContentText}>
+              {data.username}
+            </ThemedText>
+          </View>
+          <ThemedText bold style={styles.ScrollContentText}>
+            {`${data.mean.toFixed(2)}s`}
+          </ThemedText>
+        </View>
+        {i !== topData.length - 1 && <ListLine />}
+      </View>
+    ));
+  };
 
   return (
     <>
@@ -41,64 +204,7 @@ export default function Status() {
       </Header>
       <View style={styles.rankTypeScrollView}>
         <ScrollView horizontal pagingEnabled>
-          {rankTypeArray.map((type, i) => (
-            <View key={i} style={styles.rankTypeContainer}>
-              <Title>{`x${type}`}</Title>
-              <SubTitle>
-                <View style={styles.userRank}>
-                  <View style={styles.rowCenter}>
-                    <ThemedText bold style={styles.userRankText}>
-                      43
-                    </ThemedText>
-                    <ThemedText
-                      style={{ ...styles.userRankText, fontSize: 20 }}
-                    >
-                      UserName
-                    </ThemedText>
-                  </View>
-                  <ThemedText bold style={styles.userRankText}>
-                    43.44s
-                  </ThemedText>
-                </View>
-              </SubTitle>
-              <Contents>
-                <View style={styles.statusContents}>
-                  <View style={styles.scrollTitleNLine}>
-                    <View style={styles.scrollTitleContainer}>
-                      <ThemedText style={styles.scrollTitle} bold>
-                        User
-                      </ThemedText>
-                      <ThemedText style={styles.scrollTitle} bold>
-                        Time
-                      </ThemedText>
-                    </View>
-                    <ListLine />
-                  </View>
-                  <ScrollView style={styles.scrollView}>
-                    {statusData.length !== 0 &&
-                      statusData.map((status, i) => (
-                        <View key={i} style={styles.scrollContentContainer}>
-                          <View style={styles.ScrollContentTextContainer}>
-                            <View style={styles.rowCenter}>
-                              <ThemedText bold style={styles.ScrollContentText}>
-                                {`${i + 1}`}
-                              </ThemedText>
-                              <ThemedText style={styles.ScrollContentText}>
-                                {status.user}
-                              </ThemedText>
-                            </View>
-                            <ThemedText bold style={styles.ScrollContentText}>
-                              {`${status.time.toFixed(2)}s`}
-                            </ThemedText>
-                          </View>
-                          {i != statusData.length - 1 && <ListLine />}
-                        </View>
-                      ))}
-                  </ScrollView>
-                </View>
-              </Contents>
-            </View>
-          ))}
+          {Object.keys(rankData).map((type, i) => rankView(parseInt(type), i))}
         </ScrollView>
       </View>
     </>

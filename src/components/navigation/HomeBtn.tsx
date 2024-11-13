@@ -1,5 +1,5 @@
 import { Fonts, Sizes } from '@/constants/Styles';
-import { Pressable, Text, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useRouter } from 'expo-router';

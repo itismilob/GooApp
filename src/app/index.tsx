@@ -2,7 +2,7 @@ import ThemedText from '@/components/theme/ThemedText';
 import { Colors } from '@/constants/Styles';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 export default function () {
   const router = useRouter();

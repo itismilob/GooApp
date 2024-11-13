@@ -5,11 +5,10 @@ import Title from '@/components/layouts/Title';
 import HomeBtn from '@/components/navigation/HomeBtn';
 import { Colors, Fonts, Sizes } from '@/constants/Styles';
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { setTotalQuizAction } from '@/stores/inGameSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/stores/store';
+import { useDispatch } from 'react-redux';
 import ThemedText from '@/components/theme/ThemedText';
 
 export default function Difficulty() {

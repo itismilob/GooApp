@@ -4,7 +4,7 @@ import SubTitle from '@/components/layouts/SubTitle';
 import Title from '@/components/layouts/Title';
 import HomeBtn from '@/components/navigation/HomeBtn';
 import { Fonts, Colors, Sizes } from '@/constants/Styles';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import ThemedText from '@/components/theme/ThemedText';
 import Entypo from '@expo/vector-icons/Entypo';
 
@@ -13,6 +13,7 @@ import { RootState } from '@/stores/store';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SERVER_URL } from '@env';
 
 const dataToList = (data: GameData, i: number) => {
   const isCorrect = data.answer === data.correct;
@@ -51,6 +52,8 @@ const dataToList = (data: GameData, i: number) => {
 
 export default function Scoreboard() {
   const inGameData = useSelector((state: RootState) => state.inGameData);
+  const userData = useSelector((state: RootState) => state.userData);
+
   const correctCount = inGameData.gameDataList.reduce((count, data) => {
     if (data.correct === data.answer) {
       count++;
@@ -97,8 +100,27 @@ export default function Scoreboard() {
     }
   };
 
+  const saveToServer = async () => {
+    try {
+      await fetch(`${SERVER_URL}/status`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gametype: inGameData.totalQuiz,
+          username: userData.username,
+          mean: totalTime,
+        }),
+      });
+    } catch (error) {
+      console.log('saveToServer Error', error);
+    }
+  };
+
   useEffect(() => {
     saveToStorage();
+    saveToServer();
   }, []);
 
   return (

@@ -1,5 +1,5 @@
 import { Fonts, Sizes } from '@/constants/Styles';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import ThemedText from '../theme/ThemedText';
 
 interface SubTitleProps {

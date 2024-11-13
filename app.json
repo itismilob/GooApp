@@ -7,6 +7,7 @@
     "icon": "./src/assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "splash": {
       "image": "./src/assets/images/splash.png",
       "resizeMode": "contain",
@@ -20,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.itismilob.GooApp"
     },
     "web": {
       "bundler": "metro",

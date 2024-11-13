@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors, Fonts, Sizes } from '@/constants/Styles';
 import { useEffect, useRef, useState } from 'react';
 
@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
 import { setInGameAction } from '@/stores/inGameSlice';
 import ThemedText from '@/components/theme/ThemedText';
+
+const WRONG_DELAY = 1000;
 
 export default function Game() {
   const router = useRouter();
@@ -103,7 +105,8 @@ export default function Game() {
     } else {
       console.log(steps, 'wrong!!');
       setIsWrong(true);
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // if wrong deley game
+      await new Promise((resolve) => setTimeout(resolve, WRONG_DELAY));
       setIsWrong(false);
     }
 

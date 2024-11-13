@@ -4,22 +4,27 @@ import SubTitle from '@/components/layouts/SubTitle';
 import Title from '@/components/layouts/Title';
 import { Colors, Fonts, Sizes } from '@/constants/Styles';
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import ThemedText from '@/components/theme/ThemedText';
+import { useDispatch } from 'react-redux';
+import { setUserAction } from '@/stores/userSlice';
 
 export default function Login() {
-  const [user, setUser] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(user, password);
-  }, [user, password]);
+    console.log(username, password);
+  }, [username, password]);
 
   const signInHandler = () => {
     console.log('Sign In');
+    if (username === '') return;
+    dispatch(setUserAction({ username }));
     router.push('/pages/Main');
   };
   const signUpHandler = () => {
@@ -37,7 +42,7 @@ export default function Login() {
             <TextInput
               placeholder='Username'
               autoCapitalize='none'
-              onChangeText={setUser}
+              onChangeText={setUsername}
               style={styles.textInput}
             />
             {/* <TextInput
@@ -51,9 +56,9 @@ export default function Login() {
             <Pressable onPress={signInHandler} style={styles.signIn}>
               <ThemedText style={styles.signInText}>Sign In</ThemedText>
             </Pressable>
-            <Pressable onPress={signUpHandler} style={styles.signUp}>
+            {/* <Pressable onPress={signUpHandler} style={styles.signUp}>
               <ThemedText style={styles.signUpText}>Sign Up</ThemedText>
-            </Pressable>
+            </Pressable> */}
           </View>
         </View>
       </Contents>
