@@ -24,11 +24,13 @@ export default function Game() {
   const [steps, setSteps] = useState<number>(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [isWrong, setIsWrong] = useState<boolean>(false);
-  const [time, setTime] = useState<number>(0);
   const [prevTime, setPrevTime] = useState<number>(0);
   const [thisStep, setThisStep] = useState<GameData | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const time = useRef<number>(0);
+  const frameRef = useRef<number>();
+  const [frame, setFrame] = useState<number>(0);
 
   const inGameData = useSelector((state: RootState) => state.inGameData);
   const dispatch = useDispatch();
@@ -39,9 +41,9 @@ export default function Game() {
   // Start Game
   useEffect(() => {
     createQuiz();
-    setTime(0);
     setSteps(0);
     startTimer();
+    time.current = 0;
 
     return endTimer;
   }, []);
@@ -90,12 +92,12 @@ export default function Game() {
     const newInGameData: GameData[] = [...inGameData.gameDataList];
     const thisStepData: GameData = newInGameData[steps];
     setThisStep(thisStepData);
-    setPrevTime(time);
+    setPrevTime(time.current);
 
     newInGameData[steps] = {
       ...thisStepData,
       answer,
-      time: Number((time - prevTime).toFixed(2)),
+      time: Number((time.current - prevTime).toFixed(2)),
     };
     setInGame(newInGameData);
 
@@ -119,17 +121,27 @@ export default function Game() {
     }
   };
 
+  const animationFrame = () => {
+    setFrame(time.current);
+    frameRef.current = requestAnimationFrame(animationFrame);
+  };
+
   const startTimer = () => {
     console.log('game start');
     timerRef.current = setInterval(() => {
-      setTime((prev) => prev + 0.01);
+      time.current += 0.01;
     }, 10);
+
+    animationFrame();
   };
 
   const endTimer = () => {
     console.log('game end');
     if (timerRef.current) {
       clearInterval(timerRef.current);
+    }
+    if (frameRef.current) {
+      cancelAnimationFrame(frameRef.current);
     }
   };
 
@@ -170,7 +182,9 @@ export default function Game() {
             </View>
           )}
           <View style={styles.infoContainer}>
-            <ThemedText style={styles.time}>{`${time.toFixed(2)}s`}</ThemedText>
+            <ThemedText style={styles.time}>{`${frame.toFixed(
+              2
+            )}s`}</ThemedText>
             <ThemedText style={styles.steps}>
               {`${steps + 1}/${inGameData.totalQuiz}`}
             </ThemedText>
