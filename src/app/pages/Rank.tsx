@@ -10,7 +10,6 @@ import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import ThemedText from '@/components/theme/ThemedText';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
-import { SERVER_URL } from '@env';
 
 type rankData = {
   rank: number;
@@ -27,6 +26,7 @@ type rankByType = {
   [rankType: number]: rankDataDict;
 };
 
+const SERVER_URL = process.env.EXPO_PUBLIC_SERVER_URL;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function Rank() {

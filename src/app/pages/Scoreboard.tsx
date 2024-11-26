@@ -13,7 +13,8 @@ import { RootState } from '@/stores/store';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SERVER_URL } from '@env';
+
+const SERVER_URL = process.env.EXPO_PUBLIC_SERVER_URL;
 
 const dataToList = (data: GameData, i: number) => {
   const isCorrect = data.answer === data.correct;
