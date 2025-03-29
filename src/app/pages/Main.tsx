@@ -1,6 +1,6 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors, Fonts, Sizes } from '@/constants/Styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Title from '@/components/layouts/Title';
 import Header from '@/components/layouts/Header';
@@ -8,6 +8,16 @@ import SubTitle from '@/components/layouts/SubTitle';
 import Contents from '@/components/layouts/Contents';
 import { useRouter } from 'expo-router';
 import ThemedText from '@/components/theme/ThemedText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const getUserData = async () => {
+  try {
+    const result = await AsyncStorage.getItem('username');
+    return result;
+  } catch (error) {
+    return '';
+  }
+};
 
 export default function Main() {
   const router = useRouter();
@@ -22,6 +32,13 @@ export default function Main() {
   const rankBtnHandler = () => {
     router.push('/pages/Rank');
   };
+
+  useEffect(() => {
+    (async () => {
+      const result = await getUserData();
+      if (result) setUserName(result);
+    })();
+  }, []);
 
   return (
     <>

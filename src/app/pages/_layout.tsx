@@ -1,6 +1,6 @@
 import { Colors } from '@/constants/Styles';
 import { Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-reanimated';
 
 import { Provider } from 'react-redux';

@@ -6,7 +6,7 @@ import SubTitle from '@/components/layouts/SubTitle';
 import Title from '@/components/layouts/Title';
 import { Colors, Fonts } from '@/constants/Styles';
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, Text } from 'react-native';
 import ThemedText from '@/components/theme/ThemedText';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
@@ -34,8 +34,27 @@ export default function Rank() {
   const userData = useSelector((state: RootState) => state.userData);
 
   const [rankData, setRankData] = useState<rankByType>({});
+  const [serverConnected, setServerConnected] = useState(false);
 
   const fetchData = async () => {
+    await await fetch(
+      `${SERVER_URL}/rank?gametype=${rankTypeArray[0]}&username=${userData.username}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+      .then(() => {
+        setServerConnected(true);
+      })
+      .catch(() => {
+        console.log('Server not connected');
+      });
+
+    if (!serverConnected) return;
+
     for (let i = 0; i < rankTypeArray.length; i++) {
       // get Top Rank
       await fetch(
@@ -203,9 +222,17 @@ export default function Rank() {
         <HomeBtn>Rank</HomeBtn>
       </Header>
       <View style={styles.rankTypeScrollView}>
-        <ScrollView horizontal pagingEnabled>
-          {Object.keys(rankData).map((type, i) => rankView(parseInt(type), i))}
-        </ScrollView>
+        {serverConnected ? (
+          <ScrollView horizontal pagingEnabled>
+            {Object.keys(rankData).map((type, i) =>
+              rankView(parseInt(type), i)
+            )}
+          </ScrollView>
+        ) : (
+          <View style={styles.disconnected}>
+            <Text style={styles.disconnectedText}>Network failed.</Text>
+          </View>
+        )}
       </View>
     </>
   );
@@ -257,4 +284,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   ScrollContentText: { color: 'white', fontSize: Fonts.default },
+  disconnected: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  disconnectedText: {
+    color: 'white',
+    fontSize: Fonts.bigText,
+  },
 });

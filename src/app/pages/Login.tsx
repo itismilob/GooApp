@@ -9,6 +9,15 @@ import { useRouter } from 'expo-router';
 import ThemedText from '@/components/theme/ThemedText';
 import { useDispatch } from 'react-redux';
 import { setUserAction } from '@/stores/userSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const storeUserData = async (username: string) => {
+  try {
+    await AsyncStorage.setItem('username', username);
+  } catch (error) {
+    console.log('failed to save username');
+  }
+};
 
 export default function Login() {
   const [username, setUsername] = useState<string>('');
@@ -17,14 +26,16 @@ export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log(username, password);
-  }, [username, password]);
+  // useEffect(() => {
+  //   console.log(username, password);
+  // }, [username, password]);
 
   const signInHandler = () => {
     console.log('Sign In');
     if (username === '') return;
     dispatch(setUserAction({ username }));
+    storeUserData(username);
+
     router.push('/pages/Main');
   };
   const signUpHandler = () => {
