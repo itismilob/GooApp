@@ -6,13 +6,23 @@
  */
 
 import React from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 function App(): React.JSX.Element {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text style={{color: 'white'}}>This is Test!</Text>
+    <View style={styles.viewStyle}>
+      <Text style={styles.textStyle}>This is Test!</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  viewStyle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'black',
+  },
+  textStyle: {color: 'red', fontSize: 30, fontWeight: 'bold'},
+});
 
 export default App;
