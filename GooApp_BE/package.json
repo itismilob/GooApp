@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc && tsc-alias",
+    "dev": "node ./build/index.js",
+    "start": "nodemon -e ts --exec \"npm run build && npm run dev\""
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +27,7 @@
     "globals": "^16.1.0",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.3",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0"
   }
