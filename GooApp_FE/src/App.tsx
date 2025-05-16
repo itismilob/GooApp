@@ -117,7 +117,8 @@ const RootStack = createNativeStackNavigator<RootStackParams>({
   },
 });
 
-const Navigation = createStaticNavigation(RootStack);
+import DefaultNavigation from './navigation/DefaultNavigation';
+const Navigation = createStaticNavigation(DefaultNavigation());
 
 export default function App() {
   return <Navigation />;
