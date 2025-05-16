@@ -1,5 +1,25 @@
-import { Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { DefaultNavigatorParams } from '../../types/navigationTypes';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Tutorial() {
-  return <Text>Tutorial</Text>;
+  type NavigationProp = NativeStackNavigationProp<
+    DefaultNavigatorParams,
+    'Tutorial'
+  >;
+  const navigation = useNavigation<NavigationProp>();
+
+  return (
+    <View>
+      <Pressable
+        onPress={() => {
+          navigation.navigate('Puzzle');
+        }}
+      >
+        <Text>Tutorial</Text>
+        <Text>확인</Text>
+      </Pressable>
+    </View>
+  );
 }
