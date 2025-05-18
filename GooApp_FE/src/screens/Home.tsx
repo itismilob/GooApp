@@ -3,6 +3,8 @@ import { Pressable, Text, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '../types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
+import DefaultButton from '../components/DefaultButton';
+import TitleText from '../components/TitleText';
 
 export default function Home() {
   type NavigationProp = NativeStackNavigationProp<
@@ -16,13 +18,17 @@ export default function Home() {
       <Text>GooApp</Text>
       <Text>멋있는 파랑 청설모</Text>
 
-      <Pressable
+      <DefaultButton
+        className="bg-green-700"
         onPress={() => {
           navigation.navigate('Tutorial');
         }}
       >
-        <Text>퍼즐</Text>
-      </Pressable>
+        <TitleText size={30} className="color-white">
+          퍼즐
+        </TitleText>
+      </DefaultButton>
+
       <Pressable
         onPress={() => {
           navigation.navigate('Record');
