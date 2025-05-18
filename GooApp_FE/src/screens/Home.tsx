@@ -5,6 +5,7 @@ import { DefaultNavigatorParams } from '../types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import DefaultButton from '../components/DefaultButton';
 import TitleText from '../components/TitleText';
+import HeaderButton from '../components/HeaderButton';
 
 export default function Home() {
   type NavigationProp = NativeStackNavigationProp<
