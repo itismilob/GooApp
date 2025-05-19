@@ -12,6 +12,7 @@ import { Button } from '@react-navigation/elements';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParams } from './types/navigationTypes';
+import './global.css';
 
 function HomeScreen() {
   type NavigationProp = NativeStackNavigationProp<RootStackParams, 'Home'>;

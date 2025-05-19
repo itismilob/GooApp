@@ -3,6 +3,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '../types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
+import HeaderButton from '../components/HeaderButton';
+
 export default function Puzzle() {
   type NavigationProp = NativeStackNavigationProp<
     DefaultNavigatorParams,
@@ -12,6 +14,7 @@ export default function Puzzle() {
 
   return (
     <View>
+      <HeaderButton>퍼즐</HeaderButton>
       <Text>Puzzle</Text>
       <Pressable
         onPress={() => {
