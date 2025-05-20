@@ -21,9 +21,9 @@ export default function Loading() {
 
   useEffect(() => {
     if (isFirst) {
-      if (NetInfo.isConnected) {
+      if (NetInfo.isConnected === true) {
         navigation.replace('NicknameNoti');
-      } else {
+      } else if (NetInfo.isConnected === false) {
         navigation.navigate('NetworkOfflineModal');
       }
     } else {
