@@ -11,8 +11,13 @@ import Scoreboard from '../screens/Scoreboard';
 import Record from '../screens/Record';
 import Rank from '../screens/Rank';
 
+import NetworkOfflineModal from '../screens/NetworkOfflineModal';
+
 const DefaultNavigator = createNativeStackNavigator<DefaultNavigatorParams>({
   initialRouteName: 'Loading',
+  screenOptions: {
+    headerShown: false,
+  },
   screens: {
     Loading: Loading,
     NicknameNoti: NicknameNoti,
@@ -22,6 +27,12 @@ const DefaultNavigator = createNativeStackNavigator<DefaultNavigatorParams>({
     Scoreboard: Scoreboard,
     Record: Record,
     Rank: Rank,
+    NetworkOfflineModal: {
+      screen: NetworkOfflineModal,
+      options: {
+        presentation: 'transparentModal',
+      },
+    },
   },
 });
 

@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '../types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
+
+import StyledText from '../components/StyledText';
+
+import { useNetInfo } from '@react-native-community/netinfo';
 
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
@@ -11,15 +15,25 @@ export default function Loading() {
   >;
   const navigation = useNavigation<NavigationProp>();
 
+  // 첫 실행 확인 더미 데이터
+  const isFirst = true;
+  const NetInfo = useNetInfo();
+
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('NicknameNoti');
-    }, 3000);
-  }, []);
+    if (isFirst) {
+      if (NetInfo.isConnected === true) {
+        navigation.replace('NicknameNoti');
+      } else if (NetInfo.isConnected === false) {
+        navigation.navigate('NetworkOfflineModal');
+      }
+    } else {
+      navigation.replace('Home');
+    }
+  }, [NetInfo]);
 
   return (
     <View>
-      <Text>Loading</Text>
+      <StyledText className="text-red-500 text-6xl">Loading</StyledText>
     </View>
   );
 }
