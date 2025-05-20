@@ -12,4 +12,5 @@ export type DefaultNavigatorParams = {
   Scoreboard: undefined;
   Record: undefined;
   Rank: undefined;
+  NetworkOfflineModal: undefined;
 };

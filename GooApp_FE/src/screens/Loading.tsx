@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '../types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
-import { getNetInfo } from '../utils/netinfo';
+import StyledText from '../components/StyledText';
+
+import { useNetInfo } from '@react-native-community/netinfo';
 
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
@@ -15,28 +17,23 @@ export default function Loading() {
 
   // 첫 실행 확인 더미 데이터
   const isFirst = true;
-
-  const checkNetwork = async () => {
-    const netState = await getNetInfo();
-    const isNetConnected = netState.isConnected;
-    if (isNetConnected) {
-      navigation.replace('NicknameNoti');
-    } else {
-      // open modal
-    }
-  };
+  const NetInfo = useNetInfo();
 
   useEffect(() => {
     if (isFirst) {
-      checkNetwork();
+      if (NetInfo.isConnected) {
+        navigation.replace('NicknameNoti');
+      } else {
+        navigation.navigate('NetworkOfflineModal');
+      }
     } else {
       navigation.replace('Home');
     }
-  }, []);
+  }, [NetInfo]);
 
   return (
     <View>
-      <Text>Loading</Text>
+      <StyledText className="text-red-500 text-6xl">Loading</StyledText>
     </View>
   );
 }
