@@ -13,29 +13,26 @@ import Rank from '../screens/Rank';
 
 import NetworkOfflineModal from '../screens/NetworkOfflineModal';
 
-const DefaultNavigator = createNativeStackNavigator<DefaultNavigatorParams>({
-  initialRouteName: 'Loading',
-  screenOptions: {
-    headerShown: false,
-  },
-  screens: {
-    Loading: Loading,
-    NicknameNoti: NicknameNoti,
-    Home: Home,
-    Puzzle: Puzzle,
-    Tutorial: Tutorial,
-    Scoreboard: Scoreboard,
-    Record: Record,
-    Rank: Rank,
-    NetworkOfflineModal: {
-      screen: NetworkOfflineModal,
-      options: {
-        presentation: 'transparentModal',
+export const DefaultNavigator =
+  createNativeStackNavigator<DefaultNavigatorParams>({
+    initialRouteName: 'Loading',
+    screenOptions: {
+      headerShown: false,
+    },
+    screens: {
+      Loading: Loading,
+      NicknameNoti: NicknameNoti,
+      Home: Home,
+      Puzzle: Puzzle,
+      Tutorial: Tutorial,
+      Scoreboard: Scoreboard,
+      Record: Record,
+      Rank: Rank,
+      NetworkOfflineModal: {
+        screen: NetworkOfflineModal,
+        options: {
+          presentation: 'transparentModal',
+        },
       },
     },
-  },
-});
-
-export default function DefaultNavigation() {
-  return DefaultNavigator;
-}
+  });
