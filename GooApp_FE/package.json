@@ -18,6 +18,8 @@
     "nativewind": "^4.1.23",
     "react": "19.0.0",
     "react-native": "0.79.2",
+    "react-native-keychain": "^10.0.0",
+    "react-native-mmkv": "^3.2.0",
     "react-native-reanimated": "^3.17.5",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "^4.10.0",
