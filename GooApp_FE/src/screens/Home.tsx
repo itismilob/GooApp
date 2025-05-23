@@ -6,6 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 import DefaultButton from '../components/DefaultButton';
 import TitleText from '../components/TitleText';
 import HeaderButton from '../components/HeaderButton';
+import { useEffect, useState } from 'react';
+import { userDataType } from '../types/dataTypes';
+import { getLocalStorage } from '../stores/mmkvStorage';
 
 export default function Home() {
   type NavigationProp = NativeStackNavigationProp<
@@ -13,11 +16,23 @@ export default function Home() {
     'Home'
   >;
   const navigation = useNavigation<NavigationProp>();
+  const LocalStorage = getLocalStorage();
+
+  const [userData, setUserData] = useState<userDataType>();
+
+  const getUserData = () => {
+    const userDataString = LocalStorage.getString('userData');
+    if (userDataString) setUserData(JSON.parse(userDataString));
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <View>
       <Text>GooApp</Text>
-      <Text>멋있는 파랑 청설모</Text>
+      <Text>{userData?.nickname}</Text>
 
       <DefaultButton
         className="bg-green-700"
