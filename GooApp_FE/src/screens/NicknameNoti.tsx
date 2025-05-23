@@ -8,10 +8,7 @@ import userDataJSON from '../test/userData.json';
 
 import { getLocalStorage } from '../stores/mmkvStorage';
 
-interface userDataType {
-  userID: string;
-  nickname: string;
-}
+import { userDataType } from '../types/dataTypes';
 
 export default function NicknameNoti() {
   type NavigationProp = NativeStackNavigationProp<
@@ -21,23 +18,20 @@ export default function NicknameNoti() {
   const navigation = useNavigation<NavigationProp>();
   const LocalStorage = getLocalStorage();
 
-  const [userData, setUserData] = useState<userDataType>({
-    userID: '',
-    nickname: '',
-  });
+  const [userData, setUserData] = useState<userDataType>();
 
   // 유저 더미 데이터 생성 -> 유저 닉네임, 아이디 불러오기
   const fetchData = async () => {
-    console.log(userDataJSON);
-
     // fetch data await
     setUserData(userDataJSON);
   };
 
   // 유저 정보 저장하기
   const saveUserData = () => {
-    const userDataString = JSON.stringify(userData);
-    LocalStorage.set('userData', userDataString);
+    if (userData) {
+      const userDataString = JSON.stringify(userData);
+      LocalStorage.set('userData', userDataString);
+    }
   };
 
   useEffect(() => {
@@ -51,7 +45,7 @@ export default function NicknameNoti() {
   return (
     <View>
       <Text>당신은...</Text>
-      <Text>{userData.nickname}</Text>
+      <Text>{userData?.nickname}</Text>
       <Text>입니다!</Text>
       <Pressable
         onPress={() => {
