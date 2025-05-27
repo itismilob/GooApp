@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
-import TitleText from '../components/TitleText';
-import { fileMapCacheDirectory } from '../../metro.config';
-import DefaultButton from '../components/DefaultButton';
-import StyledText from '../components/StyledText';
+import TitleText from '@/components/TitleText';
+import DefaultButton from '@/components/DefaultButton';
+import StyledText from '@/components/StyledText';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { DefaultNavigatorParams } from '../types/navigationTypes';
+import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
 export default function NetworkOfflineModal() {
