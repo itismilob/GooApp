@@ -6,8 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 
 import StyledText from '../components/StyledText';
 
-import { useNetInfo } from '@react-native-community/netinfo';
 import { getLocalStorage } from '../stores/mmkvStorage';
+
+import useCheckNetInfo from '../hooks/useCheckNetInfo';
 
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
@@ -15,29 +16,29 @@ export default function Loading() {
     'Loading'
   >;
   const navigation = useNavigation<NavigationProp>();
-  const LocalStorage = getLocalStorage();
-  const NetInfo = useNetInfo();
+  const localStorage = getLocalStorage();
   const [isFirst, setIsFirst] = useState<boolean>();
 
-  // 첫 실행인지 확인
-  function checkFirstStart() {
-    // userDataString : 유저 데이터가 존재하는지 확인 (임시 명칭임)
-    const userDataString = LocalStorage.getString('userData');
-    return userDataString === undefined;
-  }
-
   // 네트워크 확인해서 모달 띄움
-  function checkNetwork() {
-    if (NetInfo.isConnected === true) {
+  const checkNetInfoTrigger = useCheckNetInfo(
+    () => {
       navigation.replace('NicknameNoti');
-    } else if (NetInfo.isConnected === false) {
+    },
+    () => {
       navigation.navigate('NetworkOfflineModal');
-    }
-  }
+    },
+  );
+
+  // 첫 실행인지 확인
+  const checkFirstStart = () => {
+    // userDataString : 유저 데이터가 존재하는지 확인 (임시 명칭임)
+    const userDataString = localStorage.getString('userData');
+    return userDataString === undefined;
+  };
 
   useEffect(() => {
     // 테스트용 데이터 초기화
-    // LocalStorage.clearAll();
+    localStorage.clearAll();
 
     // 첫 실행인지 확인하고 아니면 Home으로 이동
     const result = checkFirstStart();
@@ -50,9 +51,9 @@ export default function Loading() {
   useEffect(() => {
     // 첫 실행인지 확인이 된 후 네트워크 확인
     if (isFirst) {
-      checkNetwork();
+      checkNetInfoTrigger();
     }
-  }, [NetInfo]);
+  }, [isFirst]);
 
   return (
     <View>
