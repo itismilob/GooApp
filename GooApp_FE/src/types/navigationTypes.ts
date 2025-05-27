@@ -1,8 +1,3 @@
-export type RootStackParams = {
-  Home: undefined;
-  Details: { pageID: string } | undefined;
-};
-
 export type DefaultNavigatorParams = {
   Loading: undefined;
   NicknameNoti: undefined;
