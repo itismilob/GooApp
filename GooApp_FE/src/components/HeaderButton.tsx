@@ -19,7 +19,7 @@ export default function HeaderButton({ children }: props) {
   const navigation = useNavigation<NavigationProp>();
 
   return (
-    <View className="h-16 px-8 mt-10 bg-green-700 flex-row items-center justify-between">
+    <View className="px-6 pt-14 pb-4 bg-green-700 flex-row items-center justify-between">
       <TouchableOpacity
         className="w-3"
         onPress={() => {
