@@ -2,7 +2,7 @@ import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import StyledText from './StyledText';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { DefaultNavigatorParams } from '../types/navigationTypes';
+import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import TitleText from './TitleText';
 

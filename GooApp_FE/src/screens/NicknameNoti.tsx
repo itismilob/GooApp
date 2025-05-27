@@ -1,14 +1,14 @@
 import { Pressable, Text, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { DefaultNavigatorParams } from '../types/navigationTypes';
+import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 
-import userDataJSON from '../test/userData.json';
+import userDataJSON from '@/test/userData.json';
 
-import { getLocalStorage } from '../stores/mmkvStorage';
+import { getLocalStorage } from '@/stores/mmkvStorage';
 
-import { userDataType } from '../types/dataTypes';
+import { userDataType } from '@/types/dataTypes';
 
 export default function NicknameNoti() {
   type NavigationProp = NativeStackNavigationProp<
