@@ -1,9 +1,7 @@
-export interface Quest {
-  connect: number;
+export type Quest = {
   content: string;
-  isCorrect: boolean;
-  step: number;
+  answer?: string;
   side: number;
-}
+};
 
-export type QuestStack = Quest[];
+export type QuestArray = (Quest | null)[];

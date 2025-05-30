@@ -1,1 +1,1 @@
-export const puzzleCount = 4;
+export const puzzleCount = 2;

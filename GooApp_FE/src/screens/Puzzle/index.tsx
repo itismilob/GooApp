@@ -9,11 +9,11 @@ import DefaultButton from '@/components/DefaultButton';
 import StyledText from '@/components/StyledText';
 import Information from '@/components/Information';
 
-import questGenerator from './game';
 import { useEffect, useState } from 'react';
-import { QuestStack, Quest } from '@/types/puzzleTypes';
+import { Quest, QuestArray } from '@/types/puzzleTypes';
 import ToggleButton from '@/components/ToggleButton';
 import { puzzleCount } from '@/const/puzzle';
+import { queueAlgorithm } from './game';
 
 type BtnPosType = { side: number; index: number };
 interface BtnStateType extends Quest {
@@ -27,145 +27,119 @@ export default function Puzzle() {
   >;
   const navigation = useNavigation<NavigationProp>();
 
+  // 문제_리스트로 넣어줄 대기열 배열 (왼쪽-문제 / 오른쪽-정답)
+  const [questQueue, setQuestQueue] = useState<QuestArray[]>([
+    Array.from({ length: puzzleCount }).map(_ => null),
+    Array.from({ length: puzzleCount }).map(_ => null),
+  ]);
+  // 문제를 보여줄 리스트 (왼쪽-문제 / 오른쪽-정답)
+  const [questList, setQuestList] = useState<QuestArray[]>([
+    Array.from({ length: puzzleCount }).map(_ => null),
+    Array.from({ length: puzzleCount }).map(_ => null),
+  ]);
   // 화면에 보여지는 버튼 상태
-  const [renderBtns, setRenderBtns] = useState<BtnStateType[]>([]);
-  // 화면에 보여지는 문제들
-  const [renderQuest, setRenderQuest] = useState<QuestStack>([]);
-  // 퀴즈 스텍
-  const [questStackList, setQuestStackList] = useState<QuestStack[]>([]);
+  const [renderBtns, setRenderBtns] = useState<BtnStateType[][]>([[], []]);
+  // 선택된 버튼
   const [selectedBtn, setSelectedBtn] = useState<BtnPosType | null>(null);
-  const [step, setStep] = useState(0);
 
-  // 문제를 생성하고 questStackList에 추가
-  const addQuestStack = () => {
-    const questStack: QuestStack = questGenerator();
-    questStack.map(quest => (quest.step = step));
+  // 문제 생성
+  const getQuest = () => {
+    const [newQueue, newList] = queueAlgorithm(questQueue, questList);
 
-    setStep(step + 1);
-    setQuestStackList(prev => [...prev, questStack]);
+    console.log(newQueue, newList);
+    setQuestQueue(newQueue);
+    setQuestList(newList);
   };
 
-  // questStackList에서 풀지 않은 문제를 뽑아옴
-  const resetRenderQuest = () => {
-    const newRenderQuest: QuestStack = [];
-
-    let i, j;
-
-    console.log(questStackList);
-    // return;
-    for (i = 0; i < puzzleCount * 2; i++) {
-      // questStackList에서 풀지 않은 문제를 선택함
-      for (j = 0; j < questStackList.length; j++) {
-        if (questStackList[j][i].isCorrect === false) {
-          const newQuest = questStackList[j][i];
-
-          newRenderQuest[i] = newQuest;
-          break;
-        }
-      }
-    }
-
-    setRenderQuest(newRenderQuest);
-  };
-
-  // renderQuest를 버튼으로 변경
+  // questList의 문제들을 버튼에 넣기
   const resetRenderBtns = () => {
-    const newRenderBtns: BtnStateType[] = [];
-    renderQuest.forEach((quest, i) => {
-      newRenderBtns[i] = {
-        isOn: false,
-        ...quest,
-      };
+    const newRenderBtns: BtnStateType[][] = [[], []];
+    questList.forEach((side, i) => {
+      side.forEach(quest => {
+        newRenderBtns[i].push({ isOn: false, ...quest! });
+      });
     });
-
     setRenderBtns(newRenderBtns);
   };
 
   // 누른 버튼 선택 함수
-  const selectBtn = (clickendBtn: BtnPosType | null) => {
-    const newRenderBtns: BtnStateType[] = [...renderBtns];
+  const selectBtn = (clickedBtn: BtnPosType | null) => {
+    const newRenderBtns: BtnStateType[][] = [...renderBtns];
 
-    if (clickendBtn) {
+    if (clickedBtn) {
       // 선택한 버튼이 있으면 isOn true
-      newRenderBtns[clickendBtn.index].isOn = true;
+      newRenderBtns[clickedBtn.side][clickedBtn.index].isOn = true;
     } else {
       // null로 선택을 취소하면 전체 isOn false
-      newRenderBtns.forEach(btn => {
-        btn.isOn = false;
+      newRenderBtns.forEach(side => {
+        side.forEach(btn => {
+          btn.isOn = false;
+        });
       });
     }
 
     // 버튼 색상 변화
     setRenderBtns(newRenderBtns);
     // 클릭한 버튼으로 선택
-    setSelectedBtn(clickendBtn);
+    setSelectedBtn(clickedBtn);
   };
 
-  const btnEventListner = (clickendBtn: BtnPosType) => {
+  const btnEventListner = (clickedBtn: BtnPosType) => {
     // 선택된 버튼이 없다면 누른 버튼으로 선택
     if (!selectedBtn) {
-      selectBtn(clickendBtn);
+      selectBtn(clickedBtn);
       return;
     }
 
-    if (selectedBtn.side === clickendBtn.side) {
-      selectBtn(null);
-      selectBtn(clickendBtn);
-      return;
+    if (selectedBtn.side === clickedBtn.side) {
+      if (selectedBtn.index === clickedBtn.index) {
+        selectBtn(null);
+      } else {
+        // 같은 줄의 버튼을 누르면 해당 버튼 선택
+        selectBtn(null);
+        selectBtn(clickedBtn);
+        return;
+      }
     }
 
     // 선택된 버튼과 누른 버튼이 같은 줄이 아닐 떄 실행
-    if (selectedBtn.side !== clickendBtn.side) {
-      const selected = renderBtns[selectedBtn.index];
-      const clicked = renderBtns[clickendBtn.index];
+    const selected = renderBtns[selectedBtn.side][selectedBtn.index];
+    const clicked = renderBtns[clickedBtn.side][clickedBtn.index];
+    console.log(selected, clicked);
 
-      console.log(selected, clicked);
+    const isCorrect =
+      (selected.answer && selected.answer === clicked.content) ||
+      (clicked.answer && clicked.answer === selected.content);
 
-      // 맞았는지 확인
-      if (selected.connect === clicked.connect) {
-        console.log('correct');
+    // 맞았는지 확인
+    if (isCorrect) {
+      console.log('correct');
 
-        // Q, A 정답처리
-        setQuestStackList(prev => {
-          const temp = [...prev];
-          temp[selected.step][selectedBtn.index].isCorrect = true;
-          temp[selected.step][clickendBtn.index].isCorrect = true;
-          return temp;
-        });
-      } else {
-        console.log('wrong');
-      }
+      setQuestList(prev => {
+        const temp = [...prev];
+        temp[selectedBtn.side][selectedBtn.index] = null;
+        temp[clickedBtn.side][clickedBtn.index] = null;
+        return temp;
+      });
+
+      getQuest();
     } else {
-      console.log('cancled');
+      console.log('wrong');
     }
 
     // 선택 버튼 초기화
     selectBtn(null);
   };
 
+  // 첫 실행시 문제 생성
   useEffect(() => {
-    addQuestStack();
+    getQuest();
   }, []);
 
-  useEffect(() => {
-    if (questStackList.length == 0) return;
-
-    // questStackList이 변하면서 마지막 문제중 하나를 맞춘다면 문제 추가
-    const lastStack = questStackList[questStackList.length - 1];
-    for (let i = 0; i < puzzleCount; i++) {
-      if (lastStack[i].isCorrect) {
-        addQuestStack();
-        break;
-      }
-    }
-
-    resetRenderQuest();
-  }, [questStackList]);
-
-  // renderQuest가 변화하면 btn을 변경시킨다.
+  // questList가 변화하면 btn에 적용시킨다.
   useEffect(() => {
     resetRenderBtns();
-  }, [renderQuest]);
+  }, [questList]);
 
   return (
     <View className="bg-green-500 w-full h-full">
@@ -186,23 +160,19 @@ export default function Puzzle() {
         {[0, 1].map(side => (
           <View key={side} className="flex-1 h-full gap-2">
             {renderBtns.length > 0 &&
-              renderBtns.map((btn, i) => {
-                if (
-                  i >= side * puzzleCount &&
-                  i <= side * puzzleCount + (puzzleCount - 1)
-                )
-                  return (
-                    <ToggleButton
-                      key={i}
-                      className={'flex-1 '}
-                      isOn={btn.isOn}
-                      onPress={() => {
-                        btnEventListner({ side, index: i });
-                      }}
-                    >
-                      <TitleText size={60}>{btn.content}</TitleText>
-                    </ToggleButton>
-                  );
+              renderBtns[side].map((btn, i) => {
+                return (
+                  <ToggleButton
+                    key={i}
+                    className={'flex-1 '}
+                    isOn={btn.isOn}
+                    onPress={() => {
+                      btnEventListner({ side, index: i });
+                    }}
+                  >
+                    <TitleText size={60}>{btn.content}</TitleText>
+                  </ToggleButton>
+                );
               })}
           </View>
         ))}
