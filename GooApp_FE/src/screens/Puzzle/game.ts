@@ -21,11 +21,11 @@ const insertRandom = (array: QuestArray, Q: Quest) => {
     if (spot === null) empty.push(i);
   });
 
-  if (empty.length > 0) {
-    shuffleArray(empty);
-    const index = empty.pop()!;
-    array[index] = Q;
-  }
+  // insertRandom이 실행되면 NULL인 칸은 무조건 존재함
+  const shuffled = shuffleArray(empty);
+  console.log('empty: ', empty, shuffled);
+  const index = shuffled.pop()!;
+  array[index] = Q;
 };
 
 export const queueAlgorithm = (
@@ -35,9 +35,11 @@ export const queueAlgorithm = (
   // 큐와 리스트를 분할해 사용함
   const QQueue = [...questQueue[0]];
   const AQueue = [...questQueue[1]];
-
   const QList = [...questList[0]];
   const AList = [...questList[1]];
+
+  console.log(AQueue);
+
   // 문제_리스트의 빈칸을 모두 채운다.
   QList.forEach((Q, i) => {
     if (Q === null && QQueue[i] === null) {
@@ -69,8 +71,6 @@ export const queueAlgorithm = (
       AList[i] = temp;
     }
   });
-
-  console.log(AList);
 
   const newQueue = [QQueue, AQueue];
   const newList = [QList, AList];

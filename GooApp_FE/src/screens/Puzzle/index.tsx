@@ -9,15 +9,16 @@ import DefaultButton from '@/components/DefaultButton';
 import StyledText from '@/components/StyledText';
 import Information from '@/components/Information';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Quest, QuestArray } from '@/types/puzzleTypes';
 import ToggleButton from '@/components/ToggleButton';
-import { puzzleCount } from '@/const/puzzle';
+import { puzzleCount, puzzleTime } from '@/const/puzzle';
 import { queueAlgorithm } from './game';
+import { getAccuracy } from '@/utils/getAccuracy';
 
 type BtnPosType = { side: number; index: number };
 interface BtnStateType extends Quest {
-  isOn: boolean;
+  status: 'off' | 'on' | 'red';
 }
 
 export default function Puzzle() {
@@ -42,6 +43,16 @@ export default function Puzzle() {
   // 선택된 버튼
   const [selectedBtn, setSelectedBtn] = useState<BtnPosType | null>(null);
 
+  // 시간
+  const timer = useRef(puzzleTime);
+  const interval = useRef<NodeJS.Timeout | null>(null);
+  // 화면에 보여질 타이머 프레임
+  const [timerFrame, setTimerFrame] = useState<number>(0);
+  const timerAnimationFrame = useRef<number>(0);
+
+  // [맞은 수, 틀린 수]
+  const [answerStats, setAnswerStats] = useState<number[]>([0, 0]);
+
   // 문제 생성
   const getQuest = () => {
     const [newQueue, newList] = queueAlgorithm(questQueue, questList);
@@ -56,7 +67,7 @@ export default function Puzzle() {
     const newRenderBtns: BtnStateType[][] = [[], []];
     questList.forEach((side, i) => {
       side.forEach(quest => {
-        newRenderBtns[i].push({ isOn: false, ...quest! });
+        newRenderBtns[i].push({ status: 'off', ...quest! });
       });
     });
     setRenderBtns(newRenderBtns);
@@ -66,16 +77,16 @@ export default function Puzzle() {
   const selectBtn = (clickedBtn: BtnPosType | null) => {
     const newRenderBtns: BtnStateType[][] = [...renderBtns];
 
+    // 전체 isOn 초기화
+    newRenderBtns.forEach(side => {
+      side.forEach(btn => {
+        btn.status = 'off';
+      });
+    });
+
     if (clickedBtn) {
       // 선택한 버튼이 있으면 isOn true
-      newRenderBtns[clickedBtn.side][clickedBtn.index].isOn = true;
-    } else {
-      // null로 선택을 취소하면 전체 isOn false
-      newRenderBtns.forEach(side => {
-        side.forEach(btn => {
-          btn.isOn = false;
-        });
-      });
+      newRenderBtns[clickedBtn.side][clickedBtn.index].status = 'on';
     }
 
     // 버튼 색상 변화
@@ -93,13 +104,13 @@ export default function Puzzle() {
 
     if (selectedBtn.side === clickedBtn.side) {
       if (selectedBtn.index === clickedBtn.index) {
+        // 동일한 버튼을 다시 누르면 선택 취소
         selectBtn(null);
       } else {
         // 같은 줄의 버튼을 누르면 해당 버튼 선택
-        selectBtn(null);
         selectBtn(clickedBtn);
-        return;
       }
+      return;
     }
 
     // 선택된 버튼과 누른 버튼이 같은 줄이 아닐 떄 실행
@@ -119,26 +130,85 @@ export default function Puzzle() {
         const temp = [...prev];
         temp[selectedBtn.side][selectedBtn.index] = null;
         temp[clickedBtn.side][clickedBtn.index] = null;
+        console.log('questList : ', temp);
         return temp;
       });
 
-      getQuest();
+      setAnswerStats(prev => {
+        const temp = [...prev];
+        temp[0] += 1;
+        return temp;
+      });
     } else {
       console.log('wrong');
+
+      setAnswerStats(prev => {
+        const temp = [...prev];
+        temp[1] += 1;
+        return temp;
+      });
     }
 
     // 선택 버튼 초기화
     selectBtn(null);
   };
 
+  const startTimer = () => {
+    console.log('game start');
+    interval.current = setInterval(() => {
+      if (timer.current > 0) {
+        timer.current -= 0.1;
+      } else {
+        endTimer();
+        navigation.replace('Scoreboard');
+      }
+    }, 100);
+    animationFrame();
+  };
+
+  const endTimer = () => {
+    console.log('game end');
+    if (interval.current) {
+      clearInterval(interval.current);
+    }
+    if (timerAnimationFrame.current) {
+      cancelAnimationFrame(timerAnimationFrame.current);
+    }
+  };
+
+  const animationFrame = () => {
+    setTimerFrame(timer.current);
+    timerAnimationFrame.current = requestAnimationFrame(animationFrame);
+  };
+
   // 첫 실행시 문제 생성
   useEffect(() => {
     getQuest();
+    startTimer();
+
+    return () => {
+      endTimer();
+    };
   }, []);
 
-  // questList가 변화하면 btn에 적용시킨다.
   useEffect(() => {
-    resetRenderBtns();
+    // 퀴즈 리스트에 NULL 값이 있는지 확인하고 퀴즈를 추가함
+    let isNull = false;
+    questList.forEach(side => {
+      side.forEach(quest => {
+        if (quest === null) isNull = true;
+      });
+    });
+
+    if (isNull) {
+      // NULL값이 있으면 퀴즈 불러오기
+      console.log('퀴즈 가져올거임');
+      getQuest();
+    } else {
+      // NULL값이 없으면 버튼 랜더링
+      console.log('버튼 그릴거임');
+      resetRenderBtns();
+    }
   }, [questList]);
 
   return (
@@ -147,10 +217,14 @@ export default function Puzzle() {
       {/* 점수, 시간 */}
       <Information>
         <>
-          <TitleText size={60}>남은 시간</TitleText>
-          <View className="flex-row justify-between">
-            <TitleText size={30}>맞은 수 / 틀린 수</TitleText>
-            <TitleText size={30}>정확도%</TitleText>
+          <TitleText size={60}>{`${timerFrame.toFixed(2)}`}</TitleText>
+          <View className=" flex-row gap-20">
+            <TitleText size={30}>
+              {answerStats[0]} / {answerStats[1]}
+            </TitleText>
+            <TitleText size={30}>
+              {getAccuracy(answerStats[0], answerStats[1])}%
+            </TitleText>
           </View>
           <TitleText size={20}>정답을 짝지어 주세요</TitleText>
         </>
@@ -165,7 +239,7 @@ export default function Puzzle() {
                   <ToggleButton
                     key={i}
                     className={'flex-1 '}
-                    isOn={btn.isOn}
+                    status={btn.status}
                     onPress={() => {
                       btnEventListner({ side, index: i });
                     }}
