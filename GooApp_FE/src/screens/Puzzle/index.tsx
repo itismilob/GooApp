@@ -14,6 +14,7 @@ import { Quest, QuestArray } from '@/types/puzzleTypes';
 import { puzzleCount, puzzleStop, puzzleTime } from '@/const/puzzle';
 import { queueAlgorithm } from './game';
 import { getAccuracy } from '@/utils/getAccuracy';
+import puzzleStore from '@/stores/puzzleStore';
 
 type BtnPosType = { side: number; index: number };
 type BtnColor = 'bg-green-700' | 'bg-green-950' | 'bg-red-700';
@@ -53,6 +54,7 @@ export default function Puzzle() {
 
   // [맞은 수, 틀린 수]
   const [answerStats, setAnswerStats] = useState<number[]>([0, 0]);
+  const puzzleStoreState = puzzleStore.getState();
 
   // 문제 생성
   const getQuest = () => {
@@ -189,15 +191,18 @@ export default function Puzzle() {
       if (timer.current > 0) {
         timer.current -= 0.1;
       } else {
-        endTimer();
+        // 타이머 종료
+        gameEnd();
+        // 점수 정보 스토어에 저장
+        puzzleStoreState.setAnswerStats(answerStats);
         navigation.replace('Scoreboard');
       }
     }, 100);
     animationFrame();
   };
 
-  // 퍼즐 타이마 종료
-  const endTimer = () => {
+  // 퍼즐 게임 종료
+  const gameEnd = () => {
     console.log('game end');
     if (interval.current) {
       clearInterval(interval.current);
@@ -219,7 +224,7 @@ export default function Puzzle() {
     startTimer();
 
     return () => {
-      endTimer();
+      gameEnd();
     };
   }, []);
 
