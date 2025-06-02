@@ -34,31 +34,33 @@ export default function Home() {
       <Text>GooApp</Text>
       <Text>{userData?.nickname}</Text>
 
-      <DefaultButton
-        className="bg-green-700"
-        onPress={() => {
-          navigation.navigate('Tutorial');
-        }}
-      >
-        <TitleText size={30} className="color-white">
-          퍼즐
-        </TitleText>
-      </DefaultButton>
+      <View>
+        <DefaultButton
+          className="bg-green-700"
+          onPress={() => {
+            navigation.navigate('Tutorial');
+          }}
+        >
+          <TitleText size={30}>퍼즐</TitleText>
+        </DefaultButton>
 
-      <Pressable
-        onPress={() => {
-          navigation.navigate('Record');
-        }}
-      >
-        <Text>기록</Text>
-      </Pressable>
-      <Pressable
-        onPress={() => {
-          navigation.navigate('Rank');
-        }}
-      >
-        <Text>랭크</Text>
-      </Pressable>
+        <DefaultButton
+          className="bg-green-700"
+          onPress={() => {
+            navigation.navigate('Record');
+          }}
+        >
+          <TitleText size={30}>기록</TitleText>
+        </DefaultButton>
+        <DefaultButton
+          className="bg-green-700"
+          onPress={() => {
+            navigation.navigate('Rank');
+          }}
+        >
+          <TitleText size={30}>랭킹</TitleText>
+        </DefaultButton>
+      </View>
     </View>
   );
 }
