@@ -1,27 +1,21 @@
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
 import HeaderButton from '@/components/HeaderButton';
 import TitleText from '@/components/TitleText';
 import DefaultButton from '@/components/DefaultButton';
-import StyledText from '@/components/StyledText';
 import Information from '@/components/Information';
 
 import { useEffect, useRef, useState } from 'react';
-import { Quest, QuestArray } from '@/types/puzzleTypes';
 import { puzzleCount, puzzleStop, puzzleTime } from '@/const/puzzle';
 import { queueAlgorithm } from './game';
 import { getAccuracy } from '@/utils/getAccuracy';
 import puzzleStore from '@/stores/puzzleStore';
 
-type BtnPosType = { side: number; index: number };
-type BtnColor = 'bg-green-700' | 'bg-green-950' | 'bg-red-700';
-interface BtnStateType extends Quest {
-  color: BtnColor;
-  isOn: boolean;
-}
+import type { DefaultNavigatorParams } from '@/types/navigationTypes';
+import type { QuestArray } from '@/types/puzzleTypes';
+import type { BtnPosType, BtnColor, BtnStateType } from '@/types/puzzleTypes';
 
 export default function Puzzle() {
   type NavigationProp = NativeStackNavigationProp<
