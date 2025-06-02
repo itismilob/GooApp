@@ -12,13 +12,15 @@ import Information from '@/components/Information';
 import { useEffect, useRef, useState } from 'react';
 import { Quest, QuestArray } from '@/types/puzzleTypes';
 import ToggleButton from '@/components/ToggleButton';
-import { puzzleCount, puzzleTime } from '@/const/puzzle';
+import { puzzleCount, puzzleStop, puzzleTime } from '@/const/puzzle';
 import { queueAlgorithm } from './game';
 import { getAccuracy } from '@/utils/getAccuracy';
 
 type BtnPosType = { side: number; index: number };
+type BtnColor = 'bg-green-700' | 'bg-green-950' | 'bg-red-700';
 interface BtnStateType extends Quest {
-  status: 'off' | 'on' | 'red';
+  color: BtnColor;
+  isOn: boolean;
 }
 
 export default function Puzzle() {
@@ -57,19 +59,25 @@ export default function Puzzle() {
   const getQuest = () => {
     const [newQueue, newList] = queueAlgorithm(questQueue, questList);
 
-    console.log(newQueue, newList);
     setQuestQueue(newQueue);
     setQuestList(newList);
   };
 
   // questList의 문제들을 버튼에 넣기
   const resetRenderBtns = () => {
-    const newRenderBtns: BtnStateType[][] = [[], []];
+    const newRenderBtns: BtnStateType[][] = [...renderBtns];
+
     questList.forEach((side, i) => {
-      side.forEach(quest => {
-        newRenderBtns[i].push({ status: 'off', ...quest! });
+      side.forEach((quest, j) => {
+        if (!renderBtns[i][j] || renderBtns[i][j]?.isOn)
+          newRenderBtns[i][j] = {
+            color: 'bg-green-700',
+            ...quest!,
+            isOn: true,
+          };
       });
     });
+
     setRenderBtns(newRenderBtns);
   };
 
@@ -77,22 +85,42 @@ export default function Puzzle() {
   const selectBtn = (clickedBtn: BtnPosType | null) => {
     const newRenderBtns: BtnStateType[][] = [...renderBtns];
 
-    // 전체 isOn 초기화
+    // 전체 버튼 색상 초기화
     newRenderBtns.forEach(side => {
       side.forEach(btn => {
-        btn.status = 'off';
+        btn.color = 'bg-green-700';
       });
     });
 
     if (clickedBtn) {
-      // 선택한 버튼이 있으면 isOn true
-      newRenderBtns[clickedBtn.side][clickedBtn.index].status = 'on';
+      // 선택한 버튼이 있으면 색상 선택
+      newRenderBtns[clickedBtn.side][clickedBtn.index].color = 'bg-green-950';
     }
 
     // 버튼 색상 변화
     setRenderBtns(newRenderBtns);
     // 클릭한 버튼으로 선택
     setSelectedBtn(clickedBtn);
+  };
+
+  const indicateBtnColor = (btn: BtnPosType, color: BtnColor) => {
+    // 색상을 변화시킴
+    setRenderBtns(prev => {
+      const temp = [...prev];
+      temp[btn.side][btn.index].color = color;
+      temp[btn.side][btn.index].isOn = false;
+      return temp;
+    });
+
+    // 1초 후 색상 되돌림
+    setTimeout(() => {
+      setRenderBtns(prev => {
+        const temp = [...prev];
+        temp[btn.side][btn.index].color = 'bg-green-700';
+        temp[btn.side][btn.index].isOn = true;
+        return temp;
+      });
+    }, puzzleStop);
   };
 
   const btnEventListner = (clickedBtn: BtnPosType) => {
@@ -116,7 +144,6 @@ export default function Puzzle() {
     // 선택된 버튼과 누른 버튼이 같은 줄이 아닐 떄 실행
     const selected = renderBtns[selectedBtn.side][selectedBtn.index];
     const clicked = renderBtns[clickedBtn.side][clickedBtn.index];
-    console.log(selected, clicked);
 
     const isCorrect =
       (selected.answer && selected.answer === clicked.content) ||
@@ -130,7 +157,6 @@ export default function Puzzle() {
         const temp = [...prev];
         temp[selectedBtn.side][selectedBtn.index] = null;
         temp[clickedBtn.side][clickedBtn.index] = null;
-        console.log('questList : ', temp);
         return temp;
       });
 
@@ -147,6 +173,8 @@ export default function Puzzle() {
         temp[1] += 1;
         return temp;
       });
+      indicateBtnColor(selectedBtn, 'bg-red-700');
+      indicateBtnColor(clickedBtn, 'bg-red-700');
     }
 
     // 선택 버튼 초기화
@@ -202,11 +230,9 @@ export default function Puzzle() {
 
     if (isNull) {
       // NULL값이 있으면 퀴즈 불러오기
-      console.log('퀴즈 가져올거임');
       getQuest();
     } else {
       // NULL값이 없으면 버튼 랜더링
-      console.log('버튼 그릴거임');
       resetRenderBtns();
     }
   }, [questList]);
@@ -236,16 +262,16 @@ export default function Puzzle() {
             {renderBtns.length > 0 &&
               renderBtns[side].map((btn, i) => {
                 return (
-                  <ToggleButton
+                  <DefaultButton
                     key={i}
-                    className={'flex-1 '}
-                    status={btn.status}
+                    className={'flex-1 ' + btn.color}
                     onPress={() => {
                       btnEventListner({ side, index: i });
                     }}
+                    disabled={!btn.isOn}
                   >
                     <TitleText size={60}>{btn.content}</TitleText>
-                  </ToggleButton>
+                  </DefaultButton>
                 );
               })}
           </View>

@@ -23,7 +23,6 @@ const insertRandom = (array: QuestArray, Q: Quest) => {
 
   // insertRandom이 실행되면 NULL인 칸은 무조건 존재함
   const shuffled = shuffleArray(empty);
-  console.log('empty: ', empty, shuffled);
   const index = shuffled.pop()!;
   array[index] = Q;
 };
@@ -37,8 +36,6 @@ export const queueAlgorithm = (
   const AQueue = [...questQueue[1]];
   const QList = [...questList[0]];
   const AList = [...questList[1]];
-
-  console.log(AQueue);
 
   // 문제_리스트의 빈칸을 모두 채운다.
   QList.forEach((Q, i) => {
