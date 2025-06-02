@@ -11,7 +11,6 @@ import Information from '@/components/Information';
 
 import { useEffect, useRef, useState } from 'react';
 import { Quest, QuestArray } from '@/types/puzzleTypes';
-import ToggleButton from '@/components/ToggleButton';
 import { puzzleCount, puzzleStop, puzzleTime } from '@/const/puzzle';
 import { queueAlgorithm } from './game';
 import { getAccuracy } from '@/utils/getAccuracy';
