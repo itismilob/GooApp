@@ -102,6 +102,7 @@ export default function Puzzle() {
     setSelectedBtn(clickedBtn);
   };
 
+  // 버튼의 색상을 변경하고 일정시간 정지시키는 함수
   const indicateBtnColor = (btn: BtnPosType, color: BtnColor) => {
     // 색상을 변화시킴
     setRenderBtns(prev => {
@@ -122,6 +123,7 @@ export default function Puzzle() {
     }, puzzleStop);
   };
 
+  // 버튼 클릭 이벤트 헨들러
   const btnEventListner = (clickedBtn: BtnPosType) => {
     // 선택된 버튼이 없다면 누른 버튼으로 선택
     if (!selectedBtn) {
@@ -180,6 +182,7 @@ export default function Puzzle() {
     selectBtn(null);
   };
 
+  // 퍼즐 타이머 시작
   const startTimer = () => {
     console.log('game start');
     interval.current = setInterval(() => {
@@ -193,6 +196,7 @@ export default function Puzzle() {
     animationFrame();
   };
 
+  // 퍼즐 타이마 종료
   const endTimer = () => {
     console.log('game end');
     if (interval.current) {
@@ -203,6 +207,7 @@ export default function Puzzle() {
     }
   };
 
+  // 타이머 애니메이션 프레임 설정
   const animationFrame = () => {
     setTimerFrame(timer.current);
     timerAnimationFrame.current = requestAnimationFrame(animationFrame);
