@@ -38,7 +38,7 @@ export default function Loading() {
 
   useEffect(() => {
     // 테스트용 데이터 초기화
-    // localStorage.clearAll();
+    localStorage.clearAll();
 
     // 첫 실행인지 확인하고 아니면 Home으로 이동
     const result = checkFirstStart();

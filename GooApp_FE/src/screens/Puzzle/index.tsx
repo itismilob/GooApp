@@ -187,8 +187,6 @@ export default function Puzzle() {
       } else {
         // 타이머 종료
         gameEnd();
-        // 점수 정보 스토어에 저장
-        puzzleStoreState.setAnswerStats(answerStats);
         navigation.replace('Scoreboard');
       }
     }, 100);
@@ -239,6 +237,11 @@ export default function Puzzle() {
       resetRenderBtns();
     }
   }, [questList]);
+
+  useEffect(() => {
+    // 점수 정보 스토어에 저장
+    puzzleStoreState.setAnswerStats(answerStats);
+  }, [answerStats]);
 
   return (
     <View className="bg-green-500 w-full h-full">
