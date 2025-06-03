@@ -6,14 +6,14 @@ import puzzleStore from '@/stores/puzzleStore';
 import { useEffect, useState } from 'react';
 import TitleText from '@/components/TitleText';
 import { getAccuracy } from '@/utils/getAccuracy';
-import useCheckNetInfo from '@/hooks/useCheckNetInfo';
 import StyledText from '@/components/StyledText';
 import { getLocalStorage } from '@/stores/mmkvStorage';
-import { ScoreDataType } from '@/types/dataTypes';
+import { ScoreDataType, userDataType } from '@/types/dataTypes';
 import HeaderButton from '@/components/HeaderButton';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DefaultButton from '@/components/DefaultButton';
+import useCheckNetInfo from '@/hooks/useCheckNetInfo';
 
 export default function Scoreboard() {
   type NavigationProp = NativeStackNavigationProp<
@@ -22,6 +22,9 @@ export default function Scoreboard() {
   >;
   const navigation = useNavigation<NavigationProp>();
   const localStorage = getLocalStorage();
+  const checkNetInfoTrigger = useCheckNetInfo(() => {
+    setIsNetworkOn(true);
+  }, undefined);
 
   // 퍼즐 게임 데이터 스토어
   const puzzleStoreState = puzzleStore.getState();
@@ -29,17 +32,11 @@ export default function Scoreboard() {
   const [scoreData, setScoreData] = useState<ScoreDataType | null>(null);
   // 로컬 기록
   const [localScore, setLocalScore] = useState<ScoreDataType[]>([]);
-  // 랭크
-  const [rank, setRank] = useState<number | null>(0);
 
-  const checkNetInfoTrigger = useCheckNetInfo(
-    () => {
-      getRank();
-    },
-    () => {
-      //do noting?
-    },
-  );
+  const [isNetworkOn, setIsNetworkOn] = useState<boolean>(true);
+  // 랭크
+  const [rank, setRank] = useState<number>(0);
+  const [newRank, setNewRank] = useState<number>(0);
 
   const localScoreFuntion = (newScoreData: ScoreDataType) => {
     // 로컬 점수 데이터 불러오기
@@ -58,8 +55,30 @@ export default function Scoreboard() {
 
     // 변화한 데이터 저장
     const temp = JSON.stringify([...scoreData, newScoreData]);
-    console.log(scoreData, newScoreData);
     localStorage.set('scoreData', temp);
+  };
+
+  // 랭크 데이터를 불러옴
+  const getRank = async () => {
+    const userDataString = localStorage.getString('userData');
+    if (!userDataString) return;
+
+    const userData: userDataType = JSON.parse(userDataString);
+    setRank(userData.rank);
+
+    try {
+      // const newRank = await axios.post()
+      // newRank 더미 데이터
+      const newRank = 22;
+      setNewRank(newRank);
+
+      // 새로운 랭크를 로컬에 저장
+      const newUserData = { ...userData };
+      newUserData.rank = newRank;
+      localStorage.set('userData', JSON.stringify(newUserData));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // localScore에서 가장 높은 점수를 반환
@@ -70,26 +89,35 @@ export default function Scoreboard() {
           return a.score - b.score;
         })
         .pop();
+
+      console.log(localScore, top);
       if (top) return top.score;
     }
     return 0;
   };
 
   const getScoreIcon = () => {
-    if (scoreData && scoreData.score > getTopScore()) {
-      return <Icon name="arrow-up" color={'blue'} />;
+    if (scoreData) {
+      const top = getTopScore();
+      console.log(scoreData.score, top);
+
+      if (scoreData.score > top) {
+        return <Icon name="arrow-up" color={'blue'} />;
+      } else if (scoreData.score < top) {
+        return <Icon name="arrow-down" color={'red'} />;
+      }
     }
-    return <Icon name="arrow-down" color={'red'} />;
+    return <Icon name="minus" color={'white'} />;
   };
 
   const getRankIcon = () => {
-    if (scoreData && scoreData.score > getTopScore()) {
+    if (rank < newRank) {
       return <Icon name="arrow-up" color={'blue'} />;
+    } else if (rank > newRank) {
+      return <Icon name="arrow-down" color={'red'} />;
     }
-    return <Icon name="arrow-down" color={'red'} />;
+    return <Icon name="minus" color={'white'} />;
   };
-
-  const getRank = () => {};
 
   useEffect(() => {
     const stats = puzzleStoreState.getAnswerStats();
@@ -110,8 +138,13 @@ export default function Scoreboard() {
     // 로컬 데이터
     localScoreFuntion(newScoreData);
 
+    // 네트워크 연결 확인
     checkNetInfoTrigger();
   }, []);
+
+  useEffect(() => {
+    if (isNetworkOn) getRank();
+  }, [isNetworkOn]);
 
   return (
     <View className="w-full h-full justify-center items-center bg-green-500">
@@ -134,11 +167,11 @@ export default function Scoreboard() {
             {getScoreIcon()}
           </View>
         </View>
-        {rank !== null ? (
+        {isNetworkOn ? (
           <View className="flex-row justify-between">
             <StyledText>현재 랭킹 : </StyledText>
             <View className="flex-row gap-1">
-              <StyledText>{rank}</StyledText>
+              <StyledText>{newRank}</StyledText>
               {getRankIcon()}
             </View>
           </View>
