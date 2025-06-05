@@ -8,7 +8,7 @@ import userDataJSON from '@/test/userData.json';
 
 import { getLocalStorage } from '@/stores/mmkvStorage';
 
-import { userDataType } from '@/types/dataTypes';
+import { UserDataType } from '@/types/dataTypes';
 
 export default function NicknameNoti() {
   type NavigationProp = NativeStackNavigationProp<
@@ -18,7 +18,7 @@ export default function NicknameNoti() {
   const navigation = useNavigation<NavigationProp>();
   const LocalStorage = getLocalStorage();
 
-  const [userData, setUserData] = useState<userDataType>();
+  const [userData, setUserData] = useState<UserDataType>();
 
   // 유저 더미 데이터 생성 -> 유저 닉네임, 아이디 불러오기
   const fetchData = async () => {

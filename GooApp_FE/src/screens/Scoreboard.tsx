@@ -8,7 +8,7 @@ import TitleText from '@/components/TitleText';
 import { getAccuracy } from '@/utils/getAccuracy';
 import StyledText from '@/components/StyledText';
 import { getLocalStorage } from '@/stores/mmkvStorage';
-import { ScoreDataType, userDataType } from '@/types/dataTypes';
+import { ScoreDataType, UserDataType } from '@/types/dataTypes';
 import HeaderButton from '@/components/HeaderButton';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -63,7 +63,7 @@ export default function Scoreboard() {
     const userDataString = localStorage.getString('userData');
     if (!userDataString) return;
 
-    const userData: userDataType = JSON.parse(userDataString);
+    const userData: UserDataType = JSON.parse(userDataString);
     setRank(userData.rank);
 
     try {
