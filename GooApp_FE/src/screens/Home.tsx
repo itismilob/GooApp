@@ -7,7 +7,7 @@ import DefaultButton from '@/components/DefaultButton';
 import TitleText from '@/components/TitleText';
 import HeaderButton from '@/components/HeaderButton';
 import { useEffect, useState } from 'react';
-import { userDataType } from '@/types/dataTypes';
+import { UserDataType } from '@/types/dataTypes';
 import { getLocalStorage } from '@/stores/mmkvStorage';
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
   const navigation = useNavigation<NavigationProp>();
   const LocalStorage = getLocalStorage();
 
-  const [userData, setUserData] = useState<userDataType>();
+  const [userData, setUserData] = useState<UserDataType>();
 
   const getUserData = () => {
     const userDataString = LocalStorage.getString('userData');

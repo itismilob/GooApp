@@ -1,4 +1,4 @@
-export interface userDataType {
+export interface UserDataType {
   userID: string;
   nickname: string;
   rank: number;
