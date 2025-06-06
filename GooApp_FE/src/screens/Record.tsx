@@ -35,6 +35,7 @@ export default function Record() {
       <View className="h-full bg-green-700">
         {topScore ? (
           <ScrollView className="h-full bg-green-600">
+            {/* 최고기록 표시 */}
             <View className="h-60 w-full bg-green-700 items-center">
               <TitleText size={30}>최고기록</TitleText>
               <TitleText size={60}>{topScore?.score}점</TitleText>
@@ -47,6 +48,7 @@ export default function Record() {
                 <TitleText size={30}>{topScore?.accuracy}%</TitleText>
               </View>
             </View>
+            {/* 기록 리스트 표시 */}
             <View>
               <RecordListLine
                 content={{ a: '점수', b: '맞춘 개수', c: '정확도' }}
