@@ -69,15 +69,19 @@ export default function Scoreboard() {
   const addLocalScoreData = () => {
     // 로컬 점수 데이터 불러오기
     const scoreDataString = localStorage.getString('scoreData');
+    let newScoreData: string;
 
     // 로컬 데이터에 점수 추가
     if (scoreDataString) {
       const result: ScoreDataType[] = JSON.parse(scoreDataString);
 
       // 데이터 추가해서 저장
-      const temp = JSON.stringify([...result, scoreData]);
-      localStorage.set('scoreData', temp);
+      newScoreData = JSON.stringify([...result, scoreData]);
+    } else {
+      newScoreData = JSON.stringify([scoreData]);
     }
+    console.log(newScoreData);
+    localStorage.set('scoreData', newScoreData);
   };
 
   // 최고기록 비교, 변경
@@ -188,7 +192,7 @@ export default function Scoreboard() {
 
       <View className="w-60">
         <View className="flex-row justify-between">
-          <StyledText>이전 기록 : </StyledText>
+          <StyledText>최고 기록 : </StyledText>
           <View className="flex-row gap-1">
             <StyledText>{topScore}</StyledText>
             {getScoreIcon()}
