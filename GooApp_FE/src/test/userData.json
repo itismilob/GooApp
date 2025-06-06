@@ -1,5 +1,6 @@
 {
   "userID": "TestUSER",
   "nickname": "TestUSER",
-  "rank": 0
+  "rank": 0,
+  "topScore": 0
 }

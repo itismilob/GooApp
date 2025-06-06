@@ -2,6 +2,7 @@ export interface UserDataType {
   userID: string;
   nickname: string;
   rank: number;
+  topScore: number;
 }
 
 export interface ScoreDataType {
