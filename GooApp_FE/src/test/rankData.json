@@ -1,0 +1,62 @@
+[
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 1,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 2,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 3,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 4,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 5,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 6,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 7,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 8,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 9,
+    "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 10,
+    "topScore": 222
+  }
+]
