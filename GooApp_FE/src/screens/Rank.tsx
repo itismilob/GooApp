@@ -12,41 +12,13 @@ import {
   getLocalUserData,
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
+import { getRankChanges } from '@/services/userDataAPIs';
 
 export default function Rank() {
   // 유저 정보
   const [userData, setUserData] = useState<UserDataType | undefined>();
   // 랭킹 리스트
   const [rankList, setRankList] = useState<UserDataType[]>([]);
-
-  // 서버에 전송 -> 새로운 데이터 응답 (rank만 변화함)
-  const postUserData = async () => {
-    // 로컬 유저 데이터 가져옴
-
-    const localUserData = getLocalUserData();
-    console.log(localUserData);
-    if (!localUserData) return;
-
-    try {
-      // 서버에 전송
-      // const newUserData = await axios.post(localUser);
-
-      // 현재 로컬 유저 데이터 사용
-      const newUserData = localUserData;
-      if (!newUserData) return;
-
-      console.log(newUserData);
-
-      setUserData(newUserData);
-
-      if (newUserData !== localUserData) {
-        // 새로운 유저 데이터 로컬에 저장
-        setLocalUserData(newUserData);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   // 서버에서 랭킹 정보를 가져옴
   const getRankList = async () => {
@@ -64,7 +36,10 @@ export default function Rank() {
   };
 
   useEffect(() => {
-    postUserData();
+    // 유저 랭킹의 변동사항을 가져옴
+    getRankChanges(newUserData => {
+      setUserData(newUserData);
+    });
   }, []);
 
   useEffect(() => {

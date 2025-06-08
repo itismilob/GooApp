@@ -18,6 +18,7 @@ import {
   getLocalUserData,
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
+import { getRankChanges } from '@/services/userDataAPIs';
 
 // 랭크 상승 : -1, 유지 : 0, 하락 : 1
 type RankChangeType = -1 | 0 | 1;
@@ -42,8 +43,9 @@ export default function Scoreboard() {
   // 네트워크 연결 유무
   const [isNetworkOn, setIsNetworkOn] = useState<boolean>(true);
   // 랭크
-  const [rank, setRank] = useState<number>(0);
   const [rankChangeState, setRankChangeState] = useState<RankChangeType>(0);
+  // 유저 데이터
+  const [userData, setUserData] = useState<UserDataType | undefined>();
 
   /**
    * 새로운 점수 데이터 생성
@@ -100,41 +102,6 @@ export default function Scoreboard() {
     }
   };
 
-  // 랭크 데이터를 불러옴
-  const getRank = async () => {
-    // 로컬 유저 데이터 불러옴
-    const userDataString = localStorage.getString('userData');
-    if (!userDataString) return;
-    const userData: UserDataType = JSON.parse(userDataString);
-
-    try {
-      // 점수 데이터를 서버에 보내 랭크 변동사항 받아옴
-      // const result = await axios.post(scoreData)
-
-      // result 더미 데이터 사용
-      const result = 22;
-      setRank(result);
-
-      // 랭크 변동사항 적용
-      if (userData.rank > result) {
-        // 랭크 상승
-        setRankChangeState(-1);
-      } else if (userData.rank < result) {
-        // 랭크 하락
-        setRankChangeState(1);
-      }
-
-      // 새로운 랭크를 로컬에 저장
-      const newUserData = {
-        ...userData,
-        rank: result,
-      };
-      localStorage.set('userData', JSON.stringify(newUserData));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   // 점수 변동 아이콘 정함
   const getScoreIcon = () => {
     if (scoreData) {
@@ -160,6 +127,10 @@ export default function Scoreboard() {
   useEffect(() => {
     // 새로운 점수 데이터 생성
     createNewScoreData();
+
+    // 유저 데이터 가져옴
+    const localUserData = getLocalUserData();
+    setUserData(localUserData);
   }, []);
 
   useEffect(() => {
@@ -174,7 +145,23 @@ export default function Scoreboard() {
   }, [scoreData]);
 
   useEffect(() => {
-    if (isNetworkOn) getRank();
+    if (isNetworkOn) {
+      const userData = getLocalUserData();
+      if (!userData) return;
+
+      getRankChanges(newUserData => {
+        setUserData(newUserData);
+
+        // 랭크 변동사항 적용
+        if (userData.rank > newUserData.rank) {
+          // 랭크 상승
+          setRankChangeState(-1);
+        } else if (userData.rank < newUserData.rank) {
+          // 랭크 하락
+          setRankChangeState(1);
+        }
+      });
+    }
   }, [isNetworkOn]);
 
   return (
@@ -202,7 +189,7 @@ export default function Scoreboard() {
           <View className="flex-row justify-between">
             <StyledText>현재 랭킹 : </StyledText>
             <View className="flex-row gap-1">
-              <StyledText>{rank}</StyledText>
+              <StyledText>{userData?.rank}</StyledText>
               {getRankIcon()}
             </View>
           </View>
