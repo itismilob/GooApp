@@ -59,7 +59,7 @@ export default function Loading() {
 
   return (
     <View className={`bg-[${defaultGreen}] flex-1 items-center justify-center`}>
-      <TitleText size={60}>Loading</TitleText>
+      <TitleText size={50}>Loading</TitleText>
     </View>
   );
 }

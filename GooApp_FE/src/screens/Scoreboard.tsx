@@ -168,7 +168,7 @@ export default function Scoreboard() {
     <View className="w-full h-full justify-center items-center bg-green-500">
       <HeaderButton>점수판</HeaderButton>
       <View className="w-full items-center">
-        <TitleText size={60}>{`${scoreData?.score}점`}</TitleText>
+        <TitleText size={50}>{`${scoreData?.score}점`}</TitleText>
         <View className="flex-row justify-center gap-10 w-full">
           <TitleText
             size={30}

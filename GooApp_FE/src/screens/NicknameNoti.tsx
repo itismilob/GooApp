@@ -9,6 +9,9 @@ import userDataJSON from '@/test/userData.json';
 import { getLocalStorage } from '@/stores/mmkvStorage';
 
 import { UserDataType } from '@/types/dataTypes';
+import { defaultGap, defaultGreen } from '@/styles/const';
+import DefaultButton from '@/components/DefaultButton';
+import TitleText from '@/components/TitleText';
 
 export default function NicknameNoti() {
   type NavigationProp = NativeStackNavigationProp<
@@ -43,17 +46,30 @@ export default function NicknameNoti() {
   }, [userData]);
 
   return (
-    <View>
-      <Text>당신은...</Text>
-      <Text>{userData?.nickname}</Text>
-      <Text>입니다!</Text>
-      <Pressable
+    <View
+      className={`bg-[${defaultGreen}] flex-1 items-center justify-center p-[50]`}
+    >
+      <View>
+        <TitleText size={30}>당신은...</TitleText>
+        <TitleText size={50}>
+          {userData?.nickname}
+          {/* {'멋있는 주황색 코뿔소'} */}
+        </TitleText>
+        <View>
+          <TitleText size={30} className="w-full text-right overflow-scroll">
+            입니다!
+          </TitleText>
+        </View>
+      </View>
+      <DefaultButton
+        color="green"
+        className="absolute bottom-10"
         onPress={() => {
           navigation.replace('Home');
         }}
       >
-        <Text>시작하기</Text>
-      </Pressable>
+        시작하기
+      </DefaultButton>
     </View>
   );
 }

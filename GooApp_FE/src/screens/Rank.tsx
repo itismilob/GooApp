@@ -55,7 +55,7 @@ export default function Rank() {
             {/* 유저 랭킹 표시 */}
             <View className="h-60 w-full bg-green-700 items-center">
               <TitleText size={30}>{userData.nickname}</TitleText>
-              <TitleText size={60}>랭킹 {userData.rank}등</TitleText>
+              <TitleText size={50}>랭킹 {userData.rank}등</TitleText>
               <TitleText size={30}>최고점수 : {userData.topScore}점</TitleText>
             </View>
             {/* 랭킹 상위 100명 표시 */}
@@ -76,7 +76,7 @@ export default function Rank() {
           </ScrollView>
         ) : (
           <View className="items-center">
-            <TitleText size={60}>사용자 정보를 불러오지 못했습니다.</TitleText>
+            <TitleText size={50}>사용자 정보를 불러오지 못했습니다.</TitleText>
             <TitleText size={30}>다시 시도해주세요.</TitleText>
           </View>
         )}

@@ -22,7 +22,7 @@ export default function NetworkOfflineModal() {
       <View
         className={`bg-[${defaultGreen}] items-center justify-center w-full h-72 rounded-[${defaultRound}] gap-10`}
       >
-        <Icon name={'wifi-strength-off-outline'} size={60} color="white"></Icon>
+        <Icon name={'wifi-strength-off-outline'} size={50} color="white"></Icon>
         <View className="gap-5">
           <TitleText size={30}>오프라인 상태입니다.</TitleText>
           <TitleText size={20}>네트워크 설정을 확인해주세요.</TitleText>

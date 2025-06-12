@@ -38,7 +38,7 @@ export default function Record() {
             {/* 최고기록 표시 */}
             <View className="h-60 w-full bg-green-700 items-center">
               <TitleText size={30}>최고기록</TitleText>
-              <TitleText size={60}>{topScore?.score}점</TitleText>
+              <TitleText size={50}>{topScore?.score}점</TitleText>
               <View className="flex-row justify-between w-60">
                 <View>
                   <TitleText size={30}>
@@ -68,7 +68,7 @@ export default function Record() {
           </ScrollView>
         ) : (
           <View className="items-center">
-            <TitleText size={60}>기록이 없습니다.</TitleText>
+            <TitleText size={50}>기록이 없습니다.</TitleText>
             <TitleText size={30}>게임을 플레이 해주세요.</TitleText>
           </View>
         )}

@@ -249,7 +249,7 @@ export default function Puzzle() {
       {/* 점수, 시간 */}
       <Information>
         <>
-          <TitleText size={60}>{`${timerFrame.toFixed(1)}`}</TitleText>
+          <TitleText size={50}>{`${timerFrame.toFixed(1)}`}</TitleText>
           <View className=" flex-row gap-20">
             <TitleText size={30}>
               {answerStats[0]} / {answerStats[1]}
@@ -276,7 +276,7 @@ export default function Puzzle() {
                     }}
                     disabled={!btn.isOn}
                   >
-                    <TitleText size={60}>{btn.content}</TitleText>
+                    <TitleText size={50}>{btn.content}</TitleText>
                   </DefaultButton>
                 );
               })}
