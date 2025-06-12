@@ -9,6 +9,8 @@ import StyledText from '@/components/StyledText';
 import { getLocalStorage } from '@/stores/mmkvStorage';
 
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
+import { defaultGreen } from '@/styles/const';
+import TitleText from '@/components/TitleText';
 
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
@@ -22,7 +24,8 @@ export default function Loading() {
   // 네트워크 확인해서 모달 띄움
   const checkNetInfoTrigger = useCheckNetInfo(
     () => {
-      navigation.replace('NicknameNoti');
+      navigation.navigate('NetworkOfflineModal');
+      // navigation.replace('NicknameNoti');
     },
     () => {
       navigation.navigate('NetworkOfflineModal');
@@ -56,8 +59,8 @@ export default function Loading() {
   }, [isFirst]);
 
   return (
-    <View>
-      <StyledText className="text-red-500 text-6xl">Loading</StyledText>
+    <View className={`bg-[${defaultGreen}] flex-1 items-center justify-center`}>
+      <TitleText size={60}>Loading</TitleText>
     </View>
   );
 }

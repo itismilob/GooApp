@@ -15,6 +15,6 @@ export default function TitleText({ size, className, ...rest }: props) {
     return <StyledText className={'text-3xl ' + className} {...rest} />;
   }
   if (size == 60) {
-    return <StyledText className={'text-6xl ' + className} {...rest} />;
+    return <StyledText className={'h-20 text-6xl ' + className} {...rest} />;
   }
 }
