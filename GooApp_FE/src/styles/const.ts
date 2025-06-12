@@ -1,4 +1,4 @@
-export const lightGreen = '#39BC92';
+export const lightGreen = '#33AF88';
 export const defaultGreen = '#278b6c';
 export const darkGreen = '#1B624C';
 

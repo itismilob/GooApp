@@ -1,7 +1,7 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { TouchableOpacity, View, TouchableOpacityProps } from 'react-native';
 import TitleText from './TitleText';
-import { defaultGreen } from '@/styles/const';
+import { defaultRound, lightGreen } from '@/styles/const';
 
 interface props extends TouchableOpacityProps {
   className?: string;
@@ -15,14 +15,23 @@ export default function DefaultButton({
   color,
   ...rest
 }: props) {
-  const bg = color === 'green' ? defaultGreen : '';
-
-  return (
-    <TouchableOpacity
-      className={`bg-[${bg}] rounded-xl justify-center items-center ${className}`}
-      {...rest}
-    >
-      <TitleText size={30}>{children}</TitleText>
-    </TouchableOpacity>
-  );
+  if (color === 'green') {
+    return (
+      <TouchableOpacity
+        className={`bg-light-green p-8 w-full justify-center items-center rounded-default ${className}`}
+        {...rest}
+      >
+        <TitleText size={30}>{children}</TitleText>
+      </TouchableOpacity>
+    );
+  } else {
+    return (
+      <TouchableOpacity
+        className={`p-8 w-full justify-center items-center rounded-default ${className}`}
+        {...rest}
+      >
+        <TitleText size={30}>{children}</TitleText>
+      </TouchableOpacity>
+    );
+  }
 }

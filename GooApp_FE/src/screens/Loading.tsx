@@ -4,12 +4,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
-import StyledText from '@/components/StyledText';
-
 import { getLocalStorage } from '@/stores/mmkvStorage';
 
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
-import { defaultGreen } from '@/styles/const';
 import TitleText from '@/components/TitleText';
 
 export default function Loading() {
@@ -58,7 +55,7 @@ export default function Loading() {
   }, [isFirst]);
 
   return (
-    <View className={`bg-[${defaultGreen}] flex-1 items-center justify-center`}>
+    <View className={`bg-default-green flex-1 items-center justify-center`}>
       <TitleText size={50}>Loading</TitleText>
     </View>
   );

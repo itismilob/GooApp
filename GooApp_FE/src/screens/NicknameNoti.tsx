@@ -47,9 +47,9 @@ export default function NicknameNoti() {
 
   return (
     <View
-      className={`bg-[${defaultGreen}] flex-1 items-center justify-center p-[50]`}
+      className={`bg-default-green flex-1 items-center justify-center p-[50]`}
     >
-      <View>
+      <View className="flex-1 justify-center">
         <TitleText size={30}>당신은...</TitleText>
         <TitleText size={50}>
           {userData?.nickname}
@@ -63,7 +63,6 @@ export default function NicknameNoti() {
       </View>
       <DefaultButton
         color="green"
-        className="absolute bottom-10"
         onPress={() => {
           navigation.replace('Home');
         }}
