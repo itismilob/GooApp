@@ -86,7 +86,7 @@ export default function Record() {
             <DefaultButton
               color="green"
               onPress={() => {
-                navigation.replace('Puzzle');
+                navigation.replace('Tutorial');
               }}
             >
               퍼즐 플레이
