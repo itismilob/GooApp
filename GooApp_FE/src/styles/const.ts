@@ -16,8 +16,10 @@ export const buttonHeight = '80px';
 export const listHiehgt = '60px';
 export const divLineHeight = '4px';
 
-export const defaultGap = '30px';
+export const defaultGap = '30';
 export const listGap = '10px';
+
+export const defaultRound = '20';
 
 export const h1 = '60px';
 export const h2 = '40px';
