@@ -10,7 +10,6 @@ import Frame from '../assets/images/frame.svg';
 
 import { Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
-import { getLocalUserData } from '@/stores/localStorageFunctions';
 
 export default function Tutorial() {
   type NavigationProp = NativeStackNavigationProp<
@@ -23,14 +22,6 @@ export default function Tutorial() {
   const windowHeight = Dimensions.get('window').height;
 
   const [next, setNext] = useState<boolean>(false);
-
-  useEffect(() => {
-    const localData = getLocalUserData();
-
-    if (localData?.topScore !== 0) {
-      navigation.replace('Puzzle');
-    }
-  }, []);
 
   return (
     <Pressable

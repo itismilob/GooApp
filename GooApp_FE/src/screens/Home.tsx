@@ -14,6 +14,7 @@ import IconButton from '@/components/IconButton';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FA5Icons from 'react-native-vector-icons/FontAwesome5';
+import { getLocalUserData } from '@/stores/localStorageFunctions';
 
 export default function Home() {
   type NavigationProp = NativeStackNavigationProp<
@@ -25,13 +26,18 @@ export default function Home() {
 
   const [userData, setUserData] = useState<UserDataType>();
 
-  const getUserData = () => {
-    const userDataString = LocalStorage.getString('userData');
-    if (userDataString) setUserData(JSON.parse(userDataString));
+  const puzzleClickHandler = () => {
+    const localData = getLocalUserData();
+    if (localData?.topScore !== 0) {
+      navigation.navigate('Puzzle');
+    } else {
+      navigation.navigate('Tutorial');
+    }
   };
 
   useEffect(() => {
-    getUserData();
+    const localData = getLocalUserData();
+    setUserData(localData);
   }, []);
 
   return (
@@ -42,17 +48,12 @@ export default function Home() {
       </View>
 
       <View className="flex-1 gap-default justify-center ">
-        <IconButton
-          onPress={() => {
-            navigation.navigate('Tutorial');
-          }}
-          text="퍼즐"
-        >
+        <IconButton onPress={puzzleClickHandler} text="퍼즐">
           <IonIcons name="extension-puzzle" size={30} color={'white'} />
         </IconButton>
         <IconButton
           onPress={() => {
-            navigation.navigate('Tutorial');
+            navigation.navigate('Record');
           }}
           text="기록"
         >
@@ -60,7 +61,7 @@ export default function Home() {
         </IconButton>
         <IconButton
           onPress={() => {
-            navigation.navigate('Tutorial');
+            navigation.navigate('Rank');
           }}
           text="랭킹"
         >
