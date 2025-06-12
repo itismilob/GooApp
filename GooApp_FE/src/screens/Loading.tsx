@@ -4,11 +4,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
-import StyledText from '@/components/StyledText';
-
 import { getLocalStorage } from '@/stores/mmkvStorage';
 
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
+import TitleText from '@/components/TitleText';
 
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
@@ -42,6 +41,7 @@ export default function Loading() {
 
     // 첫 실행인지 확인하고 아니면 Home으로 이동
     const result = checkFirstStart();
+
     setIsFirst(result);
     if (!result) {
       navigation.replace('Home');
@@ -56,8 +56,8 @@ export default function Loading() {
   }, [isFirst]);
 
   return (
-    <View>
-      <StyledText className="text-red-500 text-6xl">Loading</StyledText>
+    <View className={`bg-default-green flex-1 items-center justify-center`}>
+      <TitleText size={50}>Loading</TitleText>
     </View>
   );
 }

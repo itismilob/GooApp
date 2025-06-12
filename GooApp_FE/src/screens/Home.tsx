@@ -9,6 +9,15 @@ import HeaderButton from '@/components/HeaderButton';
 import { useEffect, useState } from 'react';
 import { UserDataType } from '@/types/dataTypes';
 import { getLocalStorage } from '@/stores/mmkvStorage';
+import IconButton from '@/components/IconButton';
+
+import IonIcons from 'react-native-vector-icons/Ionicons';
+import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FA5Icons from 'react-native-vector-icons/FontAwesome5';
+import {
+  getLocalScoreData,
+  getLocalUserData,
+} from '@/stores/localStorageFunctions';
 
 export default function Home() {
   type NavigationProp = NativeStackNavigationProp<
@@ -20,46 +29,43 @@ export default function Home() {
 
   const [userData, setUserData] = useState<UserDataType>();
 
-  const getUserData = () => {
-    const userDataString = LocalStorage.getString('userData');
-    if (userDataString) setUserData(JSON.parse(userDataString));
-  };
-
   useEffect(() => {
-    getUserData();
+    const localData = getLocalUserData();
+    setUserData(localData);
   }, []);
 
   return (
-    <View>
-      <Text>GooApp</Text>
-      <Text>{userData?.nickname}</Text>
+    <View className="bg-default-green flex-1 p-default">
+      <View className="flex-1 items-center justify-center gap-default">
+        <TitleText size={60}>GooApp</TitleText>
+        <TitleText size={30}>{userData?.nickname}</TitleText>
+      </View>
 
-      <View>
-        <DefaultButton
-          className="bg-green-700"
+      <View className="flex-1 gap-default justify-center ">
+        <IconButton
           onPress={() => {
             navigation.navigate('Tutorial');
           }}
+          text="퍼즐"
         >
-          <TitleText size={30}>퍼즐</TitleText>
-        </DefaultButton>
-
-        <DefaultButton
-          className="bg-green-700"
+          <IonIcons name="extension-puzzle" size={30} color={'white'} />
+        </IconButton>
+        <IconButton
           onPress={() => {
             navigation.navigate('Record');
           }}
+          text="기록"
         >
-          <TitleText size={30}>기록</TitleText>
-        </DefaultButton>
-        <DefaultButton
-          className="bg-green-700"
+          <MCIcons name="bullseye-arrow" size={30} color={'white'} />
+        </IconButton>
+        <IconButton
           onPress={() => {
             navigation.navigate('Rank');
           }}
+          text="랭킹"
         >
-          <TitleText size={30}>랭킹</TitleText>
-        </DefaultButton>
+          <FA5Icons name="trophy" size={24} color={'white'} />
+        </IconButton>
       </View>
     </View>
   );

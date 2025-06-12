@@ -1,23 +1,27 @@
 import { View } from 'react-native';
 import TitleText from './TitleText';
+import Line from './Line';
 
 interface props {
-  content: {
-    a: string;
-    b: string;
-    c: string;
-  };
+  content: string[];
 }
 
 export default function RecordListLine({ content }: props) {
   return (
-    <View className="pt-10">
-      <View className="flex-row h-16 justify-between">
-        <TitleText size={30}>{content.a}</TitleText>
-        <TitleText size={30}>{content.b}</TitleText>
-        <TitleText size={30}>{content.c}</TitleText>
+    <>
+      <View className="py-3">
+        <View className="flex-row h-16 px-default justify-between items-center">
+          <TitleText className="flex-1 text-left" size={30}>
+            {content[0]}
+          </TitleText>
+          <TitleText className="flex-1 text-center" size={30}>
+            {content[1]}
+          </TitleText>
+          <TitleText className="flex-1 text-right" size={30}>
+            {content[2]}
+          </TitleText>
+        </View>
       </View>
-      <View className="w-full h-1 bg-green-950" />
-    </View>
+    </>
   );
 }

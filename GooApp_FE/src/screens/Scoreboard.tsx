@@ -19,6 +19,7 @@ import {
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
 import { getRankChanges } from '@/services/userDataAPIs';
+import Line from '@/components/Line';
 
 // 랭크 상승 : -1, 유지 : 0, 하락 : 1
 type RankChangeType = -1 | 0 | 1;
@@ -42,7 +43,9 @@ export default function Scoreboard() {
   const [topScore, setTopScore] = useState<number>(0);
   // 네트워크 연결 유무
   const [isNetworkOn, setIsNetworkOn] = useState<boolean>(true);
-  // 랭크
+  // 기록 변경사항
+  const [recordChangeState, setRecordChangeState] = useState<RankChangeType>(0);
+  // 랭크 변경사항
   const [rankChangeState, setRankChangeState] = useState<RankChangeType>(0);
   // 유저 데이터
   const [userData, setUserData] = useState<UserDataType | undefined>();
@@ -91,37 +94,40 @@ export default function Scoreboard() {
     const localUser = getLocalUserData();
     if (!localUser) return;
 
-    if (scoreData!.score > localUser.topScore) {
+    const score = scoreData!.score;
+    if (score > localUser.topScore) {
       // 최고기록 경신
-      const newUserData = { ...localUser, topScore: scoreData!.score };
+      const newUserData = { ...localUser, topScore: score };
       setLocalUserData(newUserData);
-      setTopScore(scoreData!.score);
-    } else {
-      // 최고기록 변경 X
-      setTopScore(localUser.topScore);
+      setTopScore(score);
+      setRecordChangeState(-1);
+      return;
+    } else if (score < localUser.topScore) {
+      setRecordChangeState(1);
     }
+    // 최고기록 변경 X
+    setTopScore(localUser.topScore);
   };
 
   // 점수 변동 아이콘 정함
   const getScoreIcon = () => {
-    if (scoreData) {
-      if (scoreData.score > topScore) {
-        return <Icon name="arrow-up" color={'blue'} />;
-      } else if (scoreData.score < topScore) {
-        return <Icon name="arrow-down" color={'red'} />;
-      }
+    if (recordChangeState === -1) {
+      return <Icon name="arrow-up" size={25} color={'blue'} />;
+    } else if (recordChangeState === 1) {
+      return <Icon name="arrow-down" size={25} color={'red'} />;
     }
-    return <Icon name="minus" color={'white'} />;
+
+    return <Icon name="minus" size={25} color={'white'} />;
   };
 
   // 랭킹 변동 아이콘 정함
   const getRankIcon = () => {
     if (rankChangeState === -1) {
-      return <Icon name="arrow-up" color={'blue'} />;
+      return <Icon name="arrow-up" size={25} color={'blue'} />;
     } else if (rankChangeState === 1) {
-      return <Icon name="arrow-down" color={'red'} />;
+      return <Icon name="arrow-down" size={25} color={'red'} />;
     }
-    return <Icon name="minus" color={'white'} />;
+    return <Icon name="minus" size={25} color={'white'} />;
   };
 
   useEffect(() => {
@@ -165,46 +171,53 @@ export default function Scoreboard() {
   }, [isNetworkOn]);
 
   return (
-    <View className="w-full h-full justify-center items-center bg-green-500">
+    <View className="flex-1 bg-default-green">
       <HeaderButton>점수판</HeaderButton>
-      <View className="w-full items-center">
-        <TitleText size={60}>{`${scoreData?.score}점`}</TitleText>
-        <View className="flex-row justify-center gap-10 w-full">
-          <TitleText
-            size={30}
-          >{`${scoreData?.correct} / ${scoreData?.wrong}`}</TitleText>
-          <TitleText size={30}>{`${scoreData?.accuracy}%`}</TitleText>
-        </View>
-      </View>
 
-      <View className="w-60">
-        <View className="flex-row justify-between">
-          <StyledText>최고 기록 : </StyledText>
-          <View className="flex-row gap-1">
-            <StyledText>{topScore}</StyledText>
-            {getScoreIcon()}
-          </View>
-        </View>
-        {isNetworkOn ? (
-          <View className="flex-row justify-between">
-            <StyledText>현재 랭킹 : </StyledText>
-            <View className="flex-row gap-1">
-              <StyledText>{userData?.rank}</StyledText>
-              {getRankIcon()}
+      <View className="p-default flex-1">
+        <View className="flex-1 justify-center items-center gap-default ">
+          <View className="w-full items-center  gap-default">
+            <TitleText size={60}>{`${scoreData?.score}점`}</TitleText>
+            <View className="flex-row justify-center gap-10 w-full">
+              <TitleText
+                size={30}
+              >{`${scoreData?.correct} / ${scoreData?.wrong}`}</TitleText>
+              <TitleText size={30}>{`${scoreData?.accuracy}%`}</TitleText>
             </View>
           </View>
-        ) : (
-          <StyledText>네트워크 연결 필요</StyledText>
-        )}
-      </View>
 
-      <DefaultButton
-        onPress={() => {
-          navigation.navigate('Puzzle');
-        }}
-      >
-        <TitleText size={30}>다시하기</TitleText>
-      </DefaultButton>
+          <View className="w-full p-default gap-[50]">
+            <Line color="light" />
+            <View className="flex-row justify-between px-5">
+              <TitleText size={30}>최고 기록 : </TitleText>
+              <View className="flex-row gap-5 items-center">
+                <TitleText size={30}>{topScore}</TitleText>
+                {getScoreIcon()}
+              </View>
+            </View>
+            {isNetworkOn ? (
+              <View className="flex-row justify-between px-5">
+                <TitleText size={30}>현재 랭킹 : </TitleText>
+                <View className="flex-row gap-5 items-center">
+                  <TitleText size={30}>{userData?.rank}</TitleText>
+                  {getRankIcon()}
+                </View>
+              </View>
+            ) : (
+              <StyledText>네트워크 연결 필요</StyledText>
+            )}
+            <Line color="light" />
+          </View>
+        </View>
+        <DefaultButton
+          color="green"
+          onPress={() => {
+            navigation.navigate('Puzzle');
+          }}
+        >
+          다시하기
+        </DefaultButton>
+      </View>
     </View>
   );
 }

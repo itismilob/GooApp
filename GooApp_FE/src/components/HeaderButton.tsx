@@ -19,9 +19,9 @@ export default function HeaderButton({ children }: props) {
   const navigation = useNavigation<NavigationProp>();
 
   return (
-    <View className="w-full px-6 pt-14 pb-4 bg-green-700 flex-row items-center justify-between">
+    <View className="w-full px-6 py-4 bg-default-green flex-row items-center justify-between">
       <TouchableOpacity
-        className="w-3"
+        className="w-10"
         onPress={() => {
           navigation.popToTop();
         }}
