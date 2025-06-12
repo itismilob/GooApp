@@ -83,7 +83,7 @@ export default function Rank() {
             </View>
             <ScrollView className="w-full">
               {/* 랭킹 상위 100명 표시 */}
-              <View className="mt-[400] h-full bg-light-green rounded-default px-default">
+              <View className="mt-header h-full bg-light-green rounded-default px-default">
                 <RecordListLine content={['랭킹', '사용자', '점수']} />
                 {rankList.length > 0 &&
                   rankList.map((user, key) => (

@@ -58,7 +58,7 @@ export default function Record() {
             </View>
             <ScrollView className="w-full ">
               {/* 기록 리스트 표시 */}
-              <View className="mt-[400] h-full bg-light-green rounded-default px-default">
+              <View className="mt-header h-full bg-light-green rounded-default px-default">
                 <RecordListLine content={['점수', '맞춘 개수', '정확도']} />
                 {scores.length > 0 &&
                   scores.map((record, key) => (

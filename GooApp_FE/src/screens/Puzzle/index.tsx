@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import HeaderButton from '@/components/HeaderButton';
 import TitleText from '@/components/TitleText';
 import DefaultButton from '@/components/DefaultButton';
-import Information from '@/components/Information';
 
 import { useEffect, useRef, useState } from 'react';
 import { puzzleCount, puzzleStop, puzzleTime } from '@/const/puzzle';
@@ -244,10 +243,10 @@ export default function Puzzle() {
   }, [answerStats]);
 
   return (
-    <View className="bg-default-green w-full h-full">
+    <View className="bg-default-green flex-1">
       <HeaderButton>퍼즐</HeaderButton>
       {/* 점수, 시간 */}
-      <View className="items-center justify-center h-header gap-default">
+      <View className="items-center justify-center h-header gap-default relative">
         <TitleText size={60}>{`${timerFrame.toFixed(1)}`}</TitleText>
         <View className=" flex-row gap-20">
           <TitleText size={30}>
@@ -257,10 +256,10 @@ export default function Puzzle() {
             {getAccuracy(answerStats[0], answerStats[1])}%
           </TitleText>
         </View>
+        <TitleText className="absolute text-center bottom-4" size={30}>
+          정답을 짝지어 주세요
+        </TitleText>
       </View>
-      <TitleText className="w-full text-center bottom-10" size={30}>
-        정답을 짝지어 주세요
-      </TitleText>
       {/* 버튼 */}
       <View className="flex-row w-full flex-1 gap-default p-default">
         {[0, 1].map(side => (
