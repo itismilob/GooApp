@@ -8,12 +8,34 @@ import rankDataJSON from '@/test/rankData.json';
 import { getRankChanges } from '@/services/userDataAPIs';
 import RankListLine from '@/components/RankListLine';
 import RecordListLine from '@/components/RecordListLine';
+import useCheckNetInfo from '@/hooks/useCheckNetInfo';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { DefaultNavigatorParams } from '@/types/navigationTypes';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Rank() {
+  type NavigationProp = NativeStackNavigationProp<
+    DefaultNavigatorParams,
+    'Rank'
+  >;
+  const navigation = useNavigation<NavigationProp>();
+
+  // 네트워크 확인
+  const [isNetwork, setIsNetwork] = useState<boolean>(false);
   // 유저 정보
   const [userData, setUserData] = useState<UserDataType | undefined>();
   // 랭킹 리스트
   const [rankList, setRankList] = useState<UserDataType[]>([]);
+
+  // 네트워크 확인해서 모달 띄움
+  const checkNetInfoTrigger = useCheckNetInfo(
+    () => {
+      setIsNetwork(true);
+    },
+    () => {
+      navigation.navigate('NetworkOfflineModal');
+    },
+  );
 
   // 서버에서 랭킹 정보를 가져옴
   const getRankList = async () => {
@@ -31,11 +53,17 @@ export default function Rank() {
   };
 
   useEffect(() => {
-    // 유저 랭킹의 변동사항을 가져옴
-    getRankChanges(newUserData => {
-      setUserData(newUserData);
-    });
+    checkNetInfoTrigger();
   }, []);
+
+  useEffect(() => {
+    if (isNetwork) {
+      // 유저 랭킹의 변동사항을 가져옴
+      getRankChanges(newUserData => {
+        setUserData(newUserData);
+      });
+    }
+  }, [isNetwork]);
 
   useEffect(() => {
     if (userData) getRankList();
