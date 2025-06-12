@@ -1,10 +1,17 @@
-import { Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import DefaultButton from '@/components/DefaultButton';
 import HeaderButton from '@/components/HeaderButton';
 import TitleText from '@/components/TitleText';
+
+import Tutorial1 from '../assets/images/tutorial1.svg';
+import Tutorial2 from '../assets/images/tutorial2.svg';
+import Frame from '../assets/images/frame.svg';
+
+import { Dimensions } from 'react-native';
+import { useState } from 'react';
 
 export default function Tutorial() {
   type NavigationProp = NativeStackNavigationProp<
@@ -13,18 +20,29 @@ export default function Tutorial() {
   >;
   const navigation = useNavigation<NavigationProp>();
 
-  return (
-    <View className="flex w-full h-full">
-      <HeaderButton>Tutorial</HeaderButton>
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
 
+  const [next, setNext] = useState<boolean>(false);
+
+  return (
+    <View className="flex-1 bg-default-green">
+      <Frame height={windowHeight} width={windowWidth} />
+      <View className=" flex-1 w-full h-full absolute bg-transparent-dark">
+        {next === false ? (
+          <Tutorial1 height={windowHeight} width={windowWidth} />
+        ) : (
+          <Tutorial2 height={windowHeight} width={windowWidth} />
+        )}
+      </View>
       <DefaultButton
+        className="absolute bottom-10"
         onPress={() => {
-          navigation.replace('Puzzle');
+          if (next) navigation.replace('Puzzle');
+          else setNext(true);
         }}
       >
-        <TitleText size={30} className="color-black">
-          확인
-        </TitleText>
+        확인
       </DefaultButton>
     </View>
   );
