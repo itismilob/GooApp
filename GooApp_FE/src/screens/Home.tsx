@@ -36,7 +36,7 @@ export default function Home() {
 
   return (
     <View className="bg-default-green flex-1 p-default">
-      <View className="h-header items-center justify-end gap-6">
+      <View className="h-header items-center justify-center gap-6">
         <TitleText size={60}>GooApp</TitleText>
         <TitleText size={30}>{userData?.nickname}</TitleText>
       </View>

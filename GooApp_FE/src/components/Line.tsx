@@ -5,5 +5,5 @@ interface props {
 }
 
 export default function Line({ color }: props) {
-  return <View className={'h-2 w-full rounded-full ' + `bg-${color}-green`} />;
+  return <View className={'h-1 w-full rounded-full ' + `bg-${color}-green`} />;
 }
