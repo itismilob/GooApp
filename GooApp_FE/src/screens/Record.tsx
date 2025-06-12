@@ -30,15 +30,15 @@ export default function Record() {
   }, []);
 
   return (
-    <>
+    <View className="flex-1 bg-default-green">
       <HeaderButton>기록</HeaderButton>
-      <View className="h-full bg-green-700">
+      <View className="flex-1">
         {topScore ? (
-          <ScrollView className="h-full bg-green-600">
+          <>
             {/* 최고기록 표시 */}
-            <View className="h-60 w-full bg-green-700 items-center">
+            <View className="absolute h-header top-0 w-full items-center justify-center gap-default">
               <TitleText size={30}>최고기록</TitleText>
-              <TitleText size={50}>{topScore?.score}점</TitleText>
+              <TitleText size={60}>{topScore?.score}점</TitleText>
               <View className="flex-row justify-between w-60">
                 <View>
                   <TitleText size={30}>
@@ -48,24 +48,24 @@ export default function Record() {
                 <TitleText size={30}>{topScore?.accuracy}%</TitleText>
               </View>
             </View>
-            {/* 기록 리스트 표시 */}
-            <View>
-              <RecordListLine
-                content={{ a: '점수', b: '맞춘 개수', c: '정확도' }}
-              />
-              {scores.length > 0 &&
-                scores.map((record, key) => (
-                  <RecordListLine
-                    key={key}
-                    content={{
-                      a: `${record.score}점`,
-                      b: `${record.correct} / ${record.wrong}`,
-                      c: `${record.accuracy}%`,
-                    }}
-                  />
-                ))}
-            </View>
-          </ScrollView>
+            <ScrollView className="w-full ">
+              {/* 기록 리스트 표시 */}
+              <View className="mt-[400] h-full bg-light-green rounded-default px-default">
+                <RecordListLine content={['점수', '맞춘 개수', '정확도']} />
+                {scores.length > 0 &&
+                  scores.map((record, key) => (
+                    <RecordListLine
+                      key={key}
+                      content={[
+                        `${record.score}점`,
+                        `${record.correct} / ${record.wrong}`,
+                        `${record.accuracy}%`,
+                      ]}
+                    />
+                  ))}
+              </View>
+            </ScrollView>
+          </>
         ) : (
           <View className="items-center">
             <TitleText size={50}>기록이 없습니다.</TitleText>
@@ -73,6 +73,6 @@ export default function Record() {
           </View>
         )}
       </View>
-    </>
+    </View>
   );
 }
