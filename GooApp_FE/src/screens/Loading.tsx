@@ -41,6 +41,7 @@ export default function Loading() {
 
     // 첫 실행인지 확인하고 아니면 Home으로 이동
     const result = checkFirstStart();
+
     setIsFirst(result);
     if (!result) {
       navigation.replace('Home');
@@ -50,6 +51,7 @@ export default function Loading() {
   useEffect(() => {
     // 첫 실행인지 확인이 된 후 네트워크 확인
     if (isFirst) {
+      console.log(111);
       checkNetInfoTrigger();
     }
   }, [isFirst]);

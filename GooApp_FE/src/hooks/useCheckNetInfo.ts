@@ -18,7 +18,7 @@ export default function useCheckNetInfo(
         disconnected();
       }
     }
-  }, [netInfo]);
+  }, [netInfo, trigger]);
 
   const triggerOn = () => {
     setTrigger(true);

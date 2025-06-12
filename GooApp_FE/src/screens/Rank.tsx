@@ -89,11 +89,7 @@ export default function Rank() {
                   rankList.map((user, key) => (
                     <RankListLine
                       key={key}
-                      content={[
-                        user.rank.toString(),
-                        user.nickname,
-                        `${user.topScore}점`,
-                      ]}
+                      content={[user.rank, user.nickname, `${user.topScore}점`]}
                     />
                   ))}
               </View>
