@@ -2,7 +2,7 @@ import { TextProps } from 'react-native';
 import StyledText from './StyledText';
 
 interface props extends TextProps {
-  size: 20 | 30 | 50;
+  size: 20 | 30 | 50 | 60;
   className?: string;
 }
 
@@ -17,6 +17,11 @@ export default function TitleText({ size, className, ...rest }: props) {
   if (size == 50) {
     return (
       <StyledText className={'leading-[1.4] text-5xl ' + className} {...rest} />
+    );
+  }
+  if (size == 60) {
+    return (
+      <StyledText className={'leading-[1.4] text-6xl ' + className} {...rest} />
     );
   }
 }
