@@ -1,22 +1,30 @@
+import DefaultButton from '@/components/DefaultButton';
 import HeaderButton from '@/components/HeaderButton';
 import RecordListLine from '@/components/RecordListLine';
 import TitleText from '@/components/TitleText';
+import { getLocalScoreData } from '@/stores/localStorageFunctions';
 import { getLocalStorage } from '@/stores/mmkvStorage';
 import { ScoreDataType } from '@/types/dataTypes';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { DefaultNavigatorParams } from '@/types/navigationTypes';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Record() {
-  const localStorage = getLocalStorage();
+  type NavigationProp = NativeStackNavigationProp<
+    DefaultNavigatorParams,
+    'Record'
+  >;
+  const navigation = useNavigation<NavigationProp>();
 
   const [scores, setScores] = useState<ScoreDataType[]>([]);
   const [topScore, setTopScore] = useState<ScoreDataType>();
 
   const getScores = () => {
-    const result = localStorage.getString('scoreData');
-    if (!result) return;
+    const newScore = getLocalScoreData();
+    if (!newScore) return;
 
-    const newScore: ScoreDataType[] = JSON.parse(result);
     setScores(newScore);
 
     const newTop = newScore.reduce((prev, curr) => {
@@ -67,9 +75,19 @@ export default function Record() {
             </ScrollView>
           </>
         ) : (
-          <View className="items-center">
-            <TitleText size={50}>기록이 없습니다.</TitleText>
-            <TitleText size={30}>게임을 플레이 해주세요.</TitleText>
+          <View className="p-default flex-1">
+            <View className="items-center justify-center flex-1 gap-default">
+              <TitleText size={50}>기록이 없습니다.</TitleText>
+              <TitleText size={30}>퍼즐을 플레이 해주세요.</TitleText>
+            </View>
+            <DefaultButton
+              color="green"
+              onPress={() => {
+                navigation.replace('Puzzle');
+              }}
+            >
+              퍼즐 플레이
+            </DefaultButton>
           </View>
         )}
       </View>

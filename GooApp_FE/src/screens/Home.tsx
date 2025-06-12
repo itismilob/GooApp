@@ -29,15 +29,6 @@ export default function Home() {
 
   const [userData, setUserData] = useState<UserDataType>();
 
-  const puzzleClickHandler = () => {
-    const localData = getLocalScoreData();
-    if (localData && localData.length > 0) {
-      navigation.navigate('Puzzle');
-    } else {
-      navigation.navigate('Tutorial');
-    }
-  };
-
   useEffect(() => {
     const localData = getLocalUserData();
     setUserData(localData);
@@ -51,7 +42,12 @@ export default function Home() {
       </View>
 
       <View className="flex-1 gap-default justify-center ">
-        <IconButton onPress={puzzleClickHandler} text="퍼즐">
+        <IconButton
+          onPress={() => {
+            navigation.navigate('Tutorial');
+          }}
+          text="퍼즐"
+        >
           <IonIcons name="extension-puzzle" size={30} color={'white'} />
         </IconButton>
         <IconButton

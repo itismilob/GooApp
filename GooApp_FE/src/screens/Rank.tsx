@@ -23,7 +23,7 @@ export default function Rank() {
 
       // 더미 데이터 사용
       const rank: UserDataType[] = rankDataJSON;
-      console.log(rank);
+
       if (rank) setRankList(rank);
     } catch (error) {
       console.error(error);
@@ -72,8 +72,10 @@ export default function Rank() {
             </ScrollView>
           </>
         ) : (
-          <View className="items-center">
-            <TitleText size={50}>사용자 정보를 불러오지 못했습니다.</TitleText>
+          <View className="gap-default justify-center items-center flex-1">
+            <TitleText size={50} className="text-center">
+              {'사용자 정보를\n불러오지 못했습니다.'}
+            </TitleText>
             <TitleText size={30}>다시 시도해주세요.</TitleText>
           </View>
         )}

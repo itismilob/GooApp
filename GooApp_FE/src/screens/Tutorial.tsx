@@ -10,6 +10,7 @@ import Frame from '../assets/images/frame.svg';
 
 import { Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
+import { getLocalScoreData } from '@/stores/localStorageFunctions';
 
 export default function Tutorial() {
   type NavigationProp = NativeStackNavigationProp<
@@ -23,25 +24,34 @@ export default function Tutorial() {
 
   const [next, setNext] = useState<boolean>(false);
 
+  useEffect(() => {
+    const localData = getLocalScoreData();
+    if (localData && localData.length > 0) {
+      navigation.navigate('Puzzle');
+    }
+  }, []);
+
   return (
-    <Pressable
-      onPress={() => {
-        if (next) navigation.replace('Puzzle');
-        else setNext(true);
-      }}
-      className="flex-1 bg-default-green"
-    >
+    <View className="flex-1 bg-default-green">
       <Frame height={windowHeight} width={windowWidth} />
-      <View className=" flex-1 w-full h-full absolute bg-transparent-dark">
+      <View className="flex-1 w-full h-full absolute bg-transparent-dark">
         {next === false ? (
           <Tutorial1 height={windowHeight} width={windowWidth} />
         ) : (
           <Tutorial2 height={windowHeight} width={windowWidth} />
         )}
       </View>
-      <TitleText size={30} className="text-center w-full absolute bottom-10">
-        확인
-      </TitleText>
-    </Pressable>
+      <Pressable
+        onPress={() => {
+          if (next) navigation.replace('Puzzle');
+          else setNext(true);
+        }}
+        className="absolute w-full h-full p-default align-bottom justify-end"
+      >
+        <TitleText size={30} className="text-center">
+          확인
+        </TitleText>
+      </Pressable>
+    </View>
   );
 }
