@@ -27,7 +27,7 @@ export default function Tutorial() {
   useEffect(() => {
     const localData = getLocalScoreData();
     if (localData && localData.length > 0) {
-      navigation.navigate('Puzzle');
+      navigation.replace('Puzzle');
     }
   }, []);
 

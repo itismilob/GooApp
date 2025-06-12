@@ -51,7 +51,6 @@ export default function Loading() {
   useEffect(() => {
     // 첫 실행인지 확인이 된 후 네트워크 확인
     if (isFirst) {
-      console.log(111);
       checkNetInfoTrigger();
     }
   }, [isFirst]);

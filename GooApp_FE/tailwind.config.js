@@ -17,11 +17,11 @@ module.exports = {
       spacing: {
         default: '30px',
         list: '10px',
-        header: '300px',
+        header: '40vh',
       },
       height: {
         nav: '90px',
-        header: '300px',
+        header: '40vh',
         button: '80px',
         list: '60px',
         'div-line': '4px',

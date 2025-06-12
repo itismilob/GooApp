@@ -10,6 +10,8 @@ import { ScrollView, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
+import ListLiner from '@/components/ListLiner';
+import Line from '@/components/Line';
 
 export default function Record() {
   type NavigationProp = NativeStackNavigationProp<
@@ -56,20 +58,21 @@ export default function Record() {
                 <TitleText size={30}>{topScore?.accuracy}%</TitleText>
               </View>
             </View>
-            <ScrollView className="w-full ">
+            <ScrollView className="w-full">
               {/* 기록 리스트 표시 */}
-              <View className="mt-header h-full bg-light-green rounded-default px-default">
+              <View className="mt-header min-h-screen bg-light-green rounded-default">
                 <RecordListLine content={['점수', '맞춘 개수', '정확도']} />
                 {scores.length > 0 &&
                   scores.map((record, key) => (
-                    <RecordListLine
-                      key={key}
-                      content={[
-                        `${record.score}점`,
-                        `${record.correct} / ${record.wrong}`,
-                        `${record.accuracy}%`,
-                      ]}
-                    />
+                    <ListLiner key={key} index={key}>
+                      <RecordListLine
+                        content={[
+                          `${record.score}점`,
+                          `${record.correct} / ${record.wrong}`,
+                          `${record.accuracy}%`,
+                        ]}
+                      />
+                    </ListLiner>
                   ))}
               </View>
             </ScrollView>

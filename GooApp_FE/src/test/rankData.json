@@ -1,66 +1,72 @@
 [
   {
-    "userID": "TestUSER",
+    "userID": "22",
     "nickname": "멋있는 노랑색 코끼리",
     "rank": 1,
     "topScore": 10000
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 2,
     "topScore": 222
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 3,
     "topScore": 222
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 4,
     "topScore": 222
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 5,
     "topScore": 222
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 6,
     "topScore": 222
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 7,
     "topScore": 222
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 8,
     "topScore": 222
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 9,
     "topScore": 222
   },
   {
-    "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "userID": "22",
+    "nickname": "someUser",
     "rank": 10,
     "topScore": 222
   },
   {
     "userID": "TestUSER",
+    "nickname": "TestUSER",
+    "rank": 22,
+    "topScore": 22
+  },
+  {
+    "userID": "22",
     "nickname": "멋있는 노랑색 코끼리",
     "rank": 100,
     "topScore": 10

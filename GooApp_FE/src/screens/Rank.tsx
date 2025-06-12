@@ -12,6 +12,7 @@ import useCheckNetInfo from '@/hooks/useCheckNetInfo';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
+import ListLiner from '@/components/ListLiner';
 
 export default function Rank() {
   type NavigationProp = NativeStackNavigationProp<
@@ -83,15 +84,34 @@ export default function Rank() {
             </View>
             <ScrollView className="w-full">
               {/* 랭킹 상위 100명 표시 */}
-              <View className="mt-header h-full bg-light-green rounded-default px-default">
+              <View className="mt-header min-h-screen bg-light-green rounded-default ">
                 <RecordListLine content={['랭킹', '사용자', '점수']} />
                 {rankList.length > 0 &&
-                  rankList.map((user, key) => (
-                    <RankListLine
-                      key={key}
-                      content={[user.rank, user.nickname, `${user.topScore}점`]}
-                    />
-                  ))}
+                  rankList.map((user, key) =>
+                    user.userID === userData.userID ? (
+                      <ListLiner key={key} index={key}>
+                        <View className="bg-default-green border-white border-y-4 border-solid">
+                          <RankListLine
+                            content={[
+                              user.rank,
+                              user.nickname,
+                              `${user.topScore}점`,
+                            ]}
+                          />
+                        </View>
+                      </ListLiner>
+                    ) : (
+                      <ListLiner key={key} index={key}>
+                        <RankListLine
+                          content={[
+                            user.rank,
+                            user.nickname,
+                            `${user.topScore}점`,
+                          ]}
+                        />
+                      </ListLiner>
+                    ),
+                  )}
               </View>
             </ScrollView>
           </>

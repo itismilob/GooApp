@@ -11,7 +11,7 @@ export default function RankListLine({ content }: props) {
   return (
     <>
       <View className="py-3">
-        <View className="flex-row h-16 px-3 gap-3 justify-between items-center">
+        <View className="flex-row h-16 px-default gap-3 justify-between items-center">
           {content[0] <= 3 ? (
             <View className="right-5 w-[50]">
               <Trophy rank={content[0]} />
@@ -29,7 +29,6 @@ export default function RankListLine({ content }: props) {
           </TitleText>
         </View>
       </View>
-      <Line color="default" />
     </>
   );
 }
