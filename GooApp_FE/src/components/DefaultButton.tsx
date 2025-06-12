@@ -1,18 +1,28 @@
 import { ReactElement } from 'react';
 import { TouchableOpacity, View, TouchableOpacityProps } from 'react-native';
+import TitleText from './TitleText';
+import { defaultGreen } from '@/styles/const';
 
 interface props extends TouchableOpacityProps {
-  children: ReactElement;
   className?: string;
+  children: string;
+  color?: 'green';
 }
 
-export default function DefaultButton({ children, className, ...rest }: props) {
+export default function DefaultButton({
+  children,
+  className,
+  color,
+  ...rest
+}: props) {
+  const bg = color === 'green' ? defaultGreen : '';
+
   return (
     <TouchableOpacity
-      className={'rounded-xl justify-center items-center ' + className}
+      className={`bg-[${bg}] rounded-xl justify-center items-center ${className}`}
       {...rest}
     >
-      {children}
+      <TitleText size={30}>{children}</TitleText>
     </TouchableOpacity>
   );
 }

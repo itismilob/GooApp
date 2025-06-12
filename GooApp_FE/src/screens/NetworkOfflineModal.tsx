@@ -34,7 +34,7 @@ export default function NetworkOfflineModal() {
           navigation.popToTop();
         }}
       >
-        <TitleText size={30}>확인</TitleText>
+        확인
       </DefaultButton>
     </View>
   );

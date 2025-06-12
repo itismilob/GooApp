@@ -24,8 +24,7 @@ export default function Loading() {
   // 네트워크 확인해서 모달 띄움
   const checkNetInfoTrigger = useCheckNetInfo(
     () => {
-      navigation.navigate('NetworkOfflineModal');
-      // navigation.replace('NicknameNoti');
+      navigation.replace('NicknameNoti');
     },
     () => {
       navigation.navigate('NetworkOfflineModal');
