@@ -66,7 +66,7 @@ export default function Puzzle() {
       side.forEach((quest, j) => {
         if (!renderBtns[i][j] || renderBtns[i][j]?.isOn)
           newRenderBtns[i][j] = {
-            color: 'bg-green-700',
+            color: 'bg-light-green',
             ...quest!,
             isOn: true,
           };
@@ -83,13 +83,13 @@ export default function Puzzle() {
     // 전체 버튼 색상 초기화
     newRenderBtns.forEach(side => {
       side.forEach(btn => {
-        btn.color = 'bg-green-700';
+        btn.color = 'bg-light-green';
       });
     });
 
     if (clickedBtn) {
       // 선택한 버튼이 있으면 색상 선택
-      newRenderBtns[clickedBtn.side][clickedBtn.index].color = 'bg-green-950';
+      newRenderBtns[clickedBtn.side][clickedBtn.index].color = 'bg-dark-green';
     }
 
     // 버튼 색상 변화
@@ -112,7 +112,7 @@ export default function Puzzle() {
     setTimeout(() => {
       setRenderBtns(prev => {
         const temp = [...prev];
-        temp[btn.side][btn.index].color = 'bg-green-700';
+        temp[btn.side][btn.index].color = 'bg-light-green';
         temp[btn.side][btn.index].isOn = true;
         return temp;
       });
@@ -170,8 +170,8 @@ export default function Puzzle() {
         temp[1] += 1;
         return temp;
       });
-      indicateBtnColor(selectedBtn, 'bg-red-700');
-      indicateBtnColor(clickedBtn, 'bg-red-700');
+      indicateBtnColor(selectedBtn, 'bg-default-red');
+      indicateBtnColor(clickedBtn, 'bg-default-red');
     }
 
     // 선택 버튼 초기화
@@ -244,27 +244,27 @@ export default function Puzzle() {
   }, [answerStats]);
 
   return (
-    <View className="bg-green-500 w-full h-full">
+    <View className="bg-default-green w-full h-full">
       <HeaderButton>퍼즐</HeaderButton>
       {/* 점수, 시간 */}
-      <Information>
-        <>
-          <TitleText size={50}>{`${timerFrame.toFixed(1)}`}</TitleText>
-          <View className=" flex-row gap-20">
-            <TitleText size={30}>
-              {answerStats[0]} / {answerStats[1]}
-            </TitleText>
-            <TitleText size={30}>
-              {getAccuracy(answerStats[0], answerStats[1])}%
-            </TitleText>
-          </View>
-          <TitleText size={20}>정답을 짝지어 주세요</TitleText>
-        </>
-      </Information>
+      <View className="items-center justify-center h-header gap-default">
+        <TitleText size={60}>{`${timerFrame.toFixed(1)}`}</TitleText>
+        <View className=" flex-row gap-20">
+          <TitleText size={30}>
+            {answerStats[0]} / {answerStats[1]}
+          </TitleText>
+          <TitleText size={30}>
+            {getAccuracy(answerStats[0], answerStats[1])}%
+          </TitleText>
+        </View>
+      </View>
+      <TitleText className="w-full text-center bottom-10" size={30}>
+        정답을 짝지어 주세요
+      </TitleText>
       {/* 버튼 */}
-      <View className="flex-row w-full flex-1 gap-2">
+      <View className="flex-row w-full flex-1 gap-default p-default">
         {[0, 1].map(side => (
-          <View key={side} className="flex-1 h-full gap-2">
+          <View key={side} className="flex-1 h-full gap-default">
             {renderBtns.length > 0 &&
               renderBtns[side].map((btn, i) => {
                 return (
@@ -276,7 +276,7 @@ export default function Puzzle() {
                     }}
                     disabled={!btn.isOn}
                   >
-                    <TitleText size={50}>{btn.content}</TitleText>
+                    {btn.content}
                   </DefaultButton>
                 );
               })}

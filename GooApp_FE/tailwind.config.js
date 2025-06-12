@@ -20,7 +20,7 @@ module.exports = {
       },
       height: {
         nav: '90px',
-        header: '300px',
+        header: '400px',
         button: '80px',
         list: '60px',
         'div-line': '4px',

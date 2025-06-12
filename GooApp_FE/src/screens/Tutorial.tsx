@@ -1,9 +1,7 @@
-import { Image, Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
-import DefaultButton from '@/components/DefaultButton';
-import HeaderButton from '@/components/HeaderButton';
 import TitleText from '@/components/TitleText';
 
 import Tutorial1 from '../assets/images/tutorial1.svg';
@@ -11,7 +9,8 @@ import Tutorial2 from '../assets/images/tutorial2.svg';
 import Frame from '../assets/images/frame.svg';
 
 import { Dimensions } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getLocalUserData } from '@/stores/localStorageFunctions';
 
 export default function Tutorial() {
   type NavigationProp = NativeStackNavigationProp<
@@ -25,8 +24,22 @@ export default function Tutorial() {
 
   const [next, setNext] = useState<boolean>(false);
 
+  useEffect(() => {
+    const localData = getLocalUserData();
+
+    if (localData?.topScore !== 0) {
+      navigation.replace('Puzzle');
+    }
+  }, []);
+
   return (
-    <View className="flex-1 bg-default-green">
+    <Pressable
+      onPress={() => {
+        if (next) navigation.replace('Puzzle');
+        else setNext(true);
+      }}
+      className="flex-1 bg-default-green"
+    >
       <Frame height={windowHeight} width={windowWidth} />
       <View className=" flex-1 w-full h-full absolute bg-transparent-dark">
         {next === false ? (
@@ -35,15 +48,9 @@ export default function Tutorial() {
           <Tutorial2 height={windowHeight} width={windowWidth} />
         )}
       </View>
-      <DefaultButton
-        className="absolute bottom-10"
-        onPress={() => {
-          if (next) navigation.replace('Puzzle');
-          else setNext(true);
-        }}
-      >
+      <TitleText size={30} className="text-center w-full absolute bottom-10">
         확인
-      </DefaultButton>
-    </View>
+      </TitleText>
+    </Pressable>
   );
 }
