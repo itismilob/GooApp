@@ -64,7 +64,7 @@ export default function Home() {
           }}
           text="랭킹"
         >
-          <FA5Icons name="trophy" size={30} color={'white'} />
+          <FA5Icons name="trophy" size={24} color={'white'} />
         </IconButton>
       </View>
     </View>
