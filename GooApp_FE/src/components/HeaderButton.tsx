@@ -21,7 +21,7 @@ export default function HeaderButton({ children }: props) {
   return (
     <View className="w-full px-6 pt-14 pb-4 bg-default-green flex-row items-center justify-between">
       <TouchableOpacity
-        className="w-3"
+        className="w-10"
         onPress={() => {
           navigation.popToTop();
         }}
