@@ -14,7 +14,10 @@ import IconButton from '@/components/IconButton';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FA5Icons from 'react-native-vector-icons/FontAwesome5';
-import { getLocalUserData } from '@/stores/localStorageFunctions';
+import {
+  getLocalScoreData,
+  getLocalUserData,
+} from '@/stores/localStorageFunctions';
 
 export default function Home() {
   type NavigationProp = NativeStackNavigationProp<
@@ -27,8 +30,8 @@ export default function Home() {
   const [userData, setUserData] = useState<UserDataType>();
 
   const puzzleClickHandler = () => {
-    const localData = getLocalUserData();
-    if (localData?.topScore !== 0) {
+    const localData = getLocalScoreData();
+    if (localData && localData.length > 0) {
       navigation.navigate('Puzzle');
     } else {
       navigation.navigate('Tutorial');

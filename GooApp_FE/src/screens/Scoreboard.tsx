@@ -187,7 +187,7 @@ export default function Scoreboard() {
           </View>
 
           <View className="w-full p-default gap-[50]">
-            <Line />
+            <Line color="light" />
             <View className="flex-row justify-between px-5">
               <TitleText size={30}>최고 기록 : </TitleText>
               <View className="flex-row gap-5 items-center">
@@ -206,7 +206,7 @@ export default function Scoreboard() {
             ) : (
               <StyledText>네트워크 연결 필요</StyledText>
             )}
-            <Line />
+            <Line color="light" />
           </View>
         </View>
         <DefaultButton
