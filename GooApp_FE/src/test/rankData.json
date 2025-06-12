@@ -1,9 +1,9 @@
 [
   {
     "userID": "TestUSER",
-    "nickname": "TestUSER",
+    "nickname": "멋있는 노랑색 코끼리",
     "rank": 1,
-    "topScore": 222
+    "topScore": 10000
   },
   {
     "userID": "TestUSER",
@@ -58,5 +58,11 @@
     "nickname": "TestUSER",
     "rank": 10,
     "topScore": 222
+  },
+  {
+    "userID": "TestUSER",
+    "nickname": "멋있는 노랑색 코끼리",
+    "rank": 100,
+    "topScore": 10
   }
 ]
