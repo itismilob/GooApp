@@ -9,7 +9,7 @@ function questGenerator(answers: number[]): [Quest, Quest] {
 
   // 중복 확인
   do {
-    randA = Math.floor(Math.random() * 8) + 2; // 2~9
+    randA = Math.floor(Math.random() * 2) + 2; // 2~9
     randB = Math.floor(Math.random() * 8) + 2; // 2~9
     product = randA * randB;
   } while (answers.includes(product));
@@ -37,12 +37,15 @@ const insertRandom = (array: QuestArray, Q: Quest) => {
   array[index] = Q;
 };
 
-const checkDuplication = (AQueue: QuestArray, AList: QuestArray) => {
-  const answers = new Set<number>(); // 중복 제거
+const checkDuplication = (
+  AQueue: QuestArray,
+  AList: QuestArray,
+): [Quest, Quest] => {
+  const answers: number[] = [];
 
   // 정답들만 모아서 answers에 추가
   [...AQueue, ...AList].forEach(Q => {
-    if (Q && Q.answer) answers.add(parseInt(Q.answer));
+    if (Q && Q.content) answers.push(parseInt(Q.content));
   });
 
   return questGenerator([...answers]);

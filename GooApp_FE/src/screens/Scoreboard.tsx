@@ -21,6 +21,8 @@ import {
 import { getRankChanges } from '@/services/userDataAPIs';
 import Line from '@/components/Line';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 // 랭크 상승 : -1, 유지 : 0, 하락 : 1
 type RankChangeType = -1 | 0 | 1;
 
@@ -85,7 +87,7 @@ export default function Scoreboard() {
     } else {
       newScoreData = JSON.stringify([scoreData]);
     }
-    console.log(newScoreData);
+
     localStorage.set('scoreData', newScoreData);
   };
 
@@ -171,7 +173,7 @@ export default function Scoreboard() {
   }, [isNetworkOn]);
 
   return (
-    <View className="flex-1 bg-default-green">
+    <SafeAreaView className="flex-1 bg-default-green">
       <HeaderButton>점수판</HeaderButton>
 
       <View className="p-default flex-1">
@@ -218,6 +220,6 @@ export default function Scoreboard() {
           다시하기
         </DefaultButton>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

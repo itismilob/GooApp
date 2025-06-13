@@ -13,6 +13,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import ListLiner from '@/components/ListLiner';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Rank() {
   type NavigationProp = NativeStackNavigationProp<
@@ -71,7 +72,7 @@ export default function Rank() {
   }, [userData]);
 
   return (
-    <View className="flex-1 bg-default-green">
+    <SafeAreaView className="flex-1 bg-default-green">
       <HeaderButton>랭킹</HeaderButton>
       <View className="flex-1">
         {userData ? (
@@ -124,6 +125,6 @@ export default function Rank() {
           </View>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

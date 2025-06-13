@@ -15,6 +15,7 @@ import puzzleStore from '@/stores/puzzleStore';
 import type { DefaultNavigatorParams } from '@/types/navigationTypes';
 import type { QuestArray } from '@/types/puzzleTypes';
 import type { BtnPosType, BtnColor, BtnStateType } from '@/types/puzzleTypes';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Puzzle() {
   type NavigationProp = NativeStackNavigationProp<
@@ -243,7 +244,7 @@ export default function Puzzle() {
   }, [answerStats]);
 
   return (
-    <View className="bg-default-green flex-1">
+    <SafeAreaView className="bg-default-green flex-1">
       <HeaderButton>퍼즐</HeaderButton>
       {/* 점수, 시간 */}
       <View className="items-center justify-center h-header gap-default relative">
@@ -282,6 +283,6 @@ export default function Puzzle() {
           </View>
         ))}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
