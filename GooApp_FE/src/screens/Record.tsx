@@ -12,6 +12,7 @@ import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import ListLiner from '@/components/ListLiner';
 import Line from '@/components/Line';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Record() {
   type NavigationProp = NativeStackNavigationProp<
@@ -40,7 +41,7 @@ export default function Record() {
   }, []);
 
   return (
-    <View className="flex-1 bg-default-green">
+    <SafeAreaView className="flex-1 bg-default-green">
       <HeaderButton>기록</HeaderButton>
       <View className="flex-1">
         {topScore ? (
@@ -94,6 +95,6 @@ export default function Record() {
           </View>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
