@@ -79,4 +79,4 @@ yarn-error.log
 andriod/
 ios/
 
-.env
+*/.env
