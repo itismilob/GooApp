@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && tsc-alias",
-    "dev": "node ./build/index.js",
+    "dev": "node ./build/app.js",
     "start": "nodemon -e ts --exec \"npm run build && npm run dev\""
   },
   "author": "",
