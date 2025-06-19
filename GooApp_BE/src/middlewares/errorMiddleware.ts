@@ -7,9 +7,9 @@ interface CustomError extends Error {
 
 export default function errorMiddleware(
   err: CustomError,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) {
   // 기본값
   let status = 500;
