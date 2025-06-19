@@ -1,6 +1,16 @@
 import type { Controller } from '@/types/defaultTypes';
 
-export const createUser: Controller = (req, res, next) => {};
+import userService from '@/services/userServices';
+
+export const createUser: Controller = async (req, res, next) => {
+  try {
+    const newUser = await userService.createUser();
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getUser: Controller = (req, res, next) => {};
 
