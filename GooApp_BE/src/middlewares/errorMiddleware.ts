@@ -28,5 +28,8 @@ export default function errorMiddleware(
     message = err.message || message;
   }
 
+  console.error(err);
+  console.log(status, message);
+
   res.status(status).json({ error: message });
 }
