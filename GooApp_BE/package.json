@@ -17,7 +17,8 @@
     "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.0",
-    "mongoose": "^8.14.2"
+    "mongoose": "^8.14.2",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
