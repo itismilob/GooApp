@@ -7,7 +7,7 @@ interface CustomError extends Error {
 
 export default function errorMiddleware(
   err: CustomError,
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction,
 ) {
@@ -28,8 +28,7 @@ export default function errorMiddleware(
     message = err.message || message;
   }
 
-  console.error(err);
-  console.log(status, message);
+  console.error(`[${req.method} ${req.url} - ${message}]`);
 
   res.status(status).json({ error: message });
 }
