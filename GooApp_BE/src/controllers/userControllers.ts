@@ -10,8 +10,6 @@ export const createUser: Controller = async (req, res, next) => {
   try {
     const newUser = await userService.createUser();
     res.status(201).json(newUser);
-
-    res.send(200);
   } catch (error) {
     next(error);
   }
@@ -56,7 +54,13 @@ export const getTop100: Controller = async (req, res, next) => {
 export const updateUserTopScore: Controller = async (req, res, next) => {
   try {
     const { userID, score } = req.body;
-    await userService.updateUserScore(userID, score);
+    const newRank = await userService.updateUserScore(userID, score);
+    if (newRank) {
+      res.status(200).send(newRank);
+    } else {
+      // 변경 사항 없음
+      res.status(204);
+    }
   } catch (error) {
     next(error);
   }

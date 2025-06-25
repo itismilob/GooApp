@@ -59,18 +59,26 @@ export const getTop100 = async () => {
 };
 
 /**
- * _id로 User의 topScore 업데이트
+ * _id로 User의 topScore 업데이트, 랭크 변동
  * @param userID
  * @param newScore
  */
 export const updateUserScore = async (userID: string, newScore: number) => {
   const user = await User.findById(userID);
 
-  if (user && newScore > user.topScore) {
-    await User.updateOne({ _id: userID });
-  } else {
-    // 유저가 없으면 에러 처리
+  // 유저 검색 실패시 애러 처리
+  if (!user) {
+    throw new Error();
   }
+
+  // 최고점수를 넘기면 업데이트, 랭킹 변동
+  if (newScore > user.topScore) {
+    await User.updateOne({ _id: userID }, { topScore: newScore });
+  }
+
+  // 점수보다 높은 사람 수 카운트 → 랭킹 계산
+  const rank = await User.countDocuments({ topScore: { $gte: newScore } });
+  return rank;
 };
 
 export default { createUser, getUser, getTop100, updateUserScore };

@@ -13,10 +13,6 @@ const UserSchema = new Schema({
     type: Number,
     default: 0,
   },
-  rank: {
-    type: Number,
-    default: 0,
-  },
 });
 
 // nickname, tag 조합으로 유니크한 인덱스 생성
