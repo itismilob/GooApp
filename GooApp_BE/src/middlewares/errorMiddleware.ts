@@ -11,6 +11,7 @@ export default function errorMiddleware(
   res: Response,
   _next: NextFunction,
 ) {
+  console.log(err);
   // 기본값
   let status = 500;
   let message = 'Internal Server Error';

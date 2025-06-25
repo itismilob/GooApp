@@ -5,18 +5,18 @@ import {
   createUser,
   getUser,
   getTop100,
-  updateUserScore,
+  updateUserTopScore,
 } from '@/controllers/userControllers';
 
 // POST
 router.post('/', createUser);
 
 // GET
-router.get('/:userID', getUser);
 router.get('/ranks', getTop100);
+router.get('/:userID', getUser);
 
 // PUT
-router.put('/score', updateUserScore);
+router.put('/score', updateUserTopScore);
 
 // DELETE
 
