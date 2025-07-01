@@ -1,6 +1,6 @@
 import express from 'express';
 import { userRouter } from '@/routes/userRoutes';
-import errorMiddleware from '@/middlewares/errorMiddleware';
+import errorHandler from '@/middlewares/errorHandler';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the server!');
 });
 
-app.use(errorMiddleware);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
