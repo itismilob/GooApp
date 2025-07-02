@@ -12,6 +12,7 @@ import { UserDataType } from '@/types/dataTypes';
 import { defaultGap, defaultGreen } from '@/styles/const';
 import DefaultButton from '@/components/DefaultButton';
 import TitleText from '@/components/TitleText';
+import axios from 'axios';
 
 export default function NicknameNoti() {
   type NavigationProp = NativeStackNavigationProp<
@@ -25,8 +26,17 @@ export default function NicknameNoti() {
 
   // 유저 더미 데이터 생성 -> 유저 닉네임, 아이디 불러오기
   const fetchData = async () => {
-    // fetch data await
-    setUserData(userDataJSON);
+    const { SERVER_URI } = process.env;
+    console.log('server:', SERVER_URI);
+
+    // 서버 연결 - 유저 생성
+    const res = await axios.post(`${SERVER_URI}/users`);
+
+    console.log(res);
+    setUserData(res.data);
+
+    // 더미 닉네임 입력
+    // setUserData(userDataJSON);
   };
 
   // 유저 정보 저장하기
