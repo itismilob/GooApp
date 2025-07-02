@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { UserDataType } from '@/types/dataTypes';
 import rankDataJSON from '@/test/rankData.json';
 
-import { getRankChanges } from '@/services/userDataAPIs';
+import { getRank } from '@/services/userDataAPIs';
 import RankListLine from '@/components/RankListLine';
 import RecordListLine from '@/components/RecordListLine';
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
@@ -15,6 +15,10 @@ import { useNavigation } from '@react-navigation/native';
 import ListLiner from '@/components/ListLiner';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from 'axios';
+import {
+  getLocalUserData,
+  setLocalUserData,
+} from '@/stores/localStorageFunctions';
 
 export default function Rank() {
   type NavigationProp = NativeStackNavigationProp<
@@ -42,20 +46,26 @@ export default function Rank() {
 
   // 서버에서 랭킹 정보를 가져옴
   const getRankList = async () => {
-    try {
-      const { SERVER_URI } = process.env;
-      // 서버에서 가져오기
-      const res = await axios.get(`${SERVER_URI}/users/ranks`);
-      const rank = res.data;
-      console.log(rank);
+    const { SERVER_URI } = process.env;
+    // 서버에서 가져오기
+    const res = await axios.get(`${SERVER_URI}/users/ranks`);
+    const rank = res.data;
 
-      // 더미 데이터 사용
-      // const rank: UserDataType[] = rankDataJSON;
+    // 더미 데이터 사용
+    // const rank: UserDataType[] = rankDataJSON;
 
-      if (rank) setRankList(rank);
-    } catch (error) {
-      console.error(error);
-    }
+    if (rank) setRankList(rank);
+  };
+
+  const getRankChanges = async () => {
+    const localUser = getLocalUserData();
+    if (!localUser) return;
+
+    const newRank = await getRank(localUser, localUser?.topScore);
+
+    const newUser: UserDataType = { ...localUser, rank: newRank };
+    setLocalUserData(newUser);
+    setUserData(newUser);
   };
 
   useEffect(() => {
@@ -65,15 +75,10 @@ export default function Rank() {
   useEffect(() => {
     if (isNetwork) {
       // 유저 랭킹의 변동사항을 가져옴
-      getRankChanges(newUserData => {
-        setUserData(newUserData);
-      });
+      getRankChanges();
+      getRankList();
     }
   }, [isNetwork]);
-
-  useEffect(() => {
-    if (userData) getRankList();
-  }, [userData]);
 
   return (
     <SafeAreaView className="flex-1 bg-default-green">
@@ -83,7 +88,9 @@ export default function Rank() {
           <>
             {/* 유저 랭킹 표시 */}
             <View className="absolute h-header top-0 w-full items-center justify-center gap-default">
-              <TitleText size={30}>{userData.nickname}</TitleText>
+              <TitleText size={30}>
+                {userData.nickname} #{userData.tag}
+              </TitleText>
               <TitleText size={50}>랭킹 {userData.rank}등</TitleText>
               <TitleText size={30}>최고점수 : {userData.topScore}점</TitleText>
             </View>
@@ -98,8 +105,8 @@ export default function Rank() {
                         <View className="bg-default-green border-white border-y-4 border-solid">
                           <RankListLine
                             content={[
-                              user.rank,
-                              user.nickname,
+                              key + 1,
+                              `${user.nickname} #${user.tag}`,
                               `${user.topScore}점`,
                             ]}
                           />
@@ -109,8 +116,8 @@ export default function Rank() {
                       <ListLiner key={key} index={key}>
                         <RankListLine
                           content={[
-                            user.rank,
-                            user.nickname,
+                            key + 1,
+                            `${user.nickname} #${user.tag}`,
                             `${user.topScore}점`,
                           ]}
                         />

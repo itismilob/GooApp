@@ -27,12 +27,10 @@ export default function NicknameNoti() {
   // 유저 더미 데이터 생성 -> 유저 닉네임, 아이디 불러오기
   const fetchData = async () => {
     const { SERVER_URI } = process.env;
-    console.log('server:', SERVER_URI);
 
     // 서버 연결 - 유저 생성
     const res = await axios.post(`${SERVER_URI}/users`);
 
-    console.log(res);
     setUserData(res.data);
 
     // 더미 닉네임 입력

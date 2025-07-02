@@ -28,7 +28,7 @@ export default function Record() {
     const newScore = getLocalScoreData();
     if (!newScore) return;
 
-    setScores(newScore);
+    setScores(newScore.reverse());
 
     const newTop = newScore.reduce((prev, curr) => {
       return curr.score > prev.score ? curr : prev;

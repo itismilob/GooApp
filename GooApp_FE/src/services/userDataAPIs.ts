@@ -3,30 +3,27 @@ import {
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
 import { UserDataType } from '@/types/dataTypes';
+import axios from 'axios';
 
 type getRankChangesProp = (userData: UserDataType) => void;
 
 // 서버에 전송 -> 새로운 데이터 응답 (rank만 변화함)
-export async function getRankChanges(useUserData: getRankChangesProp) {
-  // 로컬 유저 데이터 가져옴
+/**
+ *
+ * @param userData
+ * @param score
+ * @returns newRank : number
+ */
+export async function getRank(userData: UserDataType, score: number) {
+  // 더미 - 현재 로컬 유저 데이터 사용
+  // const newUserData = localUserData;
 
-  const localUserData = getLocalUserData();
-  if (!localUserData) return;
+  const { SERVER_URI } = process.env;
 
-  try {
-    // 더미 - 현재 로컬 유저 데이터 사용
-    const newUserData = localUserData;
-
-    // 서버에 전송
-    // const newUserData = await axios.post(localUser);
-
-    if (!newUserData) return;
-
-    newUserData.rank = 22;
-    useUserData(newUserData);
-
-    setLocalUserData(newUserData);
-  } catch (error) {
-    console.error(error);
-  }
+  // 서버에 전송
+  const res = await axios.put(`${SERVER_URI}/users/score`, {
+    userID: userData._id,
+    score: score,
+  });
+  return res.data.rank;
 }

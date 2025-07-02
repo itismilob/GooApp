@@ -18,7 +18,7 @@ import {
   getLocalUserData,
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
-import { getRankChanges } from '@/services/userDataAPIs';
+import { getRank } from '@/services/userDataAPIs';
 import Line from '@/components/Line';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -132,6 +132,25 @@ export default function Scoreboard() {
     return <Icon name="minus" size={25} color={'white'} />;
   };
 
+  const getRankChanges = async () => {
+    if (!userData || !scoreData) return;
+
+    // API 연결
+    const newRank = await getRank(userData, scoreData?.score);
+
+    // 랭크 변동사항 적용
+    if (userData.rank > newRank) {
+      // 랭크 상승
+      setRankChangeState(-1);
+    } else if (userData.rank < newRank) {
+      // 랭크 하락
+      setRankChangeState(1);
+    }
+
+    setLocalUserData({ ...userData, rank: newRank });
+    setUserData({ ...userData, rank: newRank });
+  };
+
   useEffect(() => {
     // 새로운 점수 데이터 생성
     createNewScoreData();
@@ -142,7 +161,7 @@ export default function Scoreboard() {
   }, []);
 
   useEffect(() => {
-    if (scoreData) {
+    if (scoreData && userData) {
       // 새 점수 로컬 저장
       addLocalScoreData();
       // topScore 비교, 변경
@@ -150,25 +169,11 @@ export default function Scoreboard() {
       // 네트워크 연결 확인
       checkNetInfoTrigger();
     }
-  }, [scoreData]);
+  }, [scoreData, userData]);
 
   useEffect(() => {
     if (isNetworkOn) {
-      const userData = getLocalUserData();
-      if (!userData) return;
-
-      getRankChanges(newUserData => {
-        setUserData(newUserData);
-
-        // 랭크 변동사항 적용
-        if (userData.rank > newUserData.rank) {
-          // 랭크 상승
-          setRankChangeState(-1);
-        } else if (userData.rank < newUserData.rank) {
-          // 랭크 하락
-          setRankChangeState(1);
-        }
-      });
+      getRankChanges();
     }
   }, [isNetworkOn]);
 
