@@ -18,7 +18,7 @@ import {
   getLocalUserData,
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
-import { getRank } from '@/services/userDataAPIs';
+import userDataAPI from '@/services/userDataAPI';
 import Line from '@/components/Line';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -136,7 +136,7 @@ export default function Scoreboard() {
     if (!userData || !scoreData) return;
 
     // API 연결
-    const newRank = await getRank(userData, scoreData?.score);
+    const newRank = await userDataAPI.getRank(userData, scoreData?.score);
 
     // 랭크 변동사항 적용
     if (userData.rank > newRank) {

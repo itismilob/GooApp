@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { UserDataType } from '@/types/dataTypes';
 import rankDataJSON from '@/test/rankData.json';
 
-import { getRank } from '@/services/userDataAPIs';
+import userDataAPI from '@/services/userDataAPI';
 import RankListLine from '@/components/RankListLine';
 import RecordListLine from '@/components/RecordListLine';
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
@@ -14,7 +14,7 @@ import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import ListLiner from '@/components/ListLiner';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import axios from 'axios';
+
 import {
   getLocalUserData,
   setLocalUserData,
@@ -44,28 +44,20 @@ export default function Rank() {
     },
   );
 
-  // 서버에서 랭킹 정보를 가져옴
-  const getRankList = async () => {
-    const { SERVER_URI } = process.env;
-    // 서버에서 가져오기
-    const res = await axios.get(`${SERVER_URI}/users/ranks`);
-    const rank = res.data;
-
-    // 더미 데이터 사용
-    // const rank: UserDataType[] = rankDataJSON;
-
-    if (rank) setRankList(rank);
-  };
-
-  const getRankChanges = async () => {
+  const getRank = async () => {
     const localUser = getLocalUserData();
     if (!localUser) return;
 
-    const newRank = await getRank(localUser, localUser?.topScore);
+    const newRank = await userDataAPI.getRank(localUser, localUser?.topScore);
 
     const newUser: UserDataType = { ...localUser, rank: newRank };
     setLocalUserData(newUser);
     setUserData(newUser);
+  };
+
+  const getRankList = async () => {
+    const ranks = await userDataAPI.getRankList();
+    setRankList(ranks);
   };
 
   useEffect(() => {
@@ -75,7 +67,7 @@ export default function Rank() {
   useEffect(() => {
     if (isNetwork) {
       // 유저 랭킹의 변동사항을 가져옴
-      getRankChanges();
+      getRank();
       getRankList();
     }
   }, [isNetwork]);
