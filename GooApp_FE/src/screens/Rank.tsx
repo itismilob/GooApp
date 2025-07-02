@@ -14,6 +14,7 @@ import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import ListLiner from '@/components/ListLiner';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import axios from 'axios';
 
 export default function Rank() {
   type NavigationProp = NativeStackNavigationProp<
@@ -42,11 +43,14 @@ export default function Rank() {
   // 서버에서 랭킹 정보를 가져옴
   const getRankList = async () => {
     try {
+      const { SERVER_URI } = process.env;
       // 서버에서 가져오기
-      // const rank = await axios.get();
+      const res = await axios.get(`${SERVER_URI}/users/ranks`);
+      const rank = res.data;
+      console.log(rank);
 
       // 더미 데이터 사용
-      const rank: UserDataType[] = rankDataJSON;
+      // const rank: UserDataType[] = rankDataJSON;
 
       if (rank) setRankList(rank);
     } catch (error) {
@@ -89,7 +93,7 @@ export default function Rank() {
                 <RecordListLine content={['랭킹', '사용자', '점수']} />
                 {rankList.length > 0 &&
                   rankList.map((user, key) =>
-                    user.userID === userData.userID ? (
+                    user._id === userData._id ? (
                       <ListLiner key={key} index={key}>
                         <View className="bg-default-green border-white border-y-4 border-solid">
                           <RankListLine
