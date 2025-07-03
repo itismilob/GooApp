@@ -38,7 +38,9 @@ export default function Home() {
     <View className="bg-default-green flex-1 p-default">
       <View className="flex-1 items-center justify-center gap-default">
         <TitleText size={60}>GooApp</TitleText>
-        <TitleText size={30}>{userData?.nickname}</TitleText>
+        <TitleText size={30}>
+          {userData?.nickname} #{userData?.tag}
+        </TitleText>
       </View>
 
       <View className="flex-1 gap-default justify-center ">

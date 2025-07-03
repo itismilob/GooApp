@@ -1,5 +1,6 @@
 import { UserDataType } from '@/types/dataTypes';
 import axios from 'axios';
+import { SERVER_URI } from '@env';
 
 /**
  * 서버에 유저 최고점수 전송 -> 현재 rank 반환
@@ -7,16 +8,14 @@ import axios from 'axios';
  * @param score
  * @returns newRank : number
  */
-export async function getRank(userData: UserDataType, score: number) {
+export async function getRank(userData: UserDataType) {
   // 더미 - 현재 로컬 유저 데이터 사용
   // const newUserData = localUserData;
-
-  const { SERVER_URI } = process.env;
 
   // 서버에 전송
   const res = await axios.put(`${SERVER_URI}/users/score`, {
     userID: userData._id,
-    score: score,
+    score: userData.topScore,
   });
   return res.data.rank;
 }
@@ -28,7 +27,6 @@ export async function getRank(userData: UserDataType, score: number) {
  * @returns UserData List
  */
 export async function getRankList() {
-  const { SERVER_URI } = process.env;
   // 서버에서 가져오기
   const res = await axios.get(`${SERVER_URI}/users/ranks`);
 
