@@ -1,6 +1,7 @@
 export interface UserDataType {
-  userID: string;
+  _id: string;
   nickname: string;
+  tag: number;
   rank: number;
   topScore: number;
 }

@@ -18,12 +18,12 @@ import {
   getLocalUserData,
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
-import { getRankChanges } from '@/services/userDataAPIs';
+import userDataAPI from '@/services/userDataAPI';
 import Line from '@/components/Line';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// 랭크 상승 : -1, 유지 : 0, 하락 : 1
+// 랭킹 상승 : -1, 유지 : 0, 하락 : 1
 type RankChangeType = -1 | 0 | 1;
 
 export default function Scoreboard() {
@@ -33,9 +33,6 @@ export default function Scoreboard() {
   >;
   const navigation = useNavigation<NavigationProp>();
   const localStorage = getLocalStorage();
-  const checkNetInfoTrigger = useCheckNetInfo(() => {
-    setIsNetworkOn(true);
-  }, undefined);
 
   // 퍼즐 게임 데이터 스토어
   const puzzleStoreState = puzzleStore.getState();
@@ -47,7 +44,7 @@ export default function Scoreboard() {
   const [isNetworkOn, setIsNetworkOn] = useState<boolean>(true);
   // 기록 변경사항
   const [recordChangeState, setRecordChangeState] = useState<RankChangeType>(0);
-  // 랭크 변경사항
+  // 랭킹 변경사항
   const [rankChangeState, setRankChangeState] = useState<RankChangeType>(0);
   // 유저 데이터
   const [userData, setUserData] = useState<UserDataType | undefined>();
@@ -72,7 +69,7 @@ export default function Scoreboard() {
     setScoreData(newScoreData);
   };
 
-  // 새 점수 로컬 저장
+  // 새 점수 로컬 저장 -> 파일 분할하기 zustand + mmkv
   const addLocalScoreData = () => {
     // 로컬 점수 데이터 불러오기
     const scoreDataString = localStorage.getString('scoreData');
@@ -93,22 +90,24 @@ export default function Scoreboard() {
 
   // 최고기록 비교, 변경
   const compareTopScore = () => {
-    const localUser = getLocalUserData();
-    if (!localUser) return;
+    // userData 무조건 존재함
+    if (!userData || !scoreData) return;
 
-    const score = scoreData!.score;
-    if (score > localUser.topScore) {
+    const score = scoreData.score;
+
+    if (score > userData.topScore) {
       // 최고기록 경신
-      const newUserData = { ...localUser, topScore: score };
-      setLocalUserData(newUserData);
-      setTopScore(score);
       setRecordChangeState(-1);
-      return;
-    } else if (score < localUser.topScore) {
+      setTopScore(score);
+    } else if (score < userData.topScore) {
+      // 최고기록보다 낮은 점수
       setRecordChangeState(1);
+      setTopScore(userData.topScore);
+    } else {
+      // 최고기록과 동일한 점수
+      setRecordChangeState(0);
+      setTopScore(userData.topScore);
     }
-    // 최고기록 변경 X
-    setTopScore(localUser.topScore);
   };
 
   // 점수 변동 아이콘 정함
@@ -132,6 +131,36 @@ export default function Scoreboard() {
     return <Icon name="minus" size={25} color={'white'} />;
   };
 
+  const getRankChanges = async () => {
+    // userData, scoreData 무조건 존재
+    if (!userData) return;
+
+    // API 연결
+    const newRank = await userDataAPI.getRank(userData);
+
+    // 랭킹 변동사항 적용
+    if (userData.rank > newRank) {
+      // 랭킹 상승
+      setRankChangeState(-1);
+    } else if (userData.rank < newRank) {
+      // 랭킹 하락
+      setRankChangeState(1);
+    } else {
+      // 랭킹 유지
+      setRankChangeState(0);
+    }
+
+    // 랭킹 갱신
+    setLocalUserData({ ...userData, rank: newRank });
+    setUserData({ ...userData, rank: newRank });
+  };
+
+  const checkNetInfoTrigger = useCheckNetInfo(() => {
+    getRankChanges();
+    setIsNetworkOn(true);
+  }, undefined);
+
+  // 점수 생성 + 로컬 정보 로딩
   useEffect(() => {
     // 새로운 점수 데이터 생성
     createNewScoreData();
@@ -141,36 +170,31 @@ export default function Scoreboard() {
     setUserData(localUserData);
   }, []);
 
+  useEffect(() => {}, [scoreData]);
+
+  // 새 점수 저장 + 최고 점수 비교
   useEffect(() => {
-    if (scoreData) {
+    if (userData && scoreData && !topScore) {
       // 새 점수 로컬 저장
       addLocalScoreData();
       // topScore 비교, 변경
       compareTopScore();
+    }
+  }, [userData, scoreData]);
+
+  // 최고기록 저장 + 네트워크 확인
+  useEffect(() => {
+    if (topScore) {
+      // 최고기록 저장
+      const newUserData = { ...userData!, topScore };
+      // zustand + mmkv
+      setLocalUserData(newUserData);
+      setUserData(newUserData);
+
       // 네트워크 연결 확인
       checkNetInfoTrigger();
     }
-  }, [scoreData]);
-
-  useEffect(() => {
-    if (isNetworkOn) {
-      const userData = getLocalUserData();
-      if (!userData) return;
-
-      getRankChanges(newUserData => {
-        setUserData(newUserData);
-
-        // 랭크 변동사항 적용
-        if (userData.rank > newUserData.rank) {
-          // 랭크 상승
-          setRankChangeState(-1);
-        } else if (userData.rank < newUserData.rank) {
-          // 랭크 하락
-          setRankChangeState(1);
-        }
-      });
-    }
-  }, [isNetworkOn]);
+  }, [topScore]);
 
   return (
     <SafeAreaView className="flex-1 bg-default-green">
