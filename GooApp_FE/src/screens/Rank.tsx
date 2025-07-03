@@ -19,6 +19,7 @@ import {
   getLocalUserData,
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
+import formatTag from '@/utils/formatTag';
 
 export default function Rank() {
   type NavigationProp = NativeStackNavigationProp<
@@ -70,10 +71,11 @@ export default function Rank() {
       <View className="flex-1">
         {/* 유저 랭킹 표시 */}
         <View className="absolute h-header top-0 w-full items-center justify-center gap-default">
-          <TitleText size={30}>
-            {/* {userData?.nickname} #{userData?.tag} */}
-            {'영리한청설모\n#3b929749b'}
-          </TitleText>
+          {userData != undefined && (
+            <TitleText size={30}>
+              {userData?.nickname} {formatTag(userData?.tag)}
+            </TitleText>
+          )}
           <TitleText size={50}>랭킹 {userData?.rank}등</TitleText>
           <TitleText size={30}>최고점수 : {userData?.topScore}점</TitleText>
         </View>
@@ -89,8 +91,7 @@ export default function Rank() {
                       <RankListLine
                         content={[
                           key + 1,
-                          // `${user.nickname} #${user.tag}`,
-                          '영리한청설모 #923843899',
+                          `${user.nickname} ${formatTag(user.tag)}`,
                           `${user.topScore}점`,
                         ]}
                       />
@@ -101,7 +102,7 @@ export default function Rank() {
                     <RankListLine
                       content={[
                         key + 1,
-                        `${user.nickname} #${user.tag}`,
+                        `${user.nickname} ${formatTag(user.tag)}`,
                         `${user.topScore}점`,
                       ]}
                     />

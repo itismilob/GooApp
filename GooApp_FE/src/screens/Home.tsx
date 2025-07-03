@@ -18,6 +18,7 @@ import {
   getLocalScoreData,
   getLocalUserData,
 } from '@/stores/localStorageFunctions';
+import formatTag from '@/utils/formatTag';
 
 export default function Home() {
   type NavigationProp = NativeStackNavigationProp<
@@ -39,7 +40,7 @@ export default function Home() {
       <View className="flex-1 items-center justify-center gap-default">
         <TitleText size={60}>GooApp</TitleText>
         <TitleText size={30}>
-          {userData?.nickname} #{userData?.tag}
+          {userData?.nickname} {formatTag(userData?.tag)}
         </TitleText>
       </View>
 
