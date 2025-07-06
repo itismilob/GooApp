@@ -23,7 +23,7 @@ export default function NicknameNoti() {
   const navigation = useNavigation<NavigationProp>();
   const LocalStorage = getLocalStorage();
 
-  const [userData, setUserData] = useState<UserDataType>();
+  const [userData, setUserData] = useState<UserDataType | undefined>();
   const [createCount, setCreateCount] = useState<number>(0);
 
   // 유저 더미 데이터 생성 -> 유저 닉네임, 아이디 불러오기
@@ -34,7 +34,7 @@ export default function NicknameNoti() {
       const res = await axios.post(`${SERVER_URI}/users`);
 
       if (res.data) {
-        setUserData(res.data);
+        setUserData({ ...res.data, topScore: 0 });
       } else {
         throw new Error('UserNotCreated');
       }

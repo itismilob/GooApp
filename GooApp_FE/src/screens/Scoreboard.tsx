@@ -139,7 +139,7 @@ export default function Scoreboard() {
     const newRank = await userDataAPI.getRank(userData);
 
     // 랭킹 변동사항 적용
-    if (userData.rank > newRank) {
+    if (userData.rank > newRank || userData.rank === 0) {
       // 랭킹 상승
       setRankChangeState(-1);
     } else if (userData.rank < newRank) {
