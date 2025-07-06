@@ -49,11 +49,13 @@ export default function Rank() {
     const localUser = getLocalUserData();
     if (!localUser) return;
 
-    const newRank = await userDataAPI.getRank(localUser);
+    try {
+      const newRank = await userDataAPI.getRank(localUser);
 
-    const newUser: UserDataType = { ...localUser, rank: newRank };
-    setLocalUserData(newUser);
-    setUserData(newUser);
+      const newUser: UserDataType = { ...localUser, rank: newRank };
+      setLocalUserData(newUser);
+      setUserData(newUser);
+    } catch (err) {}
   };
 
   const getRankList = async () => {
