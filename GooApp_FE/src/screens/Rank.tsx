@@ -71,16 +71,23 @@ export default function Rank() {
     <SafeAreaView className="flex-1 bg-default-green">
       <HeaderButton>랭킹</HeaderButton>
       <View className="flex-1">
-        {/* 유저 랭킹 표시 */}
-        <View className="absolute h-header top-0 w-full items-center justify-center gap-default">
-          {userData != undefined && (
-            <TitleText size={30}>
-              {userData?.nickname} {formatTag(userData?.tag)}
-            </TitleText>
-          )}
-          <TitleText size={50}>랭킹 {userData?.rank}등</TitleText>
-          <TitleText size={30}>최고점수 : {userData?.topScore}점</TitleText>
-        </View>
+        {userData?.topScore === 0 ? (
+          <View className="absolute h-header top-0 w-full items-center justify-center gap-default">
+            <TitleText size={50}>랭킹이 없습니다.</TitleText>
+            <TitleText size={30}>퍼즐을 플레이 해주세요.</TitleText>
+          </View>
+        ) : (
+          /* 유저 랭킹 표시 */
+          <View className="absolute h-header top-0 w-full items-center justify-center gap-default">
+            {userData != undefined && (
+              <TitleText size={30}>
+                {userData?.nickname} {formatTag(userData?.tag)}
+              </TitleText>
+            )}
+            <TitleText size={50}>랭킹 {userData?.rank}등</TitleText>
+            <TitleText size={30}>최고점수 : {userData?.topScore}점</TitleText>
+          </View>
+        )}
         <ScrollView className="w-full">
           {/* 랭킹 상위 100명 표시 */}
           <View className="mt-header min-h-screen bg-light-green rounded-default ">
