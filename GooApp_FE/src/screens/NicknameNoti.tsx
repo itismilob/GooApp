@@ -36,7 +36,7 @@ export default function NicknameNoti() {
       if (res.data) {
         setUserData(res.data);
       } else {
-        throw new Error();
+        throw new Error('UserNotCreated');
       }
 
       // 더미 닉네임 입력
