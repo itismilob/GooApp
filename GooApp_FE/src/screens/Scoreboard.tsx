@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, View, Alert } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
@@ -22,6 +22,7 @@ import userDataAPI from '@/services/userDataAPI';
 import Line from '@/components/Line';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { showErrorAlert } from '@/utils/alert';
 
 // 랭킹 상승 : -1, 유지 : 0, 하락 : 1
 type RankChangeType = -1 | 0 | 1;
@@ -135,24 +136,30 @@ export default function Scoreboard() {
     // userData, scoreData 무조건 존재
     if (!userData) return;
 
-    // API 연결
-    const newRank = await userDataAPI.getRank(userData);
+    try {
+      // API 연결
+      const newRank = await userDataAPI.getRank(userData);
 
-    // 랭킹 변동사항 적용
-    if (userData.rank > newRank || userData.rank === 0) {
-      // 랭킹 상승
-      setRankChangeState(-1);
-    } else if (userData.rank < newRank) {
-      // 랭킹 하락
-      setRankChangeState(1);
-    } else {
-      // 랭킹 유지
-      setRankChangeState(0);
+      // 랭킹 변동사항 적용
+      if (userData.rank > newRank || userData.rank === 0) {
+        // 랭킹 상승
+        setRankChangeState(-1);
+      } else if (userData.rank < newRank) {
+        // 랭킹 하락
+        setRankChangeState(1);
+      } else {
+        // 랭킹 유지
+        setRankChangeState(0);
+      }
+
+      // 랭킹 갱신
+      setLocalUserData({ ...userData, rank: newRank });
+      setUserData({ ...userData, rank: newRank });
+    } catch (error) {
+      if (error instanceof Error) {
+        showErrorAlert(error);
+      }
     }
-
-    // 랭킹 갱신
-    setLocalUserData({ ...userData, rank: newRank });
-    setUserData({ ...userData, rank: newRank });
   };
 
   const checkNetInfoTrigger = useCheckNetInfo(() => {

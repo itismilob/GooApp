@@ -1,5 +1,5 @@
 import HeaderButton from '@/components/HeaderButton';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Alert } from 'react-native';
 import TitleText from '@/components/TitleText';
 import { useState, useEffect } from 'react';
 import { UserDataType } from '@/types/dataTypes';
@@ -20,6 +20,7 @@ import {
   setLocalUserData,
 } from '@/stores/localStorageFunctions';
 import formatTag from '@/utils/formatTag';
+import { showErrorAlert } from '@/utils/alert';
 
 export default function Rank() {
   type NavigationProp = NativeStackNavigationProp<
@@ -55,7 +56,11 @@ export default function Rank() {
       const newUser: UserDataType = { ...localUser, rank: newRank };
       setLocalUserData(newUser);
       setUserData(newUser);
-    } catch (err) {}
+    } catch (error) {
+      if (error instanceof Error) {
+        showErrorAlert(error);
+      }
+    }
   };
 
   const getRankList = async () => {

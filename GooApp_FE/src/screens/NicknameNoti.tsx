@@ -14,6 +14,7 @@ import DefaultButton from '@/components/DefaultButton';
 import TitleText from '@/components/TitleText';
 import axios from 'axios';
 import { SERVER_URI } from '@env';
+import { showErrorAlert } from '@/utils/alert';
 
 export default function NicknameNoti() {
   type NavigationProp = NativeStackNavigationProp<
@@ -29,20 +30,28 @@ export default function NicknameNoti() {
   // 유저 더미 데이터 생성 -> 유저 닉네임, 아이디 불러오기
   // 이거 서비스로 분리하기
   const createUser = async () => {
+    let createCount = 0;
+
     try {
-      // 서버 연결 - 유저 생성
-      const res = await axios.post(`${SERVER_URI}/users`);
+      while (createCount < 5) {
+        // 서버 연결 - 유저 생성
+        const res = await axios.post(`${SERVER_URI}/users`);
 
-      if (res.data) {
-        setUserData({ ...res.data, topScore: 0 });
-      } else {
-        throw new Error('UserNotCreated');
+        if (res.data) {
+          setUserData({ ...res.data, topScore: 0 });
+          return;
+        }
+
+        createCount++;
+
+        // 더미 닉네임 입력
+        // setUserData(userDataJSON);
       }
-
-      // 더미 닉네임 입력
-      // setUserData(userDataJSON);
+      throw new Error('USER_CREATE_FAIL');
     } catch (error) {
-      setCreateCount(createCount + 1);
+      if (error instanceof Error) {
+        showErrorAlert(error);
+      }
     }
   };
 
@@ -54,21 +63,9 @@ export default function NicknameNoti() {
     }
   };
 
-  const showAlert = () => {
-    Alert.alert(
-      '유저를 생성하지 못했습니다.',
-      '개발자에게 문의해 주시기 바랍니다.',
-      [{ text: '확인' }],
-    );
-  };
-
   useEffect(() => {
-    if (createCount < 5) {
-      createUser();
-    } else {
-      showAlert();
-    }
-  }, [createCount]);
+    createUser();
+  }, []);
 
   useEffect(() => {
     saveUserData();
