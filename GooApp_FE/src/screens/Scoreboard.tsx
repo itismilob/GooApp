@@ -156,9 +156,7 @@ export default function Scoreboard() {
       setLocalUserData({ ...userData, rank: newRank });
       setUserData({ ...userData, rank: newRank });
     } catch (error) {
-      if (error instanceof Error) {
-        showErrorAlert(error);
-      }
+      console.error(error);
     }
   };
 

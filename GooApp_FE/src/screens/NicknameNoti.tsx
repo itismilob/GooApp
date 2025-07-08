@@ -12,9 +12,8 @@ import { UserDataType } from '@/types/dataTypes';
 import { defaultGap, defaultGreen } from '@/styles/const';
 import DefaultButton from '@/components/DefaultButton';
 import TitleText from '@/components/TitleText';
-import axios from 'axios';
-import { SERVER_URI } from '@env';
 import { showErrorAlert } from '@/utils/alert';
+import { customAxios } from '@/services/customAxios';
 
 export default function NicknameNoti() {
   type NavigationProp = NativeStackNavigationProp<
@@ -35,7 +34,7 @@ export default function NicknameNoti() {
     try {
       while (createCount < 5) {
         // 서버 연결 - 유저 생성
-        const res = await axios.post(`${SERVER_URI}/users`);
+        const res = await customAxios.post(`users`);
 
         if (res.data) {
           setUserData({ ...res.data, topScore: 0 });
@@ -49,9 +48,7 @@ export default function NicknameNoti() {
       }
       throw new Error('USER_CREATE_FAIL');
     } catch (error) {
-      if (error instanceof Error) {
-        showErrorAlert(error);
-      }
+      console.error(error);
     }
   };
 
