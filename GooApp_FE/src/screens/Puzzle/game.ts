@@ -9,7 +9,7 @@ function questGenerator(answers: number[]): [Quest, Quest] {
 
   // 중복 확인
   do {
-    randA = Math.floor(Math.random() * 2) + 2; // 2~9
+    randA = Math.floor(Math.random() * 8) + 2; // 2~9
     randB = Math.floor(Math.random() * 8) + 2; // 2~9
     product = randA * randB;
   } while (answers.includes(product));

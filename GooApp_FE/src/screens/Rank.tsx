@@ -57,15 +57,17 @@ export default function Rank() {
       setLocalUserData(newUser);
       setUserData(newUser);
     } catch (error) {
-      if (error instanceof Error) {
-        showErrorAlert(error);
-      }
+      console.error(error);
     }
   };
 
   const getRankList = async () => {
-    const ranks = await userDataAPI.getRankList();
-    setRankList(ranks);
+    try {
+      const ranks = await userDataAPI.getRankList();
+      setRankList(ranks);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -107,7 +109,8 @@ export default function Rank() {
           {/* 랭킹 상위 100명 표시 */}
           <View className="mt-header min-h-screen bg-light-green rounded-default ">
             <RecordListLine content={['랭킹', '사용자', '점수']} />
-            {rankList.length > 0 &&
+            {Array.isArray(rankList) &&
+              rankList.length > 0 &&
               rankList.map((user, key) =>
                 user._id === userData?._id ? (
                   <ListLiner key={key} index={key}>

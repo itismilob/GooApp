@@ -2,6 +2,10 @@ import { CustomError } from '@/utils/customError';
 import { Alert } from 'react-native';
 
 // 에러 Alert를 띄우는 함수
-export function showErrorAlert(error: Error) {
-  Alert.alert(error.message, '개발자에게 문의해주세요.', [{ text: '확인' }]);
+export function showErrorAlert(error: CustomError) {
+  Alert.alert(
+    `${error.errorCode}\n${error.message}`,
+    '개발자에게 문의해주세요.',
+    [{ text: '확인' }],
+  );
 }

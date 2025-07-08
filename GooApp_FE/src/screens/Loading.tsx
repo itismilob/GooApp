@@ -8,6 +8,13 @@ import { getLocalStorage } from '@/stores/mmkvStorage';
 
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
 import TitleText from '@/components/TitleText';
+import { customAxios } from '@/services/customAxios';
+import { UserDataType } from '@/types/dataTypes';
+import {
+  getLocalUserData,
+  setLocalUserData,
+} from '@/stores/localStorageFunctions';
+import userDataAPI from '@/services/userDataAPI';
 
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
@@ -16,12 +23,12 @@ export default function Loading() {
   >;
   const navigation = useNavigation<NavigationProp>();
   const localStorage = getLocalStorage();
-  const [isFirst, setIsFirst] = useState<boolean>();
+  const [isTryed, setIsTryed] = useState(false);
 
   // 네트워크 확인해서 모달 띄움
   const checkNetInfoTrigger = useCheckNetInfo(
     () => {
-      navigation.replace('NicknameNoti');
+      createUser();
     },
     () => {
       navigation.navigate('NetworkOfflineModal');
@@ -30,9 +37,19 @@ export default function Loading() {
 
   // 첫 실행인지 확인
   const checkFirstStart = () => {
-    // userDataString : 유저 데이터가 존재하는지 확인 (임시 명칭임)
-    const userDataString = localStorage.getString('userData');
-    return userDataString === undefined;
+    const isUserData = getLocalUserData();
+    return isUserData === undefined;
+  };
+
+  // 유저 정보 저장하기
+  const createUser = async () => {
+    if (isTryed) return;
+    setIsTryed(true);
+    const newUser = await userDataAPI.createUser();
+    setLocalUserData(newUser);
+
+    // 유저 생성 후 NickNoti로 이동
+    navigation.replace('NicknameNoti');
   };
 
   useEffect(() => {
@@ -40,20 +57,16 @@ export default function Loading() {
     localStorage.clearAll();
 
     // 첫 실행인지 확인하고 아니면 Home으로 이동
-    const result = checkFirstStart();
+    const isFirst = checkFirstStart();
 
-    setIsFirst(result);
-    if (!result) {
+    if (isFirst) {
+      // 첫 실행이라면 네트워크 확인
+      checkNetInfoTrigger();
+    } else {
+      // 첫 실행이 아니면 Home으로
       navigation.replace('Home');
     }
   }, []);
-
-  useEffect(() => {
-    // 첫 실행인지 확인이 된 후 네트워크 확인
-    if (isFirst) {
-      checkNetInfoTrigger();
-    }
-  }, [isFirst]);
 
   return (
     <View className={`bg-default-green flex-1 items-center justify-center`}>

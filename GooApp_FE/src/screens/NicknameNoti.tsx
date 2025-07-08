@@ -13,7 +13,7 @@ import { defaultGap, defaultGreen } from '@/styles/const';
 import DefaultButton from '@/components/DefaultButton';
 import TitleText from '@/components/TitleText';
 import { showErrorAlert } from '@/utils/alert';
-import { customAxios } from '@/services/customAxios';
+import { getLocalUserData } from '@/stores/localStorageFunctions';
 
 export default function NicknameNoti() {
   type NavigationProp = NativeStackNavigationProp<
@@ -21,89 +21,38 @@ export default function NicknameNoti() {
     'NicknameNoti'
   >;
   const navigation = useNavigation<NavigationProp>();
-  const LocalStorage = getLocalStorage();
 
   const [userData, setUserData] = useState<UserDataType | undefined>();
-  const [createCount, setCreateCount] = useState<number>(0);
-
-  // 유저 더미 데이터 생성 -> 유저 닉네임, 아이디 불러오기
-  // 이거 서비스로 분리하기
-  const createUser = async () => {
-    let createCount = 0;
-
-    try {
-      while (createCount < 5) {
-        // 서버 연결 - 유저 생성
-        const res = await customAxios.post(`users`);
-
-        if (res.data) {
-          setUserData({ ...res.data, topScore: 0 });
-          return;
-        }
-
-        createCount++;
-
-        // 더미 닉네임 입력
-        // setUserData(userDataJSON);
-      }
-      throw new Error('USER_CREATE_FAIL');
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // 유저 정보 저장하기
-  const saveUserData = () => {
-    if (userData) {
-      const userDataString = JSON.stringify(userData);
-      LocalStorage.set('userData', userDataString);
-    }
-  };
 
   useEffect(() => {
-    createUser();
+    const user = getLocalUserData();
+    setUserData(user);
   }, []);
-
-  useEffect(() => {
-    saveUserData();
-  }, [userData]);
 
   return (
     <View
       className={`bg-default-green flex-1 items-center justify-center p-[50]`}
     >
-      {createCount < 5 ? (
-        <>
-          <View className="flex-1 justify-center">
-            <TitleText size={30}>당신은...</TitleText>
-            <TitleText size={50}>
-              {userData?.nickname}
-              {/* {'멋있는 주황색 코뿔소'} */}
-            </TitleText>
-            <View>
-              <TitleText
-                size={30}
-                className="w-full text-right overflow-scroll"
-              >
-                입니다!
-              </TitleText>
-            </View>
-          </View>
-          <DefaultButton
-            color="green"
-            onPress={() => {
-              navigation.replace('Home');
-            }}
-          >
-            시작하기
-          </DefaultButton>
-        </>
-      ) : (
-        <View className="flex-1 justify-center items-center gap-3">
-          <TitleText size={30}>유저를 생성하지 못했습니다.</TitleText>
-          <TitleText size={20}>개발자에게 문의해 주시기 바랍니다.</TitleText>
+      <View className="flex-1 justify-center">
+        <TitleText size={30}>당신은...</TitleText>
+        <TitleText size={50}>
+          {userData?.nickname}
+          {/* {'멋있는 주황색 코뿔소'} */}
+        </TitleText>
+        <View>
+          <TitleText size={30} className="w-full text-right overflow-scroll">
+            입니다!
+          </TitleText>
         </View>
-      )}
+      </View>
+      <DefaultButton
+        color="green"
+        onPress={() => {
+          navigation.replace('Home');
+        }}
+      >
+        시작하기
+      </DefaultButton>
     </View>
   );
 }

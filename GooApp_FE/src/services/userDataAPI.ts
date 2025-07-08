@@ -8,10 +8,9 @@ import { customAxios } from './customAxios';
  * @returns newRank : number
  */
 export async function getRank(userData: UserDataType) {
+  // 더미 - 현재 로컬 유저 데이터 사용
+  // const newUserData = localUserData;
   try {
-    // 더미 - 현재 로컬 유저 데이터 사용
-    // const newUserData = localUserData;
-
     // 서버에 전송
     const res = await customAxios.put(`users/score`, {
       userID: userData._id,
@@ -28,10 +27,9 @@ export async function getRank(userData: UserDataType) {
  * @returns UserData List
  */
 export async function getRankList() {
+  // 더미 데이터 사용
+  // const rank: UserDataType[] = rankDataJSON;
   try {
-    // 더미 데이터 사용
-    // const rank: UserDataType[] = rankDataJSON;
-
     // 서버에서 가져오기
     const res = await customAxios.get(`users/ranks`);
 
@@ -41,13 +39,24 @@ export async function getRankList() {
   }
 }
 
+/**
+ * 유저 생성
+ * @returns UserData
+ */
 export async function createUser() {
+  // 더미 닉네임 입력
+  // setUserData(userDataJSON);
   try {
-    // 서버에서 유저 생성
+    // 서버 연결 - 유저 생성
     const res = await customAxios.post(`users`);
+
+    if (res.data) {
+      const newUser = { ...res.data, topScore: 0 };
+      return newUser;
+    }
   } catch (error) {
     console.error(error);
   }
 }
 
-export default { getRank, getRankList };
+export default { getRank, getRankList, createUser };
