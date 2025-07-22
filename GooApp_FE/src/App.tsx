@@ -1,28 +1,15 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import * as React from 'react';
+import { createStaticNavigation } from '@react-navigation/native';
+import './global.css';
 
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-function App(): React.JSX.Element {
+import { DefaultNavigator } from './navigation/DefaultNavigation';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+const Navigation = createStaticNavigation(DefaultNavigator);
+
+export default function App() {
   return (
-    <View style={styles.viewStyle}>
-      <Text style={styles.textStyle}>This is Test!</Text>
-    </View>
+    <SafeAreaProvider>
+      <Navigation />
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  viewStyle: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black',
-  },
-  textStyle: {color: 'red', fontSize: 30, fontWeight: 'bold'},
-});
-
-export default App;
