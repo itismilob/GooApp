@@ -8,7 +8,7 @@ import TitleText from '@/components/TitleText';
 import HeaderButton from '@/components/HeaderButton';
 import { useEffect, useState } from 'react';
 import { UserDataType } from '@/types/dataTypes';
-import { getLocalStorage } from '@/stores/mmkvStorage';
+import { LocalStorage } from '@/stores/mmkvStorage';
 import IconButton from '@/components/IconButton';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
@@ -26,7 +26,6 @@ export default function Home() {
     'Home'
   >;
   const navigation = useNavigation<NavigationProp>();
-  const LocalStorage = getLocalStorage();
 
   const [userData, setUserData] = useState<UserDataType>();
 

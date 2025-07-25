@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import TitleText from '@/components/TitleText';
 import { getAccuracy } from '@/utils/getAccuracy';
 import StyledText from '@/components/StyledText';
-import { getLocalStorage } from '@/stores/mmkvStorage';
+import { LocalStorage } from '@/stores/mmkvStorage';
 import { ScoreDataType, UserDataType } from '@/types/dataTypes';
 import HeaderButton from '@/components/HeaderButton';
 
@@ -33,7 +33,6 @@ export default function Scoreboard() {
     'Scoreboard'
   >;
   const navigation = useNavigation<NavigationProp>();
-  const localStorage = getLocalStorage();
 
   // 퍼즐 게임 데이터 스토어
   const puzzleStoreState = puzzleStore.getState();
@@ -73,7 +72,7 @@ export default function Scoreboard() {
   // 새 점수 로컬 저장 -> 파일 분할하기 zustand + mmkv
   const addLocalScoreData = () => {
     // 로컬 점수 데이터 불러오기
-    const scoreDataString = localStorage.getString('scoreData');
+    const scoreDataString = LocalStorage.getString('scoreData');
     let newScoreData: string;
 
     // 로컬 데이터에 점수 추가

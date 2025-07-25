@@ -4,7 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
-import { getLocalStorage } from '@/stores/mmkvStorage';
+import { LocalStorage } from '@/stores/mmkvStorage';
 
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
 import TitleText from '@/components/TitleText';
@@ -22,7 +22,6 @@ export default function Loading() {
     'Loading'
   >;
   const navigation = useNavigation<NavigationProp>();
-  const localStorage = getLocalStorage();
   const [isTryed, setIsTryed] = useState(false);
 
   // 네트워크 확인해서 모달 띄움
@@ -54,7 +53,7 @@ export default function Loading() {
 
   useEffect(() => {
     // 테스트용 데이터 초기화 ***
-    localStorage.clearAll();
+    // LocalStorage.clearAll();
 
     // 첫 실행인지 확인하고 아니면 Home으로 이동
     const isFirst = checkFirstStart();

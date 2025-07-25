@@ -2,6 +2,7 @@ import axios from 'axios';
 import { SERVER_URI } from '@env';
 import { showErrorAlert } from '@/utils/alert';
 import { CustomError } from '@/utils/customError';
+import { Alert } from 'react-native';
 
 export const customAxios = axios.create({
   baseURL: SERVER_URI,
@@ -32,7 +33,7 @@ function resErrorHandler(error: unknown) {
 
   const customError = new CustomError(status, code, message);
 
-  showErrorAlert(customError);
+  // showErrorAlert(customError);
   return Promise.reject(customError);
 }
 
@@ -42,6 +43,9 @@ customAxios.interceptors.response.use(res => res, resErrorHandler);
 customAxios.interceptors.request.use(
   req => {
     console.log(req);
+    // Alert.alert(`${req.method}`, `${req.baseURL}/${req.url}`, [
+    //   { text: '확인' },
+    // ]);
     return req;
   },
   error => error,

@@ -6,8 +6,6 @@ import { useEffect, useState } from 'react';
 
 import userDataJSON from '@/test/userData.json';
 
-import { getLocalStorage } from '@/stores/mmkvStorage';
-
 import { UserDataType } from '@/types/dataTypes';
 import { defaultGap, defaultGreen } from '@/styles/const';
 import DefaultButton from '@/components/DefaultButton';

@@ -3,7 +3,6 @@ import HeaderButton from '@/components/HeaderButton';
 import RecordListLine from '@/components/RecordListLine';
 import TitleText from '@/components/TitleText';
 import { getLocalScoreData } from '@/stores/localStorageFunctions';
-import { getLocalStorage } from '@/stores/mmkvStorage';
 import { ScoreDataType } from '@/types/dataTypes';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
