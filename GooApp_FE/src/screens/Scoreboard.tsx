@@ -85,7 +85,7 @@ export default function Scoreboard() {
       newScoreData = JSON.stringify([scoreData]);
     }
 
-    localStorage.set('scoreData', newScoreData);
+    LocalStorage.set('scoreData', newScoreData);
   };
 
   // 최고기록 비교, 변경
