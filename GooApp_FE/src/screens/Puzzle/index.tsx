@@ -45,6 +45,10 @@ export default function Puzzle() {
   // 화면에 보여질 타이머 프레임
   const [timerFrame, setTimerFrame] = useState<number>(0);
   const timerAnimationFrame = useRef<number>(0);
+  // 시간 색상
+  const [timerColor, setTimerColor] = useState<
+    'color-white' | 'color-yellow-400'
+  >('color-white');
 
   // [맞은 수, 틀린 수]
   const [answerStats, setAnswerStats] = useState<number[]>([0, 0]);
@@ -150,6 +154,14 @@ export default function Puzzle() {
     if (isCorrect) {
       console.log('correct');
 
+      // 이제 정답을 맞춘다면 1초가 추가됩니다!
+      timer.current += 1;
+      // 잠시 타이머 색상 변경
+      setTimerColor('color-yellow-400');
+      setTimeout(() => {
+        setTimerColor('color-white');
+      }, 500);
+
       setQuestList(prev => {
         const temp = [...prev];
         temp[selectedBtn.side][selectedBtn.index] = null;
@@ -248,7 +260,9 @@ export default function Puzzle() {
       <HeaderButton>퍼즐</HeaderButton>
       {/* 점수, 시간 */}
       <View className="items-center justify-center h-header gap-default relative">
-        <TitleText size={60}>{`${timerFrame.toFixed(1)}`}</TitleText>
+        <TitleText size={60} className={timerColor}>{`${timerFrame.toFixed(
+          1,
+        )}`}</TitleText>
         <View className=" flex-row gap-20">
           <TitleText size={30}>
             {answerStats[0]} / {answerStats[1]}
