@@ -65,7 +65,9 @@ export const getUser = async (userID: string) => {
  * @returns User Object[]
  */
 export const getTop100 = async () => {
-  const topUsers = await User.find().sort({ topScore: -1 }).limit(100);
+  const topUsers = await User.find({ topScore: { $gt: 0 } })
+    .sort({ topScore: -1 })
+    .limit(100);
   return topUsers;
 };
 
