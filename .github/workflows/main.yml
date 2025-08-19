@@ -20,6 +20,11 @@ jobs:
         with:
           node-version: 16
 
+      - name: Check Location (경로 확인용)
+        run: |
+          pwd
+          ls -R
+
       # 의존성 설치
       - name: Install dependencies
         run: |
