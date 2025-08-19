@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,11 +20,6 @@ jobs:
         with:
           node-version: 16
 
-      - name: Check Location (경로 확인용)
-        run: |
-          pwd
-          ls -R
-
       # 의존성 설치
       - name: Install dependencies
         run: |
@@ -37,6 +32,11 @@ jobs:
           cd GooApp_BE
           npm run build
 
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
       # 서버로 배포
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.7
