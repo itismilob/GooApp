@@ -23,13 +23,13 @@ jobs:
       # 의존성 설치
       - name: Install dependencies
         run: |
-          cd ~/GooApp/GooApp_BE
+          cd GooApp/GooApp_BE
           npm ci
 
       # 빌드
       - name: Build
         run: |
-          cd ~/GooApp/GooApp_BE
+          cd GooApp/GooApp_BE
           npm run build
 
       # 서버로 배포
