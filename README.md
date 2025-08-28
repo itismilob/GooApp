@@ -7,17 +7,21 @@
 - 목적 : 구구단을 외우기 시작한 초등학교 저학년 학생들이 한글로된 구구단 앱을 사용할 수 있게 하는것, 다른 앱과는 차별화된 빠른 속도와 반복을 하며 다른 사람과도 경쟁해 더 흥미롭게 구구단을 외울 수 있게 하는것이 이 앱을 제작하게된 목적입니다.
 - 배포 링크 : [GooApp - Google Play](https://play.google.com/store/apps/details?id=com.gooapp_fe)
 
+---
+
 ### 목표
 
 - 📌 React Native를 사용하여 Android 앱을 만들어 Google Play에 배포하기
 - 📌 Express를 사용하여 백앤드 서버를 만들어 AWS EC2를 이용해 배포하기
 - 📌 MVP 기능 완성 ([MVP 확인하기 →](https://pollen-mule-b30.notion.site/MVP-1d599c14c73480e68617ee540f7e2bd1))
 
+---
+
 ### 소개 핵심 기능
 
 #### 퍼즐
 
-<img src="./resources/puzzle_record.gif" style="max-width:300px"/>
+<img src="./resources/puzzle_record.gif" width="300"/>
 
 - 간단한 구구단 퍼즐로 2x2 좌우 버튼을 짝지어 정답을 맞출 수 있습니다.
 - 20초의 짧은 제한시간동안 플레이하고 곳바로 반복적으로 플레이 할 수 있어서 간편하게 구구단을 외우도록 했습니다.
@@ -25,14 +29,14 @@
 
 #### 랭킹
 
-<img src="./resources/rank_record.gif" style="max-width:300px"/>
+<img src="./resources/rank_record.gif" width="300"/>
 
 - 다른 사용자와 최고점수를 비교햐여 랭킹을 매기도록 했습니다.
 - 인터넷이 연결되지 않을 경우 작동하지 않고 알림을 띄우도록 했습니다.
 
 #### 기록
 
-<img src="./resources/record.png" style="max-width:300px"/>
+<img src="./resources/record.png" width="300"/>
 
 - 사용자 본인의 기록들을 저장하여 언제든 확인할 수 있습니다.
 - 최고기록을 바로 확인하여 더 높은 기록을 위해 퍼즐을 플레이 하도록 만들었습니다.
@@ -41,7 +45,7 @@
 
 ### 아키텍쳐
 
-<img src="./resources/GooApp_diagram.png" style="max-width:300px"/>
+<img src="./resources/GooApp_diagram.png" width="300"/>
 
 - Frontend
   - ReactNative로 Android 앱을 개발해 Google Play에 배포한다.
@@ -51,6 +55,8 @@
   - GitHub Actions를 통해서 main 브랜치를 자동 배포 했다.
 - DB
   - MongoDB Atlas를 사용하여 배포 없이 클라우드로 연결할 수 있게 했다.
+
+---
 
 ### 기술 스택
 
