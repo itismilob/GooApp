@@ -69,6 +69,8 @@
 | Deployment | <img src="https://img.shields.io/badge/AWS EC2-%23FF9900.svg?style=flat&logo=amazon-aws&logoColor=white" /> <img src="https://img.shields.io/badge/NGINX-%23009639.svg?style=flat&logo=nginx&logoColor=white" /> <img src="https://img.shields.io/badge/GitHub%20Actions-%232671E5.svg?style=flat&logo=githubactions&logoColor=white" />                                                                                                                                                                 |
 | Others     | <img src="https://img.shields.io/badge/Notion-ffffff.svg?style=flat&logo=notion&logoColor=black" /> <img src="https://img.shields.io/badge/Postman-FF6C37.svg?style=flat&logo=postman&logoColor=white" /> <img src="https://img.shields.io/badge/Figma-black.svg?style=flat&logo=figma&logoColor=white" />                                                                                                                                                                                               |
 
+---
+
 ### terms & conditions
 
 © 2025 Itismilob. All rights reserved.  
