@@ -1,5 +1,5 @@
 export interface UserDataType {
-  _id: string;
+  _id: string | undefined;
   nickname: string;
   tag: number;
   rank: number;
@@ -11,5 +11,5 @@ export interface ScoreDataType {
   wrong: number;
   accuracy: number;
   score: number;
-  timestamp: Date;
+  timestamp: Date | undefined;
 }

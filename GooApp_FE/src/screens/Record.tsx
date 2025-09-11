@@ -2,7 +2,6 @@ import DefaultButton from '@/components/DefaultButton';
 import HeaderButton from '@/components/HeaderButton';
 import RecordListLine from '@/components/RecordListLine';
 import TitleText from '@/components/TitleText';
-import { getLocalScoreData } from '@/stores/localStorageFunctions';
 import { ScoreDataType } from '@/types/dataTypes';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
@@ -12,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import ListLiner from '@/components/ListLiner';
 import Line from '@/components/Line';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import scoreLocalStore from '@/stores/scoreStore';
 
 export default function Record() {
   type NavigationProp = NativeStackNavigationProp<
@@ -20,16 +20,12 @@ export default function Record() {
   >;
   const navigation = useNavigation<NavigationProp>();
 
-  const [scores, setScores] = useState<ScoreDataType[]>([]);
+  const scores = scoreLocalStore(state => state.scores);
   const [topScore, setTopScore] = useState<ScoreDataType>();
 
   const getScores = () => {
-    const newScore = getLocalScoreData();
-    if (!newScore) return;
-
-    setScores(newScore.reverse());
-
-    const newTop = newScore.reduce((prev, curr) => {
+    if (scores.length == 0) return;
+    const newTop = scores.reduce((prev, curr) => {
       return curr.score > prev.score ? curr : prev;
     });
     setTopScore(newTop);
@@ -63,7 +59,7 @@ export default function Record() {
               <View className="mt-header min-h-screen bg-light-green rounded-default">
                 <RecordListLine content={['점수', '맞춘 개수', '정확도']} />
                 {scores.length > 0 &&
-                  scores.map((record, key) => (
+                  scores.reverse().map((record, key) => (
                     <ListLiner key={key} index={key}>
                       <RecordListLine
                         content={[

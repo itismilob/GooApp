@@ -10,7 +10,7 @@ import Frame from '../assets/images/frame.svg';
 
 import { Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
-import { getLocalScoreData } from '@/stores/localStorageFunctions';
+import scoreLocalStore from '@/stores/scoreStore';
 
 export default function Tutorial() {
   type NavigationProp = NativeStackNavigationProp<
@@ -23,10 +23,10 @@ export default function Tutorial() {
   const windowHeight = Dimensions.get('window').height;
 
   const [next, setNext] = useState<boolean>(false);
+  const scores = scoreLocalStore(state => state.scores);
 
   useEffect(() => {
-    const localData = getLocalScoreData();
-    if (localData && localData.length > 0) {
+    if (scores.length > 0) {
       navigation.replace('Puzzle');
     }
   }, []);

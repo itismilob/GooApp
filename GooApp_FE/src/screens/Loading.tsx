@@ -4,17 +4,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
-import { LocalStorage } from '@/stores/mmkvStorage';
-
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
 import TitleText from '@/components/TitleText';
 import { customAxios } from '@/services/customAxios';
 import { UserDataType } from '@/types/dataTypes';
-import {
-  getLocalUserData,
-  setLocalUserData,
-} from '@/stores/localStorageFunctions';
 import userDataAPI from '@/services/userDataAPI';
+import userLocalStore from '@/stores/userStore';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
@@ -23,6 +19,10 @@ export default function Loading() {
   >;
   const navigation = useNavigation<NavigationProp>();
   const [isTryed, setIsTryed] = useState(false);
+
+  const [user, setUser] = userLocalStore(
+    useShallow(state => [state.user, state.setUser]),
+  );
 
   // 네트워크 확인해서 모달 띄움
   const checkNetInfoTrigger = useCheckNetInfo(
@@ -35,17 +35,16 @@ export default function Loading() {
   );
 
   // 첫 실행인지 확인
-  const checkFirstStart = () => {
-    const isUserData = getLocalUserData();
-    return isUserData === undefined;
-  };
+  // const checkFirstStart = () => {
+  //   return userData._id === undefined;
+  // };
 
   // 유저 정보 저장하기
   const createUser = async () => {
     if (isTryed) return;
     setIsTryed(true);
     const newUser = await userDataAPI.createUser();
-    setLocalUserData(newUser);
+    setUser(newUser);
 
     // 유저 생성 후 NickNoti로 이동
     navigation.replace('NicknameNoti');
@@ -56,9 +55,9 @@ export default function Loading() {
     // LocalStorage.clearAll();
 
     // 첫 실행인지 확인하고 아니면 Home으로 이동
-    const isFirst = checkFirstStart();
+    // const isFirst = checkFirstStart();
 
-    if (isFirst) {
+    if (user._id === undefined) {
       // 첫 실행이라면 네트워크 확인
       checkNetInfoTrigger();
     } else {
