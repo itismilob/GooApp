@@ -19,9 +19,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { showErrorAlert } from '@/utils/alert';
 import scoreLocalStore from '@/stores/scoreStore';
 import userLocalStore from '@/stores/userStore';
-import puzzleLocalStore from '@/stores/puzzleStore';
+import puzzleStore from '@/stores/puzzleStore';
 import { useShallow } from 'zustand/react/shallow';
-// import puzzleStore from '@/stores/puzzleStore';
 
 // 랭킹 상승 : -1, 유지 : 0, 하락 : 1
 type RankChangeType = -1 | 0 | 1;
@@ -50,7 +49,7 @@ export default function Scoreboard() {
     useShallow(state => [state.user, state.setUser]),
   );
   // 로컬 퍼즐 데이터
-  const answerStats = puzzleLocalStore(state => state.answerStats);
+  const answerStats = puzzleStore(state => state.answerStats);
   // 로컬 점수 데이터
   const addScoreData = scoreLocalStore(state => state.addScoreData);
 
