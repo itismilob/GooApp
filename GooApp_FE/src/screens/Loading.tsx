@@ -16,7 +16,6 @@ export default function Loading() {
     'Loading'
   >;
   const navigation = useNavigation<NavigationProp>();
-  const [isTryed, setIsTryed] = useState(false);
 
   const [user, setUser] = userLocalStore(
     useShallow(state => [state.user, state.setUser]),
@@ -32,15 +31,8 @@ export default function Loading() {
     },
   );
 
-  // 첫 실행인지 확인
-  // const checkFirstStart = () => {
-  //   return userData._id === undefined;
-  // };
-
   // 유저 정보 저장하기
   const createUser = async () => {
-    if (isTryed) return;
-    setIsTryed(true);
     const newUser = await userDataAPI.createUser();
     setUser(newUser);
 
@@ -51,9 +43,6 @@ export default function Loading() {
   useEffect(() => {
     // 테스트용 데이터 초기화 ***
     // LocalStorage.clearAll();
-
-    // 첫 실행인지 확인하고 아니면 Home으로 이동
-    // const isFirst = checkFirstStart();
 
     if (user._id === undefined) {
       // 첫 실행이라면 네트워크 확인
