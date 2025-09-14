@@ -6,8 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
 import TitleText from '@/components/TitleText';
-import { customAxios } from '@/services/customAxios';
-import { UserDataType } from '@/types/dataTypes';
 import userDataAPI from '@/services/userDataAPI';
 import userLocalStore from '@/stores/userStore';
 import { useShallow } from 'zustand/react/shallow';
