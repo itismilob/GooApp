@@ -12,7 +12,7 @@ const scoreLocalStore = create<ScoreStoreType>()(
         set(state => ({ scores: [...state.scores, newScore] })),
     }),
     {
-      name: 'mmkv',
+      name: 'scoreStore',
       storage: localStorage,
     },
   ),

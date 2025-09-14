@@ -10,7 +10,7 @@ const userLocalStore = create<UserStoreType>()(
       setUser: state => set({ user: state }),
     }),
     {
-      name: 'mmkv',
+      name: 'userStore',
       storage: localStorage,
     },
   ),

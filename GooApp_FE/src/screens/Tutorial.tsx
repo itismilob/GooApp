@@ -10,7 +10,8 @@ import Frame from '../assets/images/frame.svg';
 
 import { Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
-import scoreLocalStore from '@/stores/scoreStore';
+import checkboxLocalStore from '@/stores/checkboxStore';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function Tutorial() {
   type NavigationProp = NativeStackNavigationProp<
@@ -23,10 +24,13 @@ export default function Tutorial() {
   const windowHeight = Dimensions.get('window').height;
 
   const [next, setNext] = useState<boolean>(false);
-  const scores = scoreLocalStore(state => state.scores);
+
+  const [checkbox, setCheckbox] = checkboxLocalStore(
+    useShallow(state => [state.checkbox, state.setCheckbox]),
+  );
 
   useEffect(() => {
-    if (scores.length > 0) {
+    if (checkbox.doneTutorial) {
       navigation.replace('Puzzle');
     }
   }, []);
@@ -43,8 +47,10 @@ export default function Tutorial() {
       </View>
       <Pressable
         onPress={() => {
-          if (next) navigation.replace('Puzzle');
-          else setNext(true);
+          if (next) {
+            setCheckbox({ ...checkbox, doneTutorial: true });
+            navigation.replace('Puzzle');
+          } else setNext(true);
         }}
         className="absolute w-full h-full p-default align-bottom justify-end"
       >
