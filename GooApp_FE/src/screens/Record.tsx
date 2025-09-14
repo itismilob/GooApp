@@ -23,7 +23,8 @@ export default function Record() {
   const scores = scoreLocalStore(state => state.scores);
   const [topScore, setTopScore] = useState<ScoreDataType>();
 
-  const getScores = () => {
+  /**유저의 점수를 모두 비교해 최고점수를 찾음 */
+  const getTopScore = () => {
     if (scores.length == 0) return;
     const newTop = scores.reduce((prev, curr) => {
       return curr.score > prev.score ? curr : prev;
@@ -32,7 +33,7 @@ export default function Record() {
   };
 
   useEffect(() => {
-    getScores();
+    getTopScore();
   }, []);
 
   return (

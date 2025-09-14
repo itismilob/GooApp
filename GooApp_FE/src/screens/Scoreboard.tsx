@@ -53,9 +53,7 @@ export default function Scoreboard() {
   // 로컬 점수 데이터
   const addScoreData = scoreLocalStore(state => state.addScoreData);
 
-  /**
-   * 새로운 점수 데이터 생성
-   */
+  /**새로운 점수 데이터 생성 */
   const createNewScoreData = () => {
     // const stats = puzzleStoreState.getAnswerStats();
     const accuracy = getAccuracy(answerStats[0], answerStats[1]);
@@ -73,29 +71,7 @@ export default function Scoreboard() {
     setScoreData(newScoreData);
   };
 
-  // 새 점수 로컬 저장 -> 파일 분할하기 zustand + mmkv
-  // const addLocalScoreData = () => {
-  //   // 로컬 점수 데이터 불러오기
-  //   // const scoreDataString = LocalStorage.getString('scoreData');
-  //   // let newScoreData: string;
-
-  //   // 로컬 데이터에 점수 추가
-  //   // if (scoreDataString) {
-  //   //   const result: ScoreDataType[] = JSON.parse(scoreDataString);
-
-  //   //   // 데이터 추가해서 저장
-  //   //   newScoreData = JSON.stringify([...result, scoreData]);
-  //   //   addScore(scoreData);
-  //   // } else {
-  //   //   newScoreData = JSON.stringify([scoreData]);
-  //   // }
-
-  //   if (scoreData) addScoreData(scoreData);
-
-  //   // LocalStorage.set('scoreData', newScoreData);
-  // };
-
-  // 최고기록 비교, 변경
+  /**최고기록 비교, 변경 */
   const compareTopScore = () => {
     // userData 무조건 존재함
     if (!user || !scoreData) return;
@@ -117,7 +93,7 @@ export default function Scoreboard() {
     }
   };
 
-  // 점수 변동 아이콘 정함
+  /**점수 변동 아이콘 정함 */
   const getScoreIcon = () => {
     if (recordChangeState === -1) {
       return <Icon name="arrow-up" size={25} color={'blue'} />;
@@ -128,7 +104,7 @@ export default function Scoreboard() {
     return <Icon name="minus" size={25} color={'white'} />;
   };
 
-  // 랭킹 변동 아이콘 정함
+  /**랭킹 변동 아이콘 정함 */
   const getRankIcon = () => {
     if (rankChangeState === -1) {
       return <Icon name="arrow-up" size={25} color={'blue'} />;
@@ -138,6 +114,7 @@ export default function Scoreboard() {
     return <Icon name="minus" size={25} color={'white'} />;
   };
 
+  /**랭킹 변동사항을 가져옴 */
   const getRankChanges = async () => {
     // userData, scoreData 무조건 존재
     if (!user) return;
@@ -158,16 +135,13 @@ export default function Scoreboard() {
         setRankChangeState(0);
       }
 
-      // 랭킹 갱신
-      // setLocalUserData({ ...userData, rank: newRank });
-      // setUserData({ ...userData, rank: newRank });
-
       setUser({ ...user, rank: newRank });
     } catch (error) {
       console.error(error);
     }
   };
 
+  /**네트워크 확인해서 모달 띄움 */
   const checkNetInfoTrigger = useCheckNetInfo(() => {
     getRankChanges();
     setIsNetworkOn(true);
@@ -177,17 +151,12 @@ export default function Scoreboard() {
   useEffect(() => {
     // 새로운 점수 데이터 생성
     createNewScoreData();
-
-    // 유저 데이터 가져옴
-    // const localUserData = getLocalUserData();
-    // setUserData(localUserData);
   }, []);
 
   // 새 점수 저장 + 최고 점수 비교
   useEffect(() => {
     if (user && scoreData && !topScore) {
       // 새 점수 로컬 저장
-      // addLocalScoreData();
       addScoreData(scoreData);
 
       // topScore 비교, 변경

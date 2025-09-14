@@ -35,7 +35,7 @@ export default function Rank() {
   // 랭킹 리스트
   const [rankList, setRankList] = useState<UserDataType[]>([]);
 
-  // 네트워크 확인해서 모달 띄움
+  /**네트워크 확인해서 모달 띄움 */
   const checkNetInfoTrigger = useCheckNetInfo(
     () => {
       // 유저 랭킹의 변동사항을 가져옴
@@ -47,6 +47,7 @@ export default function Rank() {
     },
   );
 
+  /**유저의 랭킹을 가져옴 */
   const getRank = async () => {
     try {
       const newRank = await userDataAPI.getRank(user);
@@ -58,6 +59,7 @@ export default function Rank() {
     }
   };
 
+  /**랭킹 상위 100명의 유저 정보를 가져옴 */
   const getRankList = async () => {
     try {
       const ranks = await userDataAPI.getRankList();

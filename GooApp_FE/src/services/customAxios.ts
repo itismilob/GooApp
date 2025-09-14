@@ -4,11 +4,13 @@ import { showErrorAlert } from '@/utils/alert';
 import { CustomError } from '@/utils/customError';
 import { Alert } from 'react-native';
 
+/**axios instance 생성 */
 export const customAxios = axios.create({
   baseURL: SERVER_URI,
   timeout: 1000,
 });
 
+/**응답 에러 처리 */
 function resErrorHandler(error: unknown) {
   let status = 500;
   let code = 'UNKNOWN';

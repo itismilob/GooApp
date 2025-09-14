@@ -21,7 +21,7 @@ export default function Loading() {
     useShallow(state => [state.user, state.setUser]),
   );
 
-  // 네트워크 확인해서 모달 띄움
+  /**네트워크 확인해서 모달 띄움 */
   const checkNetInfoTrigger = useCheckNetInfo(
     () => {
       createUser();
@@ -31,7 +31,7 @@ export default function Loading() {
     },
   );
 
-  // 유저 정보 저장하기
+  /**유저 정보 저장하기 */
   const createUser = async () => {
     const newUser = await userDataAPI.createUser();
     setUser(newUser);

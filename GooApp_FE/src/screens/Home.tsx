@@ -22,6 +22,7 @@ export default function Home() {
     'Home'
   >;
   const navigation = useNavigation<NavigationProp>();
+
   const user = userLocalStore(state => state.user);
 
   return (

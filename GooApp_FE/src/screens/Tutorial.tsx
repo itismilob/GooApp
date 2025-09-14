@@ -20,16 +20,20 @@ export default function Tutorial() {
   >;
   const navigation = useNavigation<NavigationProp>();
 
+  // 화면 크기
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
 
+  // 다음 화면이 있는지 확인
   const [next, setNext] = useState<boolean>(false);
 
+  // checkbox 데이터 (튜토리얼 봤는지 확인용)
   const [checkbox, setCheckbox] = checkboxLocalStore(
     useShallow(state => [state.checkbox, state.setCheckbox]),
   );
 
   useEffect(() => {
+    // 튜토리얼을 봤는지 확인
     if (checkbox.doneTutorial) {
       navigation.replace('Puzzle');
     }
