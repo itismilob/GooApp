@@ -2,6 +2,7 @@ import shuffleArray from '@/utils/shuffleArray';
 
 import { Quest, QuestArray } from '@/types/puzzleTypes';
 
+/**퍼즐의 문제를 생성함 */
 function questGenerator(answers: number[]): [Quest, Quest] {
   let randA: number;
   let randB: number;
@@ -24,8 +25,8 @@ function questGenerator(answers: number[]): [Quest, Quest] {
   return [quest, answer];
 }
 
-// 배열에서 랜덤한 빈 칸에 값을 추가하는 함수
-const insertRandom = (array: QuestArray, Q: Quest) => {
+/**배열에서 랜덤한 빈 칸에 값을 추가함 */
+function insertRandom(array: QuestArray, Q: Quest) {
   const empty: number[] = [];
   array.forEach((spot, i) => {
     if (spot === null) empty.push(i);
@@ -35,12 +36,12 @@ const insertRandom = (array: QuestArray, Q: Quest) => {
   const shuffled = shuffleArray(empty);
   const index = shuffled.pop()!;
   array[index] = Q;
-};
+}
 
-const checkDuplication = (
+function checkDuplication(
   AQueue: QuestArray,
   AList: QuestArray,
-): [Quest, Quest] => {
+): [Quest, Quest] {
   const answers: number[] = [];
 
   // 정답들만 모아서 answers에 추가
@@ -49,8 +50,9 @@ const checkDuplication = (
   });
 
   return questGenerator([...answers]);
-};
+}
 
+/**큐에서 다음 문제를 불러옮 */
 export const queueAlgorithm = (
   questQueue: QuestArray[],
   questList: QuestArray[],

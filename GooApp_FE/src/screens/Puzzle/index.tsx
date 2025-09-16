@@ -54,7 +54,7 @@ export default function Puzzle() {
   const [answerStats, setAnswerStats] = useState<number[]>([0, 0]);
   const puzzleStoreState = puzzleStore.getState();
 
-  // 문제 생성
+  /**문제 생성 */
   const getQuest = () => {
     const [newQueue, newList] = queueAlgorithm(questQueue, questList);
 
@@ -62,7 +62,7 @@ export default function Puzzle() {
     setQuestList(newList);
   };
 
-  // questList의 문제들을 버튼에 넣기
+  /**questList의 문제들을 버튼에 넣기 */
   const resetRenderBtns = () => {
     const newRenderBtns: BtnStateType[][] = [...renderBtns];
 
@@ -80,7 +80,7 @@ export default function Puzzle() {
     setRenderBtns(newRenderBtns);
   };
 
-  // 누른 버튼 선택 함수
+  /**누른 버튼 선택 */
   const selectBtn = (clickedBtn: BtnPosType | null) => {
     const newRenderBtns: BtnStateType[][] = [...renderBtns];
 
@@ -102,7 +102,7 @@ export default function Puzzle() {
     setSelectedBtn(clickedBtn);
   };
 
-  // 버튼의 색상을 변경하고 일정시간 정지시키는 함수
+  /**버튼의 색상을 변경하고 일정시간 정지시킴 */
   const indicateBtnColor = (btn: BtnPosType, color: BtnColor) => {
     // 색상을 변화시킴
     setRenderBtns(prev => {
@@ -123,7 +123,7 @@ export default function Puzzle() {
     }, puzzleStop);
   };
 
-  // 버튼 클릭 이벤트 헨들러
+  /**버튼 클릭 이벤트 헨들러 */
   const btnEventListner = (clickedBtn: BtnPosType) => {
     // 선택된 버튼이 없다면 누른 버튼으로 선택
     if (!selectedBtn) {
@@ -190,7 +190,7 @@ export default function Puzzle() {
     selectBtn(null);
   };
 
-  // 퍼즐 타이머 시작
+  /**퍼즐 타이머 시작 */
   const startTimer = () => {
     console.log('game start');
     interval.current = setInterval(() => {
@@ -205,7 +205,7 @@ export default function Puzzle() {
     animationFrame();
   };
 
-  // 퍼즐 게임 종료
+  /**퍼즐 게임 종료 */
   const gameEnd = () => {
     console.log('game end');
     if (interval.current) {
@@ -216,7 +216,7 @@ export default function Puzzle() {
     }
   };
 
-  // 타이머 애니메이션 프레임 설정
+  /**타이머 애니메이션 프레임 설정 */
   const animationFrame = () => {
     setTimerFrame(timer.current);
     timerAnimationFrame.current = requestAnimationFrame(animationFrame);

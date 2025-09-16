@@ -10,7 +10,8 @@ import Frame from '../assets/images/frame.svg';
 
 import { Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
-import { getLocalScoreData } from '@/stores/localStorageFunctions';
+import checkboxLocalStore from '@/stores/checkboxStore';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function Tutorial() {
   type NavigationProp = NativeStackNavigationProp<
@@ -19,14 +20,21 @@ export default function Tutorial() {
   >;
   const navigation = useNavigation<NavigationProp>();
 
+  // 화면 크기
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
 
+  // 다음 화면이 있는지 확인
   const [next, setNext] = useState<boolean>(false);
 
+  // checkbox 데이터 (튜토리얼 봤는지 확인용)
+  const [checkbox, setCheckbox] = checkboxLocalStore(
+    useShallow(state => [state.checkbox, state.setCheckbox]),
+  );
+
   useEffect(() => {
-    const localData = getLocalScoreData();
-    if (localData && localData.length > 0) {
+    // 튜토리얼을 봤는지 확인
+    if (checkbox.doneTutorial) {
       navigation.replace('Puzzle');
     }
   }, []);
@@ -43,8 +51,10 @@ export default function Tutorial() {
       </View>
       <Pressable
         onPress={() => {
-          if (next) navigation.replace('Puzzle');
-          else setNext(true);
+          if (next) {
+            setCheckbox({ ...checkbox, doneTutorial: true });
+            navigation.replace('Puzzle');
+          } else setNext(true);
         }}
         className="absolute w-full h-full p-default align-bottom justify-end"
       >
