@@ -10,6 +10,9 @@ import userDataAPI from '@/services/userDataAPI';
 import userLocalStore from '@/stores/userStore';
 import { useShallow } from 'zustand/react/shallow';
 
+import { mmkvStorage } from '@/stores/mmkvStorage';
+import { UserDataType } from '@/types/dataTypes';
+
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
     DefaultNavigatorParams,
@@ -41,8 +44,15 @@ export default function Loading() {
   };
 
   useEffect(() => {
-    // 테스트용 데이터 초기화 ***
-    // LocalStorage.clearAll();
+    // CLI 테스트 중인지 확인 (__DEV__를 사용해 빌드시 트리 쉐이킹 처리됨)
+    if (__DEV__) {
+      // 테스트용 데이터 초기화
+      mmkvStorage.clearAll();
+
+      // 테스트 유저 입력 (동적 import사용)
+      const testUser: UserDataType = require('@/test/userData.json');
+      setUser(testUser);
+    }
 
     if (user._id === undefined) {
       // 첫 실행이라면 네트워크 확인
