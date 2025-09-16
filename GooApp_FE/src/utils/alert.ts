@@ -1,7 +1,7 @@
 import { CustomError } from '@/utils/customError';
 import { Alert } from 'react-native';
 
-// 에러 Alert를 띄우는 함수
+/**에러 Alert를 띄움 */
 export function showErrorAlert(error: CustomError) {
   Alert.alert(
     `${error.errorCode} - ${error.statusCode}\n${error.message}`,

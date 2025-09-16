@@ -8,17 +8,13 @@ import TitleText from '@/components/TitleText';
 import HeaderButton from '@/components/HeaderButton';
 import { useEffect, useState } from 'react';
 import { UserDataType } from '@/types/dataTypes';
-import { LocalStorage } from '@/stores/mmkvStorage';
 import IconButton from '@/components/IconButton';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FA5Icons from 'react-native-vector-icons/FontAwesome5';
-import {
-  getLocalScoreData,
-  getLocalUserData,
-} from '@/stores/localStorageFunctions';
 import formatTag from '@/utils/formatTag';
+import userLocalStore from '@/stores/userStore';
 
 export default function Home() {
   type NavigationProp = NativeStackNavigationProp<
@@ -27,19 +23,14 @@ export default function Home() {
   >;
   const navigation = useNavigation<NavigationProp>();
 
-  const [userData, setUserData] = useState<UserDataType>();
-
-  useEffect(() => {
-    const localData = getLocalUserData();
-    setUserData(localData);
-  }, []);
+  const user = userLocalStore(state => state.user);
 
   return (
     <View className="bg-default-green flex-1 p-default">
       <View className="flex-1 items-center justify-center gap-default">
         <TitleText size={60}>GooApp</TitleText>
         <TitleText size={30}>
-          {userData?.nickname} {formatTag(userData?.tag)}
+          {user?.nickname} {formatTag(user?.tag)}
         </TitleText>
       </View>
 

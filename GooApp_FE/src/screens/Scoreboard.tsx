@@ -2,27 +2,25 @@ import { Pressable, View, Alert } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
-import puzzleStore from '@/stores/puzzleStore';
 import { useEffect, useState } from 'react';
 import TitleText from '@/components/TitleText';
 import { getAccuracy } from '@/utils/getAccuracy';
 import StyledText from '@/components/StyledText';
-import { LocalStorage } from '@/stores/mmkvStorage';
 import { ScoreDataType, UserDataType } from '@/types/dataTypes';
 import HeaderButton from '@/components/HeaderButton';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DefaultButton from '@/components/DefaultButton';
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
-import {
-  getLocalUserData,
-  setLocalUserData,
-} from '@/stores/localStorageFunctions';
 import userDataAPI from '@/services/userDataAPI';
 import Line from '@/components/Line';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { showErrorAlert } from '@/utils/alert';
+import scoreLocalStore from '@/stores/scoreStore';
+import userLocalStore from '@/stores/userStore';
+import puzzleStore from '@/stores/puzzleStore';
+import { useShallow } from 'zustand/react/shallow';
 
 // 랭킹 상승 : -1, 유지 : 0, 하락 : 1
 type RankChangeType = -1 | 0 | 1;
@@ -34,10 +32,6 @@ export default function Scoreboard() {
   >;
   const navigation = useNavigation<NavigationProp>();
 
-  // 퍼즐 게임 데이터 스토어
-  const puzzleStoreState = puzzleStore.getState();
-  // 현재 게임 점수
-  const [scoreData, setScoreData] = useState<ScoreDataType | null>(null);
   // 최고 기록
   const [topScore, setTopScore] = useState<number>(0);
   // 네트워크 연결 유무
@@ -46,21 +40,29 @@ export default function Scoreboard() {
   const [recordChangeState, setRecordChangeState] = useState<RankChangeType>(0);
   // 랭킹 변경사항
   const [rankChangeState, setRankChangeState] = useState<RankChangeType>(0);
-  // 유저 데이터
-  const [userData, setUserData] = useState<UserDataType | undefined>();
 
-  /**
-   * 새로운 점수 데이터 생성
-   */
+  // 현재 게임 점수
+  const [scoreData, setScoreData] = useState<ScoreDataType | null>(null);
+
+  // 로컬 유저 데이터
+  const [user, setUser] = userLocalStore(
+    useShallow(state => [state.user, state.setUser]),
+  );
+  // 로컬 퍼즐 데이터
+  const answerStats = puzzleStore(state => state.answerStats);
+  // 로컬 점수 데이터
+  const addScoreData = scoreLocalStore(state => state.addScoreData);
+
+  /**새로운 점수 데이터 생성 */
   const createNewScoreData = () => {
-    const stats = puzzleStoreState.getAnswerStats();
-    const accuracy = getAccuracy(stats[0], stats[1]);
-    const score = stats[0] * accuracy;
+    // const stats = puzzleStoreState.getAnswerStats();
+    const accuracy = getAccuracy(answerStats[0], answerStats[1]);
+    const score = answerStats[0] * accuracy;
 
     // 새로운 데이터 생성
     const newScoreData: ScoreDataType = {
-      correct: stats[0],
-      wrong: stats[1],
+      correct: answerStats[0],
+      wrong: answerStats[1],
       accuracy,
       score,
       timestamp: new Date(),
@@ -69,48 +71,29 @@ export default function Scoreboard() {
     setScoreData(newScoreData);
   };
 
-  // 새 점수 로컬 저장 -> 파일 분할하기 zustand + mmkv
-  const addLocalScoreData = () => {
-    // 로컬 점수 데이터 불러오기
-    const scoreDataString = LocalStorage.getString('scoreData');
-    let newScoreData: string;
-
-    // 로컬 데이터에 점수 추가
-    if (scoreDataString) {
-      const result: ScoreDataType[] = JSON.parse(scoreDataString);
-
-      // 데이터 추가해서 저장
-      newScoreData = JSON.stringify([...result, scoreData]);
-    } else {
-      newScoreData = JSON.stringify([scoreData]);
-    }
-
-    LocalStorage.set('scoreData', newScoreData);
-  };
-
-  // 최고기록 비교, 변경
+  /**최고기록 비교, 변경 */
   const compareTopScore = () => {
     // userData 무조건 존재함
-    if (!userData || !scoreData) return;
+    if (!user || !scoreData) return;
 
     const score = scoreData.score;
 
-    if (score > userData.topScore) {
+    if (score > user.topScore) {
       // 최고기록 경신
       setRecordChangeState(-1);
       setTopScore(score);
-    } else if (score < userData.topScore) {
+    } else if (score < user.topScore) {
       // 최고기록보다 낮은 점수
       setRecordChangeState(1);
-      setTopScore(userData.topScore);
+      setTopScore(user.topScore);
     } else {
       // 최고기록과 동일한 점수
       setRecordChangeState(0);
-      setTopScore(userData.topScore);
+      setTopScore(user.topScore);
     }
   };
 
-  // 점수 변동 아이콘 정함
+  /**점수 변동 아이콘 정함 */
   const getScoreIcon = () => {
     if (recordChangeState === -1) {
       return <Icon name="arrow-up" size={25} color={'blue'} />;
@@ -121,7 +104,7 @@ export default function Scoreboard() {
     return <Icon name="minus" size={25} color={'white'} />;
   };
 
-  // 랭킹 변동 아이콘 정함
+  /**랭킹 변동 아이콘 정함 */
   const getRankIcon = () => {
     if (rankChangeState === -1) {
       return <Icon name="arrow-up" size={25} color={'blue'} />;
@@ -131,19 +114,20 @@ export default function Scoreboard() {
     return <Icon name="minus" size={25} color={'white'} />;
   };
 
+  /**랭킹 변동사항을 가져옴 */
   const getRankChanges = async () => {
     // userData, scoreData 무조건 존재
-    if (!userData) return;
+    if (!user) return;
 
     try {
       // API 연결
-      const newRank = await userDataAPI.getRank(userData);
+      const newRank = await userDataAPI.getRank(user);
 
       // 랭킹 변동사항 적용
-      if (userData.rank > newRank || userData.rank === 0) {
+      if (user.rank > newRank || user.rank === 0) {
         // 랭킹 상승
         setRankChangeState(-1);
-      } else if (userData.rank < newRank) {
+      } else if (user.rank < newRank) {
         // 랭킹 하락
         setRankChangeState(1);
       } else {
@@ -151,14 +135,13 @@ export default function Scoreboard() {
         setRankChangeState(0);
       }
 
-      // 랭킹 갱신
-      setLocalUserData({ ...userData, rank: newRank });
-      setUserData({ ...userData, rank: newRank });
+      setUser({ ...user, rank: newRank });
     } catch (error) {
       console.error(error);
     }
   };
 
+  /**네트워크 확인해서 모달 띄움 */
   const checkNetInfoTrigger = useCheckNetInfo(() => {
     getRankChanges();
     setIsNetworkOn(true);
@@ -168,32 +151,28 @@ export default function Scoreboard() {
   useEffect(() => {
     // 새로운 점수 데이터 생성
     createNewScoreData();
-
-    // 유저 데이터 가져옴
-    const localUserData = getLocalUserData();
-    setUserData(localUserData);
   }, []);
-
-  useEffect(() => {}, [scoreData]);
 
   // 새 점수 저장 + 최고 점수 비교
   useEffect(() => {
-    if (userData && scoreData && !topScore) {
+    if (user && scoreData && !topScore) {
       // 새 점수 로컬 저장
-      addLocalScoreData();
+      addScoreData(scoreData);
+
       // topScore 비교, 변경
       compareTopScore();
     }
-  }, [userData, scoreData]);
+  }, [user, scoreData]);
 
   // 최고기록 저장 + 네트워크 확인
   useEffect(() => {
     if (topScore) {
       // 최고기록 저장
-      const newUserData = { ...userData!, topScore };
+      const newUserData = { ...user!, topScore };
       // zustand + mmkv
-      setLocalUserData(newUserData);
-      setUserData(newUserData);
+      // setLocalUserData(newUserData);
+      // setUserData(newUserData);
+      setUser(newUserData);
 
       // 네트워크 연결 확인
       checkNetInfoTrigger();
@@ -229,7 +208,7 @@ export default function Scoreboard() {
               <View className="flex-row justify-between px-5">
                 <TitleText size={30}>현재 랭킹 : </TitleText>
                 <View className="flex-row gap-5 items-center">
-                  <TitleText size={30}>{userData?.rank}</TitleText>
+                  <TitleText size={30}>{user?.rank}</TitleText>
                   {getRankIcon()}
                 </View>
               </View>

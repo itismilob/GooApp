@@ -4,17 +4,14 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DefaultNavigatorParams } from '@/types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 
-import { LocalStorage } from '@/stores/mmkvStorage';
-
 import useCheckNetInfo from '@/hooks/useCheckNetInfo';
 import TitleText from '@/components/TitleText';
-import { customAxios } from '@/services/customAxios';
-import { UserDataType } from '@/types/dataTypes';
-import {
-  getLocalUserData,
-  setLocalUserData,
-} from '@/stores/localStorageFunctions';
 import userDataAPI from '@/services/userDataAPI';
+import userLocalStore from '@/stores/userStore';
+import { useShallow } from 'zustand/react/shallow';
+
+import { mmkvStorage } from '@/stores/mmkvStorage';
+import { UserDataType } from '@/types/dataTypes';
 
 export default function Loading() {
   type NavigationProp = NativeStackNavigationProp<
@@ -22,9 +19,12 @@ export default function Loading() {
     'Loading'
   >;
   const navigation = useNavigation<NavigationProp>();
-  const [isTryed, setIsTryed] = useState(false);
 
-  // 네트워크 확인해서 모달 띄움
+  const [user, setUser] = userLocalStore(
+    useShallow(state => [state.user, state.setUser]),
+  );
+
+  /**네트워크 확인해서 모달 띄움 */
   const checkNetInfoTrigger = useCheckNetInfo(
     () => {
       createUser();
@@ -34,31 +34,27 @@ export default function Loading() {
     },
   );
 
-  // 첫 실행인지 확인
-  const checkFirstStart = () => {
-    const isUserData = getLocalUserData();
-    return isUserData === undefined;
-  };
-
-  // 유저 정보 저장하기
+  /**유저 정보 저장하기 */
   const createUser = async () => {
-    if (isTryed) return;
-    setIsTryed(true);
     const newUser = await userDataAPI.createUser();
-    setLocalUserData(newUser);
+    setUser(newUser);
 
     // 유저 생성 후 NickNoti로 이동
     navigation.replace('NicknameNoti');
   };
 
   useEffect(() => {
-    // 테스트용 데이터 초기화 ***
-    // LocalStorage.clearAll();
+    // CLI 테스트 중인지 확인 (__DEV__를 사용해 빌드시 트리 쉐이킹 처리됨)
+    if (__DEV__) {
+      // 테스트용 데이터 초기화
+      mmkvStorage.clearAll();
 
-    // 첫 실행인지 확인하고 아니면 Home으로 이동
-    const isFirst = checkFirstStart();
+      // 테스트 유저 입력 (동적 import사용)
+      const testUser: UserDataType = require('@/test/userData.json');
+      setUser(testUser);
+    }
 
-    if (isFirst) {
+    if (user._id === undefined) {
       // 첫 실행이라면 네트워크 확인
       checkNetInfoTrigger();
     } else {
